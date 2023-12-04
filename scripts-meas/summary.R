@@ -4,13 +4,6 @@ isumm <- idat[, list(cta = max(cta),
                      air.temp.mean = mean(air.temp), 
                      air.temp.min = min(air.temp), 
                      air.temp.max = max(air.temp), 
-                     wind.2m.mean = mean(wind.2m), 
-                     wind.2m.min = min(wind.2m), 
-                     wind.2m.max = max(wind.2m), 
-                     rain.cum = max(rain.cum), 
-                     rain.cum.168 = max(rain.cum * (cta <= 168)), 
-                     rain.cum.24 = max(rain.cum * (cta <= 24)), 
-                     rain.cum.48 = max(rain.cum * (cta <= 48)), 
                      j.NH3.mean = mean(j.NH3),
                      j.NH3.min = min(j.NH3),
                      j.NH3.max = max(j.NH3),
@@ -23,7 +16,7 @@ isumm <- idat[, list(cta = max(cta),
                      e.cum.168.gaps = sum(e.int[cta <= 168 & !grepl('i', flag.int)]),
                      n.int.168 = length(e.int[cta <= 168]),
                      n.int.168.gaps = length(e.int[cta <= 168 & !grepl('i', flag.int)])
-                     ), by = list(trial.nm, app.date, pmid, meas.tech, meas.tech2, aer, aer.grp)]
+                     ), by = list(trial, treat, pmid, )]
 
 # Mean and sd of cumulative emission
 esumm <- isumm[ , list(
