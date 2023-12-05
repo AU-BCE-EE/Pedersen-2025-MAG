@@ -1,6 +1,6 @@
 
 # Data not yet released, reading from the following commit: 
-ghpath <- 'https://github.com/sashahafner/ALFAM2-data/raw/91bb37fb91867dd62434aafc681f5f8f71b5b73d/'
+ghpath <- 'https://github.com/sashahafner/ALFAM2-data/raw/a910607f6efa6a930c39ece5d752f8cc9f2ce6c6/'
 rtag <- ''
 
 p <- paste0(ghpath, rtag)
