@@ -21,21 +21,25 @@ dsumm.ex <- dsumm[, c('experiment', 'code', 'cat', 'sep', 'amount.mn', 'app.rate
 write.csv(dsumm.ex, '../output/digestate.table.csv', row.names = FALSE)
 
 
-
 # Experimental time, soil conditions and temperature 
 
 # Temperature
-temp.dat$temp.mean <- paste(temp.dat$air.temp.mean, '(', temp.dat$air.temp.min, ';', temp.dat$air.temp.max,')')
+temp.dat$temp.mean <- paste(temp.dat$air.temp.mean, '(', temp.dat$air.temp.min, ',', temp.dat$air.temp.max,')')
+colnames(temp.dat)[which(names(temp.dat) == 'trial')] <- 'experiment'
+
+# Add application method (manual/machine) and treamtment to data frame
+tk <- c(`23C` = 'Manual', `23D` = 'Manual', `23G` = 'Manual', `23H` = 'Manual', `23I` = 'Manual')
+temp.dat$app.meth <- tk[temp.dat$experiment]
+
+tk <- c(`23C` = 'Treatment of digestate', `23D` = 'Treatment of digestate', `23G` = 'Treatment of digestate', 
+        `23H` = 'Digestate properties', `23I` = 'Digestate properties')
+temp.dat$treat.var <- tk[temp.dat$experiment]
 
 # Soil data
 ssumm$bulk <- paste(ssumm$bulk.mn, ' ± ', ssumm$bulk.sd)
 ssumm$water <- paste(ssumm$water.mn, ' ± ', ssumm$water.sd)
 
+stsumm <- merge(temp.dat, ssumm, by = c('experiment'))
+stsumm.ex <- stsumm[, c('experiment', 'dt', 'app.meth', 'treat.var', 'bulk', 'water', 'pH', 'crop.height', 'air.temp.start', 'temp.mean')]
 
-
-stsumm <- merge(temp.dat, ssumm, by = c(''))
-
-stsumm.ex <- stsumm[, c('trial', 'dt', 'bulk', 'water', 'pH', 'crop.height', 'air.temp.start', 'temp.mean')]
-
-
-
+write.csv(stsumm.ex, '../output/trial.table.csv', row.names = FALSE)
