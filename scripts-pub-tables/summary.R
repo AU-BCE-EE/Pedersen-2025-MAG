@@ -1,31 +1,47 @@
-# Summarizes measurements
+# Summarizes data
 
-# cumulative emissions: 
-isumm <- idat[, .(e.cum.final = max(e.cum), 
-                     e.rel.final = max(e.rel),
-                     e.cum.150 = approx(cta, e.cum, xout = 150)$y,
-                     e.rel.150 = approx(cta, e.rel, xout = 150)$y
-                     ), by = list(trial, treat, pmid)]
+# converting digestate properties from character to numeric
+sapply(dig.dat, class)
+cols.nam <- c('amount', 'dublicate', 'TS', 'VS', 'mm2', 'mm2TS', 'density', 'K', 'n', 'r2', 'ammonium.N.A', 'totN', 'pH.lab', 'pH.field')
+dig.dat[, (cols.nam) := lapply(.SD, as.numeric), .SDcols = cols.nam]
 
-# remove one observation where there is no measurements after 2.48 h.
-isumm <- isumm[! is.na(e.rel.150)]
+# Mean and sd of digestate properties
+dsumm <- dig.dat[ , list(
+                      amount.mn = mean(amount),
+                      TS.mn = mean(TS), TS.sd = sd(TS), TS.n = length(TS),
+                      VS.mn = mean(VS), VS.sd = sd(VS), VS.n = length(VS),
+                      mm2.mn = mean(mm2), mm2.sd = sd(mm2), mm2.n = length(mm2),
+                      mm2TS.mn = mean(mm2TS), mm2TS.sd = sd(mm2TS), mm2TS.n = length(mm2TS), 
+                      density.mn = mean(density), density.sd = sd(density), desnity.n = length(density),
+                      K.mn = mean(K), K.sd = sd(K), K.n = length(K),
+                      n.mn = mean(n), n.sd = mean(n), n.n = length(n),
+                      r2.mn = mean(r2), r2.sd = sd(r2), r2.n = length(r2),
+                      NH4.mn = mean(ammonium.N.A), NH4.sd = sd(ammonium.N.A), ammonium.N.A.n = length(ammonium.N.A), 
+                      totN.mn = mean(totN), totN.sd = sd(totN), totN.n = length(totN),
+                      pH.lab.mn = mean(pH.lab), pH.lab.sd = sd(pH.lab), pH.lab.n = length(pH.lab),
+                      pH.field.mn = mean(pH.field), pH.field.sd = sd(pH.field), pH.field.n = length(pH.field)
+                      ), by = list(experiment, code, cat, sep)]                     
 
-# temperature data 
-wsumm <- idat[, .(dt = t.start.p[1],
-                      air.temp.start = mean(air.temp[interval == 1]), 
-                      air.temp.mean = mean(air.temp), 
-                      air.temp.min = min(air.temp), 
-                      air.temp.max = max(air.temp)) 
-                      , by = list(trial)]
+# Mean and sd of ESA data
+Esumm <- ESA.dat[ , list(
+                        area.perc.mn = mean(area.perc), area.perc.sd = sd(area.perc), n.area.perc = length(area.perc)
+                        ), by = list(experiment, treat)]
 
-# Mean and sd of cumulative emission
-esumm <- isumm[ , list(
-                       pmid = paste(pmid, collapse = ', '),
-                       e.rel.final = mean(e.rel.final), e.rel.final.sd = sd(e.rel.final), e.rel.final.n = length(e.rel.final),
-                       e.cum.final = mean(e.cum.final), e.cum.final.sd = sd(e.cum.final), e.cum.final.n = length(e.cum.final),
-                       e.rel.150 = mean(e.rel.150), e.rel.150.sd = sd(e.rel.150), e.rel.150.n = length(e.rel.150),
-                       e.cum.150 = mean(e.cum.150), e.cum.150.sd = sd(e.cum.150), e.cum.150.n = length(e.cum.150)
-                       ), by = list(trial, treat)]
+# converting soil properties from character to numeric
+sapply(soil.dat, class)
+cols.nam <- c('dublicate', 'bulk.dens', 'WC', 'W', 'crop.height', 'pH')
+soil.dat[, (cols.nam) := lapply(.SD, as.numeric), .SDcols = cols.nam]
+
+# Mean and sd of soil data 
+ssumm <- soil.dat[, list(
+                      bulk.mn = mean(bulk.dens), bulk.sd = sd(bulk.dens), bulk.n = length(bulk.dens), 
+                      water.mn = mean(W), water.sd = sd(W), water.n = length(W) 
+                      ), by = list(experiment, crop.height, pH)]
+
+
+
+
+
 
 isumm <- rounddf(as.data.frame(isumm), digits = 3, func = signif)
 esumm <- rounddf(as.data.frame(esumm), 3, func = signif)
