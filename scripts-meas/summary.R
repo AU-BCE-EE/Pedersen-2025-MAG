@@ -1,7 +1,7 @@
 # Summarizes measurements
 
 # cumulative emissions: 
-isumm <- idat[, list(e.cum.final = max(e.cum), 
+isumm <- idat[, .(e.cum.final = max(e.cum), 
                      e.rel.final = max(e.rel),
                      e.cum.150 = approx(cta, e.cum, xout = 150)$y,
                      e.rel.150 = approx(cta, e.rel, xout = 150)$y
@@ -11,12 +11,12 @@ isumm <- idat[, list(e.cum.final = max(e.cum),
 isumm <- isumm[! is.na(e.rel.150)]
 
 # temperature data 
-wsumm <- idat[, list(dt = t.start.p[1],
-                      air.temp.start = mean(idat[idat$interval == '1', ]$air.temp), 
+wsumm <- idat[, .(dt = t.start.p[1],
+                      air.temp.start = mean(air.temp[interval == 1]), 
                       air.temp.mean = mean(air.temp), 
                       air.temp.min = min(air.temp), 
-                      air.temp.max = max(air.temp) 
-                      ), by = list(trial)]
+                      air.temp.max = max(air.temp)) 
+                      , by = list(trial)]
 
 # Mean and sd of cumulative emission
 esumm <- isumm[ , list(
@@ -29,6 +29,7 @@ esumm <- isumm[ , list(
 
 isumm <- rounddf(as.data.frame(isumm), digits = 3, func = signif)
 esumm <- rounddf(as.data.frame(esumm), 3, func = signif)
+wsumm <- rounddf(as.data.frame(wsumm), 3, func = signif)
 
-# Select some cols from pdat to export
-# plotsumm <- pdat[, .(exper, app.date, meas.tech, meas.tech2, air.temp.24, air.temp.168, wind.2m.24, wind.2m.168, rain.12, rain.24, rain.48, rain.168, rain.tot)] 
+# Select some cols from esumm to export
+esumm.ex <- esumm[, c('trial', 'treat', 'e.rel.150', 'e.rel.150.sd', 'e.rel.150.n')] 

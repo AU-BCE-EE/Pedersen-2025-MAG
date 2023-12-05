@@ -1,0 +1,7 @@
+
+# Add trial keys and names for plots
+tk <- c(`23C` = 'A', `23D` = 'B', `23G` = 'C', `23H` = 'D', `23I` = 'E')
+pdat$trial <- tk[pdat$exper]
+
+# Merge in plot level variables
+idat <- merge(pdat, idat, by = c('pid', 'pmid'))
