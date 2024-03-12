@@ -117,7 +117,7 @@ dat$flux <- (dat$n * M.N * dat$air.flow) / dat$A.frame
 # rearranging data by tunnel 
 dat <- arrange(dat, by = id)
 
-# calculation of total flux over time
+# calculation of flux over time
 # Average ammonia flux in measurement interval
 dat$flux.tr <- rollapplyr(dat$flux, 2, mean, fill = NA)
 dat$flux.tr[dat$elapsed.time == 0] <- 0
