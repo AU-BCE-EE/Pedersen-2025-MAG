@@ -20,6 +20,9 @@ These data in `data-emission` are from the ALFAM2 database, and were used for al
 See 'scripts' for R scripts. 
 'main.R' calls the other to do the complete data loading, subsetting, calculations, plotting, saving of data (in 'output' subdirectory) and plots (in 'plots' subdirectory). 
 
+# Trial name
+A table with the 'conversion' of trial ID in folder structure here vs. trial ID in publications 
+
 # Directory structure
 ## 'data-emission'
 Measurement data in `data` subdirectory.
