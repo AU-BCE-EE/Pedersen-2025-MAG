@@ -1,14 +1,4 @@
 
-# surface pH over time, all numbers
-ggplot(dat, aes(elapsed.time, pH, group = interaction(rep, slurry), color = slurry)) + 
-  geom_point() + 
-  geom_line() + 
-  facet_wrap(~ exp, ncol = 3) +
-  theme_bw() + 
-  labs(x = 'Time after application (h)', y = 'pH') + 
-  theme(legend.position = 'bottom', legend.title = element_blank()) 
-ggsave2x('../plots-surface-pH/pH.all.01.png', height = 6, width = 10)
-
 # surface pH over time mean + sd
 ggplot(dsumm, aes(elapsed.time, pH.mn, color = slurry, fill = slurry)) + 
   geom_point() + 
