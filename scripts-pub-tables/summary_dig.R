@@ -20,7 +20,7 @@ dsumm <- dig.dat[ , list(
                       totN.mn = mean(totN), totN.sd = sd(totN), totN.n = length(totN),
                       pH.lab.mn = mean(pH.lab), pH.lab.sd = sd(pH.lab), pH.lab.n = length(pH.lab),
                       pH.field.mn = mean(pH.field), pH.field.sd = sd(pH.field), pH.field.n = length(pH.field)
-                      ), by = list(experiment, code, cat, sep)]                     
+                      ), by = list(experiment, dig, straw, treat, acid)]                     
 
 # changing TAN and totN from mg/kg to g/kg
 cols <- c('totN.mn', 'totN.sd', 'NH4.mn', 'NH4.sd')
@@ -30,7 +30,7 @@ dsumm[, (cols) := lapply(.SD, function(x) x / 1000), .SDcols = cols]
 dsumm$app.rate.mn <- dsumm$NH4.mn * dsumm$amount.mn
 dsumm$app.rate.sd <- dsumm$NH4.sd * dsumm$amount.mn
 
-sig2 <- c('amount.mn', 'app.rate.mn', 'NH4.mn', 'NH4.sd', 'totN.mn', 'totN.sd', 'pH.lab.mn', 'pH.lab.sd', 'pH.field.mn', 'pH.field.sd')
+sig2 <- c('amount.mn', 'app.rate.mn', 'app.rate.sd', 'NH4.mn', 'NH4.sd', 'totN.mn', 'totN.sd', 'pH.lab.mn', 'pH.lab.sd', 'pH.field.mn', 'pH.field.sd')
 sig3 <- c('TS.mn', 'TS.sd', 'mm2.mn', 'mm2.sd', 'mm2TS.mn', 'mm2TS.sd', 'density.mn', 'r2.mn')
 sig4 <- c('VS.mn', 'VS.sd', 'K.mn', 'n.mn')
 

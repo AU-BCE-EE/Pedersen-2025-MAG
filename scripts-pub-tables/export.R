@@ -1,7 +1,7 @@
 
 # Combinding ESA data with digestate properties data
-colnames(Esumm)[which(names(Esumm) == 'treat')] <- 'code'
-dsumm <- merge(dsumm, Esumm, by = c('experiment', 'code'), all.x = TRUE)
+colnames(Esumm)[which(names(Esumm) == 'treat')] <- 'dig'
+dsumm <- merge(dsumm, Esumm, by = c('experiment', 'dig'), all.x = TRUE)
 
 # Digestate properties 
 dsumm$TS <- paste(dsumm$TS.mn, ' ± ', dsumm$TS.sd)
@@ -15,11 +15,18 @@ dsumm$pH.lab <- paste(dsumm$pH.lab.mn, ' ± ', dsumm$pH.lab.sd)
 dsumm$pH.field <- paste(dsumm$pH.field.mn, ' ± ', dsumm$pH.field.sd)
 
 # Select some cols from esumm to export
-dsumm.ex <- dsumm[, c('experiment', 'code', 'cat', 'sep', 'amount.mn', 'app.rate.mn', 'TS', 'VS', 'ESA', 'mm2', 'mm2TS', 'density.mn', 'K.mn', 'n.mn', 'r2.mn', 
-                      'NH4', 'totN', 'pH.lab', 'pH.field')] 
+# Paper on digestate application and treatment: 
+dsumm.ex1 <- dsumm[is.element(dsumm$experiment, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), 
+                   c('experiment', 'dig', 'straw', 'treat', 'TS', 'VS', 'density.mn', 'mm2', 'mm2TS', 
+                      'K.mn', 'n.mn', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
 
-write.csv(dsumm.ex, '../output/digestate.table.csv', row.names = FALSE)
+# Paper on digestate properties:
+dsumm.ex2 <- dsumm[is.element(dsumm$experiment, c('23H', '23I', '24E', '24F', '24G')), 
+                   c('experiment', 'dig', 'straw', 'treat', 'TS', 'VS', 'density.mn', 'mm2', 'mm2TS', 
+                     'K.mn', 'n.mn', 'ESA', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
 
+write.csv(dsumm.ex1, '../output/digestate.table1.csv', row.names = FALSE)
+write.csv(dsumm.ex2, '../output/digestate.table2.csv', row.names = FALSE)
 
 # Experimental time, soil conditions and temperature 
 
