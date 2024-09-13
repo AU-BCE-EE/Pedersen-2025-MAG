@@ -70,4 +70,4 @@ dt.prop <- stsumm[is.element(stsumm$experiment, c('23H', '23I', '24E', '24F', '2
                     c('dt')]
 
 write.csv(dt.treat, '../output/dt.treat.csv', row.names = FALSE)
-write.csv(dt.prop, '../output/dt.prop.table.prop.csv', row.names = FALSE)
+write.csv(dt.prop, '../output/dt.prop.csv', row.names = FALSE)
