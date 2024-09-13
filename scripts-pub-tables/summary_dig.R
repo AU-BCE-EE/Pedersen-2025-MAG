@@ -39,6 +39,29 @@ dsumm[, sig2] <- rounddf(dsumm[, sig2], digits = 2, func = signif)
 dsumm[, sig3] <- rounddf(dsumm[, sig3], digits = 3, func = signif)
 dsumm[, sig4] <- rounddf(dsumm[, sig4], digits = 4, func = signif)
 
+# New ID's for treatment publication
+dsumm$new.ID <- dsumm$experiment
+dsumm$new.ID <- gsub('23C', '1', dsumm$new.ID)
+dsumm$new.ID <- gsub('23D', '2', dsumm$new.ID)
+dsumm$new.ID <- gsub('23G', '3', dsumm$new.ID)
+dsumm$new.ID <- gsub('24M', '4', dsumm$new.ID)
+dsumm$new.ID <- gsub('24B', '5', dsumm$new.ID)
+dsumm$new.ID <- gsub('24H', '6', dsumm$new.ID)
+dsumm$new.ID <- gsub('24C', '7', dsumm$new.ID)
+dsumm$new.ID <- gsub('24D', '8', dsumm$new.ID)
+dsumm$new.ID <- gsub('24J', '9', dsumm$new.ID)
+dsumm$new.ID <- gsub('24L', '10', dsumm$new.ID)
+dsumm$new.ID <- gsub('24N', '11', dsumm$new.ID)
+dsumm$new.ID <- gsub('24O', '12', dsumm$new.ID)
+dsumm$new.ID <- gsub('24A', '13', dsumm$new.ID)
+dsumm$new.ID <- gsub('24I', '14', dsumm$new.ID)
+dsumm$new.ID <- gsub('24K', '15', dsumm$new.ID)
 
+# New ID's for properties publication
+dsumm$new.ID <- gsub('23H', '1', dsumm$new.ID)
+dsumm$new.ID <- gsub('23I', '2', dsumm$new.ID)
+dsumm$new.ID <- gsub('24E', '3', dsumm$new.ID)
+dsumm$new.ID <- gsub('24F', '4', dsumm$new.ID)
+dsumm$new.ID <- gsub('24G', '5', dsumm$new.ID)
 
 

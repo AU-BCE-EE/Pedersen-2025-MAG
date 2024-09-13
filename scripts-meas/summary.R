@@ -43,4 +43,6 @@ esumm <- rounddf(as.data.frame(esumm), 3, func = signif)
 wsumm <- rounddf(as.data.frame(wsumm), 3, func = signif)
 
 # Select some cols from esumm to export
-esumm.ex <- esumm[, c('trial', 'treat', 'e.rel.150', 'e.rel.150.sd', 'e.rel.150.n')] 
+esumm.treat <- esumm[is.element(esumm$trial, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), c('trial', 'treat', 'e.rel.150', 'e.rel.150.sd', 'e.rel.150.n')] 
+esumm.treat.sup <- esumm[is.element(esumm$trial, c('24B', '24H', '24A', '24I', '24K')), c('trial', 'treat', 'e.rel.150', 'e.rel.150.sd', 'e.rel.150.n')] 
+esumm.prop <- esumm[is.element(esumm$trial, c('23H', '23I', '24E', '24F', '24G')), c('trial', 'treat', 'e.rel.150', 'e.rel.150.sd', 'e.rel.150.n')] 

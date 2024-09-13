@@ -17,20 +17,19 @@ dsumm$pH.field <- paste(dsumm$pH.field.mn, ' ± ', dsumm$pH.field.sd)
 # Select some cols from esumm to export
 # Paper on digestate application and treatment: 
 dsumm.treat1 <- dsumm[is.element(dsumm$experiment, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), 
-                   c('experiment', 'dig', 'straw', 'treat', 'TS', 'VS', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
+                   c('new.ID', 'dig', 'straw', 'treat', 'TS', 'VS', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
 
 dsumm.treat2 <- dsumm[is.element(dsumm$experiment, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), 
-                      c('experiment', 'dig', 'straw', 'treat', 'density.mn', 'mm2', 'mm2TS', 'K.mn', 'n.mn')] 
+                      c('new.ID', 'dig', 'straw', 'treat', 'density.mn', 'mm2', 'mm2TS', 'K.mn', 'n.mn')] 
 
 # Paper on digestate properties:
 dsumm.prop <- dsumm[is.element(dsumm$experiment, c('23H', '23I', '24E', '24F', '24G')), 
-                   c('experiment', 'dig', 'straw', 'treat', 'TS', 'VS', 'density.mn', 'mm2', 'mm2TS', 
+                   c('new.ID', 'dig', 'straw', 'treat', 'TS', 'VS', 'density.mn', 'mm2', 'mm2TS', 
                      'K.mn', 'n.mn', 'ESA', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
 
 write.csv(dsumm.treat1, '../output/digestate.table.treat1.csv', row.names = FALSE)
 write.csv(dsumm.treat2, '../output/digestate.table.treat2.csv', row.names = FALSE)
 write.csv(dsumm.prop, '../output/digestate.table.prop.csv', row.names = FALSE)
-
 
 # Experimental time, soil conditions and temperature 
 
@@ -38,36 +37,26 @@ write.csv(dsumm.prop, '../output/digestate.table.prop.csv', row.names = FALSE)
 temp.dat$temp.mean <- paste(temp.dat$air.temp.mean, '(', temp.dat$air.temp.min, ',', temp.dat$air.temp.max,')')
 colnames(temp.dat)[which(names(temp.dat) == 'trial')] <- 'experiment'
 
-# # Add application method (manual/machine) and treamtment to data frame
-# tk <- c(`23C` = 'Manual', `23D` = 'Manual', `23G` = 'Manual', `23H` = 'Manual', `23I` = 'Manual')
-# temp.dat$app.meth <- tk[temp.dat$experiment]
-# 
-# tk <- c(`23C` = 'Treatment of digestate', `23D` = 'Treatment of digestate', `23G` = 'Treatment of digestate', 
-#         `23H` = 'Digestate properties', `23I` = 'Digestate properties')
-# temp.dat$treat.var <- tk[temp.dat$experiment]
-
 # Soil data
 ssumm$water <- paste(ssumm$water.mn, ' ± ', ssumm$water.sd)
 ssumm$bulk <- paste(ssumm$bulk.mn, ' ± ', ssumm$bulk.sd)
 
-# CHECK THAT BELOW IS RUNNING AFTER GETTING ALL TEMP DATA IN
-
 stsumm <- merge(temp.dat, ssumm, by = c('experiment'))
 
 stsumm.treat <- stsumm[is.element(stsumm$experiment, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')),
-                       c('experiment', 'water', 'bulk', 'pH', 'crop.height', 'air.temp.start', 'temp.mean')]
+                       c('new.ID', 'water', 'bulk', 'pH', 'crop.height', 'air.temp.start', 'temp.mean')]
 
 stsumm.prop <- stsumm[is.element(stsumm$experiment, c('23H', '23I', '24E', '24F', '24G')), 
-                       c('experiment', 'water', 'bulk', 'pH', 'crop.height', 'air.temp.start', 'temp.mean')]
+                       c('new.ID', 'water', 'bulk', 'pH', 'crop.height', 'air.temp.start', 'temp.mean')]
 
 write.csv(stsumm.treat, '../output/soil.table.treat.csv', row.names = FALSE)
 write.csv(stsumm.prop, '../output/soil.table.prop.csv', row.names = FALSE)
 
 # Column with measurement duration 
 dt.treat <- stsumm[is.element(stsumm$experiment, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')),
-                       c('dt')]
+                       c('new.ID', 'dt')]
 dt.prop <- stsumm[is.element(stsumm$experiment, c('23H', '23I', '24E', '24F', '24G')),
-                    c('dt')]
+                    c('new.ID', 'dt')]
 
 write.csv(dt.treat, '../output/dt.treat.csv', row.names = FALSE)
 write.csv(dt.prop, '../output/dt.prop.csv', row.names = FALSE)
