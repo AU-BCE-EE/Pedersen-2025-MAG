@@ -1,11 +1,22 @@
 # Summarizes measurements
 
 # cumulative emissions: 
-isumm <- idat[, .(e.cum.final = max(e.cum), 
+isumm1 <- idat[, .(e.cum.final = max(e.cum), 
                      e.rel.final = max(e.rel),
                      e.cum.150 = approx(cta, e.cum, xout = 150)$y,
                      e.rel.150 = approx(cta, e.rel, xout = 150)$y
                      ), by = list(trial, treat, pmid)]
+
+# cumulative emissions for experiments 24C, 24N, 24O as they are not close to 150 h emission: 
+isumm2 <- idat[is.element(idat$exper, c('24C', '24N', '24O')), .(e.cum.final = max(e.cum), 
+                  e.rel.final = max(e.rel),
+                  e.cum.150 = approx(cta, e.cum, xout = 85)$y,
+                  e.rel.150 = approx(cta, e.rel, xout = 85)$y
+), by = list(trial, treat, pmid)]
+
+
+# combining the isumm
+isumm <- rbind(isumm1, isumm2)
 
 # remove one observation where there is no measurements after 2.48 h.
 isumm <- isumm[! is.na(e.rel.150)]

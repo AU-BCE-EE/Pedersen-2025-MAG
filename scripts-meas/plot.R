@@ -14,7 +14,7 @@ ggplot(isumm, aes(treat, e.rel.150, color = treat)) +
   geom_point() + 
   facet_wrap(~ trial, scales = 'free_x') + 
   theme_bw() + 
-  labs(y = 'Loss (% of TAN) after 150 h') + 
+  labs(y = 'Loss (% of TAN) h') + 
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esumm, aes(x = treat, y = e.rel.150, color = treat), show.legend = FALSE)
 ggsave2x('../plots-meas/cum.emis01.png', height = 10, width = 10)
