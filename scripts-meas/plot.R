@@ -3,7 +3,45 @@
 idat.treat <- idat[is.element(idat$exper, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), ]
 idat.prop <- idat[is.element(idat$exper, c('23H', '23I', '24E', '24F', '24G')), ]
 
+fsumm$treat1 <- fsumm$treat
+fsumm$treat1 <- gsub('A acid', 'A Acid', fsumm$treat1)
+fsumm$treat1 <- gsub('A dec', 'A Sep-D', fsumm$treat1)
+fsumm$treat1 <- gsub('A dec acid', 'A Sep-D + acid', fsumm$treat1)
+fsumm$treat1 <- gsub('A dis', 'A Dis', fsumm$treat1)
+fsumm$treat1 <- gsub('A dis acid', 'A Dis + acid', fsumm$treat1)
+fsumm$treat1 <- gsub('A screw', 'A Sep-S', fsumm$treat1)
+fsumm$treat1 <- gsub('B acid', 'B Acid', fsumm$treat1)
+fsumm$treat1 <- gsub('B screw', 'B Sep-S', fsumm$treat1)
+fsumm$treat1 <- gsub('B screw acid', 'B Sep-S + acid', fsumm$treat1)
+fsumm$treat1 <- gsub('C dec', 'C Sep-D', fsumm$treat1)
+fsumm$treat1 <- gsub('TH-12', 'TH', fsumm$treat1)
+fsumm$treat1 <- gsub('TS-TSB-12', 'TSB1', fsumm$treat1)
+fsumm$treat1 <- gsub('TS-Bo', 'TSB2', fsumm$treat1)
+
+
+fsumm$treat1 <- gsub('TS-TSB+', 'TSB3', fsumm$treat1)
+fsumm$treat1 <- gsub('TS-TSB', 'TSB1', fsumm$treat1)
+
+fsumm.treat <- fsumm[is.element(fsumm$trial, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), ]
+
+fsumm.treat02 <- fsumm.treat[fsumm.treat$new.ID == '5' | fsumm.treat$new.ID == '6' | fsumm.treat$new.ID == '7' | fsumm.treat$new.ID == '8', ]
+ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID, ncol = 4) +
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  xlim(NA, 150)
+ggsave2x('../plots-meas/NH3.flux01.treat02.png', height = 4, width = 8)
+
+
+
+
+
+
 # flux over time
+# all:
 ggplot(idat, aes(cta, j.NH3, group = pmid, color = treat)) + 
   geom_point() + 
   facet_wrap(~ trial) +
@@ -13,14 +51,34 @@ ggplot(idat, aes(cta, j.NH3, group = pmid, color = treat)) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux01.png', height = 10, width = 10)
 
-ggplot(idat.treat, aes(cta, j.NH3, group = pmid, color = treat)) + 
-  geom_point() + 
-  facet_wrap(~ new.ID) +
+fsumm.treat01 <- fsumm.treat[fsumm.treat$new.ID == '1' | fsumm.treat$new.ID == '2' | fsumm.treat$new.ID == '3' | fsumm.treat$new.ID == '4', ]
+ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
-  labs(x = 'Time after application (h)', y = expression('NH'[3]~'flux'~('kg N h'^'-1'~ha^'-1'))) + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux01.treat.png', height = 10, width = 10)
+ggsave2x('../plots-meas/NH3.flux01.treat01.png', height = 4, width = 8)
+
+
+
+fsumm.treat03 <- fsumm.treat[fsumm.treat$new.ID == '9' | fsumm.treat$new.ID == '10' | fsumm.treat$new.ID == '11' | fsumm.treat$new.ID == '12', ]
+fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TH-4', ]
+fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TS-TSB-4', ]
+fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TS-TSBacid', ]
+ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat, fill = treat)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID, ncol = 4) +
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  xlim(NA, 150)
+ggsave2x('../plots-meas/NH3.flux01.treat03.png', height = 4, width = 8)
+
+
 
 ggplot(idat.prop, aes(cta, j.NH3, group = pmid, color = treat)) + 
   geom_point() + 
