@@ -15,12 +15,12 @@ fsumm$treat1 <- gsub('B screw', 'B Sep-S', fsumm$treat1)
 fsumm$treat1 <- gsub('B screw acid', 'B Sep-S + acid', fsumm$treat1)
 fsumm$treat1 <- gsub('C dec', 'C Sep-D', fsumm$treat1)
 fsumm$treat1 <- gsub('TH-12', 'TH', fsumm$treat1)
-fsumm$treat1 <- gsub('TS-TSB-12', 'TSB1', fsumm$treat1)
-fsumm$treat1 <- gsub('TS-Bo', 'TSB2', fsumm$treat1)
+fsumm$treat1 <- gsub('TS-TSB-12', 'TS1', fsumm$treat1)
+fsumm$treat1 <- gsub('TS-Bo', 'TS2', fsumm$treat1)
 
 
-fsumm$treat1 <- gsub('TS-TSB+', 'TSB3', fsumm$treat1)
-fsumm$treat1 <- gsub('TS-TSB', 'TSB1', fsumm$treat1)
+fsumm$treat1 <- gsub('TS-TSB+', 'TS3', fsumm$treat1)
+fsumm$treat1 <- gsub('TS-TSB', 'TS1', fsumm$treat1)
 
 fsumm.treat <- fsumm[is.element(fsumm$trial, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), ]
 
@@ -33,7 +33,7 @@ ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux01.treat02.png', height = 4, width = 8)
+ggsave2x('../plots-meas/NH3.flux01.treat02', height = 4, width = 8)
 
 
 
@@ -49,7 +49,7 @@ ggplot(idat, aes(cta, j.NH3, group = pmid, color = treat)) +
   labs(x = 'Time after application (h)', y = expression('NH'[3]~'flux'~('kg N h'^'-1'~ha^'-1'))) + 
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux01.png', height = 10, width = 10)
+ggsave2x('../plots-meas/NH3.flux01', height = 10, width = 10)
 
 fsumm.treat01 <- fsumm.treat[fsumm.treat$new.ID == '1' | fsumm.treat$new.ID == '2' | fsumm.treat$new.ID == '3' | fsumm.treat$new.ID == '4', ]
 ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
@@ -60,7 +60,7 @@ ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux01.treat01.png', height = 4, width = 8)
+ggsave2x('../plots-meas/NH3.flux.treat01', height = 4, width = 8)
 
 
 
@@ -76,18 +76,19 @@ ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat, fill = treat)) +
   ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux01.treat03.png', height = 4, width = 8)
+ggsave2x('../plots-meas/NH3.flux.treat03', height = 4, width = 8)
 
 
-
-ggplot(idat.prop, aes(cta, j.NH3, group = pmid, color = treat)) + 
-  geom_point() + 
-  facet_wrap(~ new.ID) +
+fsumm.prop <- fsumm[is.element(fsumm$trial, c('23H', '23I', '24E', '24F', '24G')), ]
+ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat, fill = treat)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID, ncol = 5) +
   theme_bw() + 
-  labs(x = 'Time after application (h)', y = expression('NH'[3]~'flux'~('kg N h'^'-1'~ha^'-1'))) + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux01.prop.png', height = 10, width = 10)
+ggsave2x('../plots-meas/NH3.flux.prop', height = 4, width = 8)
 
 # cumulative emission 
 ggplot(isumm, aes(treat, e.rel.150, color = treat)) + 
@@ -97,7 +98,7 @@ ggplot(isumm, aes(treat, e.rel.150, color = treat)) +
   labs(y = 'Loss (% of TAN) h') + 
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esumm, aes(x = treat, y = e.rel.150, color = treat), show.legend = FALSE)
-ggsave2x('../plots-meas/cum.emis01.png', height = 10, width = 10)
+ggsave2x('../plots-meas/cum.emis01', height = 10, width = 10)
 
 # temperature
 ggplot(idat[idat$treat == 'A' & idat$rep == '1' | idat$treat == '2-pos' & idat$rep == '1' | idat$treat == 'TS-TSB-4' & idat$rep == '1' | idat$treat == 'TH' & idat$rep == '1' | idat$treat == 'Un12' & idat$rep == '1', ], 
@@ -108,7 +109,7 @@ ggplot(idat[idat$treat == 'A' & idat$rep == '1' | idat$treat == '2-pos' & idat$r
   labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
   xlim(NA, 150)
-ggsave2x('../plots-meas/temp.png', height = 10, width = 10)
+ggsave2x('../plots-meas/temp', height = 10, width = 10)
 
 ggplot(idat.treat[idat.treat$treat == 'A' & idat.treat$rep == '1' | idat.treat$treat == '2-pos' & idat.treat$rep == '1' | idat.treat$treat == 'TS-TSB-4' & idat.treat$rep == '1' | idat.treat$treat == 'TH' & idat.treat$rep == '1' | idat.treat$treat == 'Un12' & idat.treat$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
@@ -118,7 +119,7 @@ ggplot(idat.treat[idat.treat$treat == 'A' & idat.treat$rep == '1' | idat.treat$t
   labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
   xlim(NA, 150)
-ggsave2x('../plots-meas/temp.treat.png', height = 10, width = 10)
+ggsave2x('../plots-meas/temp.treat', height = 10, width = 10)
 
 ggplot(idat.prop[idat.prop$treat == 'A' & idat.prop$rep == '1' | idat.prop$treat == '2-pos' & idat.prop$rep == '1' | idat.prop$treat == 'TS-TSB-4' & idat.prop$rep == '1' | idat.prop$treat == 'TH' & idat.prop$rep == '1' | idat.prop$treat == 'Un12' & idat.prop$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
@@ -128,5 +129,5 @@ ggplot(idat.prop[idat.prop$treat == 'A' & idat.prop$rep == '1' | idat.prop$treat
   labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
   xlim(NA, 150)
-ggsave2x('../plots-meas/temp.prop.png', height = 10, width = 10)
+ggsave2x('../plots-meas/temp.prop', height = 10, width = 10)
 
