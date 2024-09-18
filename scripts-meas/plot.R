@@ -79,6 +79,16 @@ ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat, fill = treat)) +
 ggsave2x('../plots-meas/NH3.flux.treat03', height = 4, width = 8)
 
 
+ggplot(fsumm[fsumm$new.ID == '15', ], aes(cta, j.rel.mn, color = treat, fill = treat)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  xlim(NA, 150)
+ggsave2x('../plots-meas/NH3.flux.DFCmov', height = 3, width = 4)
+
+
 fsumm.prop <- fsumm[is.element(fsumm$trial, c('23H', '23I', '24E', '24F', '24G')), ]
 ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat, fill = treat)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
@@ -90,6 +100,7 @@ ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat, fill = treat)) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux.prop', height = 4, width = 8)
 
+
 # cumulative emission 
 ggplot(isumm, aes(treat, e.rel.150, color = treat)) + 
   geom_point() + 
@@ -99,6 +110,7 @@ ggplot(isumm, aes(treat, e.rel.150, color = treat)) +
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esumm, aes(x = treat, y = e.rel.150, color = treat), show.legend = FALSE)
 ggsave2x('../plots-meas/cum.emis01', height = 10, width = 10)
+
 
 # temperature
 ggplot(idat[idat$treat == 'A' & idat$rep == '1' | idat$treat == '2-pos' & idat$rep == '1' | idat$treat == 'TS-TSB-4' & idat$rep == '1' | idat$treat == 'TH' & idat$rep == '1' | idat$treat == 'Un12' & idat$rep == '1', ], 
@@ -111,7 +123,18 @@ ggplot(idat[idat$treat == 'A' & idat$rep == '1' | idat$treat == '2-pos' & idat$r
   xlim(NA, 150)
 ggsave2x('../plots-meas/temp', height = 10, width = 10)
 
+idat.treat$new.ID.f <- factor(idat.treat$new.ID, levels = c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'))
 ggplot(idat.treat[idat.treat$treat == 'A' & idat.treat$rep == '1' | idat.treat$treat == '2-pos' & idat.treat$rep == '1' | idat.treat$treat == 'TS-TSB-4' & idat.treat$rep == '1' | idat.treat$treat == 'TH' & idat.treat$rep == '1' | idat.treat$treat == 'Un12' & idat.treat$rep == '1', ], 
+       aes(cta, air.temp, group = pmid)) + 
+  geom_line() + 
+  facet_wrap(~ new.ID.f, scales = 'free_x') +
+  theme_bw() + 
+  labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
+  theme(legend.position = 'bottom', legend.title = element_blank()) + 
+  xlim(NA, 150)
+ggsave2x('../plots-meas/temp.treat', height = 10, width = 8)
+
+ggplot(idat[idat$new.ID == '13' & idat$treat == 'Un12' & idat$rep == '1' | idat$new.ID == '14' & idat$treat == 'Un12' & idat$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
   geom_line() + 
   facet_wrap(~ new.ID, scales = 'free_x') +
@@ -119,7 +142,16 @@ ggplot(idat.treat[idat.treat$treat == 'A' & idat.treat$rep == '1' | idat.treat$t
   labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
   xlim(NA, 150)
-ggsave2x('../plots-meas/temp.treat', height = 10, width = 10)
+ggsave2x('../plots-meas/temp.treat.speed', height = 3, width = 4)
+
+ggplot(idat[idat$new.ID == '15' & idat$treat == '2-pos' & idat$rep == '1', ], 
+       aes(cta, air.temp, group = pmid)) + 
+  geom_line() + 
+  theme_bw() + 
+  labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
+  theme(legend.position = 'bottom', legend.title = element_blank()) + 
+  xlim(NA, 150)
+ggsave2x('../plots-meas/temp.treat.DFCmov', height = 3, width = 2.5)
 
 ggplot(idat.prop[idat.prop$treat == 'A' & idat.prop$rep == '1' | idat.prop$treat == '2-pos' & idat.prop$rep == '1' | idat.prop$treat == 'TS-TSB-4' & idat.prop$rep == '1' | idat.prop$treat == 'TH' & idat.prop$rep == '1' | idat.prop$treat == 'Un12' & idat.prop$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
@@ -129,5 +161,5 @@ ggplot(idat.prop[idat.prop$treat == 'A' & idat.prop$rep == '1' | idat.prop$treat
   labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
   xlim(NA, 150)
-ggsave2x('../plots-meas/temp.prop', height = 10, width = 10)
+ggsave2x('../plots-meas/temp.prop', height = 7, width = 8)
 
