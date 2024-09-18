@@ -88,6 +88,21 @@ ggplot(fsumm[fsumm$new.ID == '15', ], aes(cta, j.rel.mn, color = treat, fill = t
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux.DFCmov', height = 3, width = 4)
 
+fsumm$treat2 <- fsumm$treat
+fsumm$treat2 <- gsub('TS-TSB-12', 'TS-12', fsumm$treat2)
+fsumm$treat2 <- gsub('TS-TSB-4', 'TS-4', fsumm$treat2)
+fsumm$new.ID.f <- factor(fsumm$new.ID, levels = c('9', '10'))
+ggplot(fsumm[fsumm$new.ID == '9' | fsumm$new.ID == '10', ], 
+       aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID.f) + 
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  xlim(NA, 150)
+ggsave2x('../plots-meas/NH3.flux.speed', height = 3, width = 7)
+
 
 fsumm.prop <- fsumm[is.element(fsumm$trial, c('23H', '23I', '24E', '24F', '24G')), ]
 ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat, fill = treat)) + 
