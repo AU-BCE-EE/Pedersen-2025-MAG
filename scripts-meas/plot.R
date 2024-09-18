@@ -19,7 +19,7 @@ fsumm$treat1 <- gsub('TS-TSB-12', 'TS1', fsumm$treat1)
 fsumm$treat1 <- gsub('TS-Bo', 'TS2', fsumm$treat1)
 
 
-fsumm$treat1 <- gsub('TS-TSB+', 'TS3', fsumm$treat1)
+fsumm$treat1 <- gsub('TS-TSB\\+', 'TS3', fsumm$treat1)
 fsumm$treat1 <- gsub('TS-TSB', 'TS1', fsumm$treat1)
 
 fsumm.treat <- fsumm[is.element(fsumm$trial, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), ]
