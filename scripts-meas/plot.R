@@ -17,8 +17,6 @@ fsumm$treat1 <- gsub('C dec', 'C Sep-D', fsumm$treat1)
 fsumm$treat1 <- gsub('TH-12', 'TH', fsumm$treat1)
 fsumm$treat1 <- gsub('TS-TSB-12', 'TS1', fsumm$treat1)
 fsumm$treat1 <- gsub('TS-Bo', 'TS2', fsumm$treat1)
-
-
 fsumm$treat1 <- gsub('TS-TSB\\+', 'TS3', fsumm$treat1)
 fsumm$treat1 <- gsub('TS-TSB', 'TS1', fsumm$treat1)
 
