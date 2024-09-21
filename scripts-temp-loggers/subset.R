@@ -20,11 +20,22 @@ idat$new.ID <- gsub('24K', '15', idat$new.ID)
 # temperature logger data: 
 tdat <- rbind(t1, t2, t3, t4)
 colnames(tdat)[1] <- 'number'
-colnames(tdat)[2] <- 'time'
-colnames(tdat)[3] <- 'log.temp'
 
-tdat$t.start1 <- as.POSIXct(paste(tdat$time), format = '%d-%m-%Y %H:%M:%S', tz = 'UTC')
+tdat$t.start1 <- as.POSIXct(tdat$date.time, format = '%m-%d-%Y %H:%M:%S')
+tdat$t.start1 <- gsub('0024', '2024', tdat$t.start1)
+tdat$t.start1 <- as.POSIXct(tdat$t.start1)
 
 idat$t.start1 <- round_date(idat$t.start, '10 min')
 
+class(tdat$t.start1)
+class(idat$t.start1)
+ 
 idat <- left_join(idat, tdat, by = 't.start1')
+
+tdat1 <- tdat[tdat$pos == 'out', ]
+colnames(tdat1)[3] <- 'temp.out'
+
+tdat2 <- tdat[tdat$pos == 'in', ]
+colnames(tdat2)[3] <- 'temp.in'
+
+tdat3 <- cbind(tdat1, tdat2)
