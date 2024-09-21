@@ -22,8 +22,8 @@ tdat <- rbind(t1, t2, t3, t4)
 colnames(tdat)[1] <- 'number'
 
 tdat$t.start1 <- as.POSIXct(tdat$date.time, format = '%m-%d-%Y %H:%M:%S')
-tdat$t.start1 <- gsub('0024', '2024', tdat$t.start1)
-tdat$t.start1 <- as.POSIXct(tdat$t.start1)
+# tdat$t.start1 <- gsub('0024', '2024', tdat$t.start1)
+# tdat$t.start1 <- as.POSIXct(tdat$t.start1)
 
 idat$t.start1 <- round_date(idat$t.start, '10 min')
 
