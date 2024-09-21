@@ -12,6 +12,10 @@ isumm1 <- idat[, .(e.cum.final = max(e.cum),
                      e.rel.150 = approx(cta, e.rel, xout = 150)$y
                      ), by = list(trial, new.ID, treat, pmid)]
 
+isumm1 <- isumm1[! isumm1$trial == '24C', ]
+isumm1 <- isumm1[! isumm1$trial == '24N', ]
+isumm1 <- isumm1[! isumm1$trial == '24O', ]
+
 # cumulative emissions for experiments 24C, 24N, 24O as they are not close to 150 h emission: 
 isumm2 <- idat[is.element(idat$exper, c('24C', '24N', '24O')), .(e.cum.final = max(e.cum), 
                   e.rel.final = max(e.rel),
