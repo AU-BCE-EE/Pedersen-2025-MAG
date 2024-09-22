@@ -126,3 +126,29 @@ tuk <- glht(m1, linfct = mcp(treat = 'Tukey'))
 
 summary(tuk)
 cld(tuk)
+
+
+########## stats for trials 1-4 (app tech on grass)
+
+isumm1 <- isumm[isumm$trial == '23C' | isumm$trial == '23D' | isumm$trial == '23G' | isumm$trial == '24M' , ]
+
+# data check
+qqnorm(isumm1$e.rel.150)
+qqline(isumm1$e.rel.150)
+
+#fit a regression model
+m1 <- lmer(e.rel.150 ~ treat + (1|new.ID), data = isumm1)
+
+# residuals 
+res <- resid(m1)
+plot(fitted(m1), res)
+abline(0,0)
+
+# reults 
+summary(m1)
+
+# tuckey's 
+tuk <- glht(m1, linfct = mcp(treat = 'Tukey'))
+
+summary(tuk)
+cld(tuk)
