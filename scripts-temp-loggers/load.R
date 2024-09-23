@@ -17,3 +17,15 @@ t3$date.time <- gsub('2024', '24', t3$date.time)
 t4 <- fread('../data-soil-temp/HOBO_D_spring2024_2.csv')
 t4$log.ID <- 'D'
 t4$date.time <- gsub('2024', '24', t4$date.time)
+
+# New IDs for publicatoin purpose
+IDs <- c(`24M` =  '4',
+         `24J` =  '7',
+         `24L` =  '8',
+         `24H` =  '10', 
+         `24N` =  '11',
+         `24O` =  '12',
+         `24I` =  '14',
+         `24K` =  '15')
+
+pdat[, new.ID := IDs[exper]]
