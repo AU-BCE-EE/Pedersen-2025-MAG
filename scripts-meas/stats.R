@@ -73,8 +73,8 @@ cld(tuk)
 
 ########## stats for trials 5-10 (app tech on winter wheat)
 
-isumm1 <- isumm[isumm$trial == '24C' | isumm$trial == '24D' | isumm$trial == '24J' | isumm$trial == '24L' | isumm$trial == '24B' | 
-                   isumm$trial == '24H', ]
+isumm1 <- isumm[isumm$new.ID == '5' | isumm$new.ID == '6' | isumm$new.ID == '7' | isumm$new.ID == '8' | isumm$new.ID == '9' | 
+                   isumm$new.ID == '10', ]
 isumm1 <- isumm1[! isumm1$treat == 'TH-4', ]
 isumm1 <- isumm1[! isumm1$treat == 'TS-TSB-4', ]
 isumm1$treat <- gsub('TH-12', 'TH', isumm1$treat)
@@ -103,7 +103,7 @@ cld(tuk)
 
 ########## stats for trials 11-12 (app tech on grass)
 
-isumm1 <- isumm[isumm$trial == '24N' | isumm$trial == '24O' , ]
+isumm1 <- isumm[isumm$new.ID == '11' | isumm$new.ID == '12' , ]
 isumm1 <- isumm1[! isumm1$treat == 'TS-TSBacid', ]
 
 # data check
@@ -127,10 +127,8 @@ tuk <- glht(m1, linfct = mcp(treat = 'Tukey'))
 summary(tuk)
 cld(tuk)
 
-
 ########## stats for trials 1-4 (app tech on grass)
-
-isumm1 <- isumm[isumm$trial == '23C' | isumm$trial == '23D' | isumm$trial == '23G' | isumm$trial == '24M' , ]
+isumm1 <- isumm[isumm$new.ID == '1' | isumm$new.ID == '2' | isumm$new.ID == '3' | isumm$new.ID == '4' , ]
 
 # data check
 qqnorm(isumm1$e.rel.150)

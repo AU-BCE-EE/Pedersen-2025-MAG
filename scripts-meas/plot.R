@@ -1,7 +1,7 @@
 # dividing dataframe into treat and prop and adding trial ID's
 
-idat.treat <- idat[is.element(idat$exper, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), ]
-idat.prop <- idat[is.element(idat$exper, c('23H', '23I', '24E', '24F', '24G')), ]
+idat.treat <- idat[is.element(idat$new.ID, c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')), ]
+idat.prop <- idat[is.element(idat$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), ]
 
 fsumm$treat1 <- fsumm$treat
 fsumm$treat1 <- gsub('A acid', 'A Acid', fsumm$treat1)
@@ -20,7 +20,7 @@ fsumm$treat1 <- gsub('TS-Bo', 'TS2', fsumm$treat1)
 fsumm$treat1 <- gsub('TS-TSB\\+', 'TS3', fsumm$treat1)
 fsumm$treat1 <- gsub('TS-TSB', 'TS1', fsumm$treat1)
 
-fsumm.treat <- fsumm[is.element(fsumm$trial, c('23C', '23D', '23G', '24M', '24B', '24C', '24D', '24H', '24J', '24L', '24N', '24O')), ]
+fsumm.treat <- fsumm[is.element(fsumm$new.ID, c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')), ]
 
 fsumm.treat02 <- fsumm.treat[fsumm.treat$new.ID == '5' | fsumm.treat$new.ID == '6' | fsumm.treat$new.ID == '7' | fsumm.treat$new.ID == '8', ]
 ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
@@ -42,7 +42,7 @@ ggsave2x('../plots-meas/NH3.flux01.treat02', height = 4, width = 8)
 # all:
 ggplot(idat, aes(cta, j.NH3, group = pmid, color = treat)) + 
   geom_point() + 
-  facet_wrap(~ trial) +
+  facet_wrap(~ new.ID) +
   theme_bw() + 
   labs(x = 'Time after application (h)', y = expression('NH'[3]~'flux'~('kg N h'^'-1'~ha^'-1'))) + 
   theme(legend.position = 'bottom', legend.title = element_blank()) +
@@ -102,7 +102,7 @@ ggplot(fsumm[fsumm$new.ID == '9' | fsumm$new.ID == '10', ],
 ggsave2x('../plots-meas/NH3.flux.speed', height = 3, width = 7)
 
 
-fsumm.prop <- fsumm[is.element(fsumm$trial, c('23H', '23I', '24E', '24F', '24G')), ]
+fsumm.prop <- fsumm[is.element(fsumm$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), ]
 ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat, fill = treat)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
   facet_wrap(~ new.ID, ncol = 5) +
@@ -117,7 +117,7 @@ ggsave2x('../plots-meas/NH3.flux.prop', height = 4, width = 8)
 # cumulative emission 
 ggplot(isumm, aes(treat, e.rel.150, color = treat)) + 
   geom_point() + 
-  facet_wrap(~ trial, scales = 'free_x') + 
+  facet_wrap(~ new.ID, scales = 'free_x') + 
   theme_bw() + 
   labs(y = 'Loss (% of TAN) h') + 
   theme(legend.title = element_blank()) + 
@@ -129,7 +129,7 @@ ggsave2x('../plots-meas/cum.emis01', height = 10, width = 10)
 ggplot(idat[idat$treat == 'A' & idat$rep == '1' | idat$treat == '2-pos' & idat$rep == '1' | idat$treat == 'TS-TSB-4' & idat$rep == '1' | idat$treat == 'TH' & idat$rep == '1' | idat$treat == 'Un12' & idat$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
   geom_line() + 
-  facet_wrap(~ trial, scales = 'free_x') +
+  facet_wrap(~ new.ID, scales = 'free_x') +
   theme_bw() + 
   labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
