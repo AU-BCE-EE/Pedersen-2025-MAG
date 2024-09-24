@@ -3,22 +3,8 @@
 idat.treat <- idat[is.element(idat$new.ID, c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')), ]
 idat.prop <- idat[is.element(idat$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), ]
 
-fsumm$treat1 <- fsumm$treat
-fsumm$treat1 <- gsub('A acid', 'A Acid', fsumm$treat1)
-fsumm$treat1 <- gsub('A dec', 'A Sep-D', fsumm$treat1)
-fsumm$treat1 <- gsub('A dec acid', 'A Sep-D + acid', fsumm$treat1)
-fsumm$treat1 <- gsub('A dis', 'A Dis', fsumm$treat1)
-fsumm$treat1 <- gsub('A dis acid', 'A Dis + acid', fsumm$treat1)
-fsumm$treat1 <- gsub('A screw', 'A Sep-S', fsumm$treat1)
-fsumm$treat1 <- gsub('B acid', 'B Acid', fsumm$treat1)
-fsumm$treat1 <- gsub('B screw', 'B Sep-S', fsumm$treat1)
-fsumm$treat1 <- gsub('B screw acid', 'B Sep-S + acid', fsumm$treat1)
-fsumm$treat1 <- gsub('C dec', 'C Sep-D', fsumm$treat1)
-fsumm$treat1 <- gsub('TH-12', 'TH', fsumm$treat1)
-fsumm$treat1 <- gsub('TS-TSB-12', 'TS1', fsumm$treat1)
-fsumm$treat1 <- gsub('TS-Bo', 'TS2', fsumm$treat1)
-fsumm$treat1 <- gsub('TS-TSB\\+', 'TS3', fsumm$treat1)
-fsumm$treat1 <- gsub('TS-TSB', 'TS1', fsumm$treat1)
+
+
 
 fsumm.treat <- fsumm[is.element(fsumm$new.ID, c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')), ]
 

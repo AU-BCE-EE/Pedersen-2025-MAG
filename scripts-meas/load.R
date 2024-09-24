@@ -2,7 +2,7 @@
 idat <- fread('../data-emission/data/MAG_interval.csv')
 pdat <- fread('../data-emission/data/MAG_plot.csv')
 
-# New IDs for publication purpose, publication with application technique
+# New IDs for publication purpose
 IDs <- c(`23C` =  '1',
          `23D` =  '2',
          `23G` =  '3',
@@ -25,3 +25,58 @@ IDs <- c(`23C` =  '1',
          `24G` =  'D5')
 
 pdat[, new.ID := IDs[exper]]
+
+
+# New treatment names for publication purpose
+IDs <- c(`A` =  'A',
+         `B` =  'B',
+         `C` =  'C',
+         `D` =  'D',
+         `E` =  'E',
+         `F` =  'F',
+         `G` =  'G',
+         `H` =  'H',
+         `I` =  'I',
+         `J` =  'J',
+         `K` =  'K',
+         `L` =  'L',
+         `H` =  'H',
+         `Un12` =  'Un12',
+         `Un25` =  'UN25',
+         `Un30` =  'Un30',
+         `Sep25` =  'Sep25',
+         `Sep30` =  'Sep30',
+         `Cattle A` =  'Cattle A',
+         `Pig A` =  'Pig A',
+         `Cattle B` =  'Cattle B',
+         `Pig B` =  'Pig B',
+         `Cattle C` =  'Cattle C',
+         `Pig C` =  'Pig C',
+         `A MF liquid` =  'A MF liquid',
+         `A MF slurry` =  'A MF slurry',
+         `A acid` =  'A Acid',
+         `A dec` =  'A Sep-D',
+         `A dec acid` =  'A Sep-D + acid',
+         `A dis` =  'A Dis',
+         `A dis acid` =  'A Dis + acid',
+         `A screw` =  'A Sep-S',
+         `B acid` =  'B Acid',
+         `B screw` =  'B Sep-S',
+         `B screw acid` =  'B Sep-S + acid',
+         `C dec` =  'C Sep-D', 
+         `H acid` =  'H Acid',
+         `TH-12` =  'TH',
+         `TS-TSB-12` =  'TS1',
+         `TH-4` =  'TH-4',
+         `TS-TSB-4` =  'TS1-4',
+         `TS-Bo` =  'TS2',
+         `TS-TSB\\+` =  'TS3',
+         `TS-TSB` =  'TS1',
+         `TS-TSBacid` =  'TS1 + acid',
+         `TH` =  'TH',
+         `OSI` =  'OSI', 
+         `7-pos` =  '7-Pos',
+         `2-pos` =  '2-Pos',
+         `No` =  'No')
+
+pdat[, treat1 := IDs[treat]]
