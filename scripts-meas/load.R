@@ -70,7 +70,7 @@ IDs <- c(`A` =  'A',
          `TH-4` =  'TH-4',
          `TS-TSB-4` =  'TS1-4',
          `TS-Bo` =  'TS2',
-         `TS-TSB\\+` =  'TS3',
+         `TS-TSB+` =  'TS3',
          `TS-TSB` =  'TS1',
          `TS-TSBacid` =  'TS1 + acid',
          `TH` =  'TH',
@@ -80,3 +80,4 @@ IDs <- c(`A` =  'A',
          `No` =  'No')
 
 pdat[, treat1 := IDs[treat]]
+
