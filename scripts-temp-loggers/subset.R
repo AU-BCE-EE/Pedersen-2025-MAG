@@ -5,14 +5,15 @@ idat <- merge(pdat, idat, by = c('pid', 'pmid'))
 tdat <- rbind(t1, t2, t3, t4)
 colnames(tdat)[1] <- 'number'
 
-tdat$t.start1 <- as.POSIXct(tdat$date.time, format = '%m-%d-%Y %H:%M:%S', tz = 'UTC')
+tdat$t.start1 <- as.POSIXct(tdat$date.time, format = '%m-%d-%y %H:%M:%S', tz = 'UTC')
 
-idat$t.start1 <- round_date(idat$t.start, '10 min', tz = 'UTC')
+idat$t.start1 <- as.POSIXct(round_date(idat$t.start, '10 min'), tz = 'UTC')
 
-class(tdat$t.start1)
-class(idat$t.start1)
- 
 idat <- left_join(idat, tdat, by = 't.start1')
+# Simpler (?) alterntives below
+#idat <- merge(idat, tdat, by = 't.start1')
+#idat <- merge(idat, tdat, by = 't.start1', all.x = TRUE)
+#idat <- merge(idat, tdat, by = 't.start1', all = TRUE)
 
 tdat1 <- tdat[tdat$pos == 'out', ]
 colnames(tdat1)[3] <- 'temp.out'
