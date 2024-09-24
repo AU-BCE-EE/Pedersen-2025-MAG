@@ -16,9 +16,12 @@ idat <- left_join(idat, tdat, by = 't.start1')
 #idat <- merge(idat, tdat, by = 't.start1', all = TRUE)
 
 tdat1 <- tdat[tdat$pos == 'out', ]
+colnames(tdat2)
 colnames(tdat1)[3] <- 'temp.out'
 
+
 tdat2 <- tdat[tdat$pos == 'in', ]
+colnames(tdat2)
 colnames(tdat2)[3] <- 'temp.in'
 
 tdat3 <- cbind(tdat1, tdat2)
