@@ -18,43 +18,92 @@ ggplot(idat, aes(cta, j.NH3, group = pmid, color = treat1)) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux01', height = 10, width = 10)
 
+
 fsumm.treat01 <- fsumm.treat[fsumm.treat$new.ID == '1' | fsumm.treat$new.ID == '2' | fsumm.treat$new.ID == '3' | fsumm.treat$new.ID == '4', ]
-ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+fsumm.treat01 <- fsumm.treat01[! c(fsumm.treat01$new.ID == '3' & fsumm.treat01$treat1 == 'B Sep-S'), ]
+f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
+  guides(colour = guide_legend(nrow = 2,byrow = TRUE)) + 
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux.treat01', height = 4, width = 8)
+# ggsave2x('../plots-meas/NH3.flux.treat01', height = 4, width = 8)
+
+f11 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID, ncol = 4) +
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  guides(colour = guide_legend(nrow = 2,byrow = TRUE)) + 
+  xlim(NA, 50)
 
 fsumm.treat02 <- fsumm.treat[fsumm.treat$new.ID == '5' | fsumm.treat$new.ID == '6' | fsumm.treat$new.ID == '7' | fsumm.treat$new.ID == '8', ]
-ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+f2 <- ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
-  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  theme(legend.position = 'bottom', legend.title = element_blank()) + 
+  ylim(NA, 0.025) + 
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux01.treat02', height = 4, width = 8)
+# ggsave2x('../plots-meas/NH3.flux.treat02', height = 3.5, width = 8)
 
+f22 <- ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID, ncol = 4) +
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) + 
+  ylim(NA, 0.025) + 
+  xlim(NA, 50)
 
 fsumm.treat03 <- fsumm.treat[fsumm.treat$new.ID == '9' | fsumm.treat$new.ID == '10' | fsumm.treat$new.ID == '11' | fsumm.treat$new.ID == '12', ]
 fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TH-4', ]
 fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TS1-4', ]
 fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TS1 + acid', ]
-ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+f3 <- ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
+  ylim(NA, 0.075) +
   xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux.treat03', height = 4, width = 8)
+# ggsave2x('../plots-meas/NH3.flux.treat03', height = 3.5, width = 8)
 
+f33 <- ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID, ncol = 4) +
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  ylim(NA, 0.075) +
+  xlim(NA, 50)
+
+mat <- matrix(c(1, 
+                2,
+                3),
+              ncol = 1)
+
+pff <- grid.arrange(f1, f2, f3, layout_matrix = mat)
+ggsave2x('../plots-meas/NH3.flux.comm.150', plot = pff, height = 11, width = 8)
+
+mat <- matrix(c(1, 
+                2,
+                3),
+              ncol = 1)
+
+pfff <- grid.arrange(f11, f22, f33, layout_matrix = mat)
+ggsave2x('../plots-meas/NH3.flux.comm.50', plot = pfff, height = 11, width = 8)
 
 ggplot(fsumm[fsumm$new.ID == '15', ], aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
