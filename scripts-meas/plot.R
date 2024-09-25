@@ -18,7 +18,6 @@ ggplot(idat, aes(cta, j.NH3, group = pmid, color = treat1)) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux01', height = 10, width = 10)
 
-
 fsumm.treat01 <- fsumm.treat[fsumm.treat$new.ID == '1' | fsumm.treat$new.ID == '2' | fsumm.treat$new.ID == '3' | fsumm.treat$new.ID == '4', ]
 fsumm.treat01 <- fsumm.treat01[! c(fsumm.treat01$new.ID == '3' & fsumm.treat01$treat1 == 'B Sep-S'), ]
 f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
@@ -138,6 +137,20 @@ ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux.prop', height = 4, width = 8)
+
+
+# cumulative loss for trial 11 + 12
+idat11.12 <- idat[idat$new.ID == '11' | idat$new.ID == '12', ]
+idat11.12 <- idat11.12[!idat11.12$treat1 == 'TS1 + acid', ]
+ggplot(idat11.12, aes(cta, e.cum, group = pmid, color = treat1)) +
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID) +
+  theme_bw() +
+  labs(x = 'Time after application (h)', y = 'Loss (%TAN)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  xlim(NA, 85)
+ggsave2x('../plots-meas/NH3.flux.trial12', height = 3, width = 7)
+
 
 
 # cumulative emission 
