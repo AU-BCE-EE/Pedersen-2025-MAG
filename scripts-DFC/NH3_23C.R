@@ -170,4 +170,4 @@ dat$air.height <- '2'
 
 dat.table <- dat[, c(46:65)]
 
-# write.xlsx(dat.table, file = '../ALFAM2 submission/dat_22C.xlsx')
+# write.xlsx(dat.table, file = '../ALFAM2 submission/dat_22C.xlsx') #test
