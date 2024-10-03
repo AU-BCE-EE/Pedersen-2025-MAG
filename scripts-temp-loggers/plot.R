@@ -1,5 +1,10 @@
-
-
-ggplot(tdat, aes(number, temp, color = pos)) + geom_line()
-
-ggplot(tdat3, aes(temp.in, temp.out)) + geom_point()
+# 
+# 
+# ggplot(tdat, aes(date.time, temp, color = pos)) + geom_line(aes(group = log.ID))
+# 
+# 
+# 
+# 
+# ggplot(ndat, aes(temp, air.temp)) + geom_point() 
+# 
+# ggplot(ndat, aes(date.time, temp, color = pos)) + geom_line()

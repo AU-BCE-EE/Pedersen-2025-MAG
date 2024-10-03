@@ -1,27 +1,37 @@
 # Merge in plot level variables
 idat <- merge(pdat, idat, by = c('pid', 'pmid'))
+idat <- idat[! idat$new.ID == 'NA', ]
+
+ndat <- subset(idat, select = c('t.start', 'air.temp'))
+ndat$pos <- 'ambient'
+colnames(ndat)[2] <- 'temp'
 
 # temperature logger data: 
 tdat <- rbind(t1, t2, t3, t4)
-colnames(tdat)[1] <- 'number'
-
-tdat$t.start1 <- as.POSIXct(tdat$date.time, format = '%m-%d-%y %H:%M:%S', tz = 'UTC')
-
-idat$t.start1 <- as.POSIXct(round_date(idat$t.start, '10 min'), tz = 'UTC')
-
-idat <- left_join(idat, tdat, by = 't.start1')
-# Simpler (?) alterntives below
-#idat <- merge(idat, tdat, by = 't.start1')
-#idat <- merge(idat, tdat, by = 't.start1', all.x = TRUE)
-#idat <- merge(idat, tdat, by = 't.start1', all = TRUE)
-
-tdat1 <- tdat[tdat$pos == 'out', ]
-colnames(tdat2)
-colnames(tdat1)[3] <- 'temp.out'
+tdat$t.start <- as.POSIXct(tdat$date.time, format = '%m-%d-%Y %H:%M:%S', tz = 'UTC')
+# tdat <- tdat[, c('temp', 'pos', 't.start')]
 
 
-tdat2 <- tdat[tdat$pos == 'in', ]
-colnames(tdat2)
-colnames(tdat2)[3] <- 'temp.in'
+ggplot(ndat, aes(t.start, temp)) + geom_point()
 
-tdat3 <- cbind(tdat1, tdat2)
+ggplot(tdat, aes(t.start, temp)) + geom_point()
+
+
+test <- rbind(tdat, ndat)
+ggplot(test, aes(t.start, temp, color = 'pos')) + geom_point() 
+
+
+
+# idat$t.start1 <- as.POSIXct(round_date(idat$t.start, '10 min'), tz = 'UTC')
+# 
+# ndat <- merge(idat, tdat, by = 't.start1')
+# 
+# 
+# 
+# tdat1 <- tdat[tdat$pos == 'out', ]
+# colnames(tdat1) <- paste('o', colnames(tdat1), sep = '.')
+# 
+# tdat2 <- tdat[tdat$pos == 'in', ]
+# colnames(tdat2) <- paste('i', colnames(tdat2), sep = '.')
+# 
+# tdat3 <- cbind(tdat1, tdat2)
