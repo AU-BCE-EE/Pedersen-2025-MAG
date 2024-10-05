@@ -4,13 +4,14 @@ idat <- idat[! idat$new.ID == 'NA', ]
 
 ndat <- subset(idat, select = c('t.start', 'air.temp'))
 ndat$pos <- 'ambient'
+ndat$log.ID <- 'ambient'
 colnames(ndat)[2] <- 'temp'
 
 # temperature logger data: 
 tdat <- rbind(t1, t2, t3, t4)
 
 # Date problem: some as dd-mm-yy and some mm-dd-yyyy
-# Luckily they can be told apart by number of year digits! (Otherwise, it's back to the source to correct.)
+# Luckily they can be told apart by number of year digits
 # Correct by identifying which rows have which by date length, correct, then convert separately
 tdat[, date := substr(date.time, 1, 10)]
 tdat[, date := gsub(' [0-9]$', '', date)]
@@ -25,29 +26,20 @@ tdat[date.len == 10, t.start := as.POSIXct(date.time, format = '%m-%d-%Y %H:%M:%
 # Check for missing dates
 if (any(is.na(tdat$t.start))) stop('Date problem')
 
-#ggplot(tdat, aes(t.start, temp, colour = log.ID)) + geom_line()
+tdat <- subset(tdat, select = c('t.start', 'temp', 'pos', 'log.ID'))
 
+# dataframe for plotting time vs temp
+d1 <- rbind(tdat, ndat)
 
-ggplot(ndat, aes(t.start, temp)) + geom_point()
+# dataframe for plotting ambient vs in vs out temperatures 
+tdat$t.start <- as.POSIXct(round_date(tdat$t.start, '10 min'), tz = 'UTC')
+tdatO <- tdat[tdat$pos == 'out', ]
+colnames(tdatO)[2:4] <- paste('O', colnames(tdatO)[2:4], sep = '.')
+tdatI <- tdat[tdat$pos == 'in', ]
+colnames(tdatI)[2:4] <- paste('I', colnames(tdatI)[2:4], sep = '.')
 
-ggplot(tdat, aes(t.start, temp)) + geom_point()
+ndat$t.start <- as.POSIXct(round_date(ndat$t.start, '10 min'), tz = 'UTC')
 
+d2 <- merge(tdatI, tdatO, by = 't.start')
+d2 <- merge(d2, ndat, by = 't.start')
 
-test <- rbind(tdat, ndat)
-ggplot(test, aes(t.start, temp, color = 'pos')) + geom_point() 
-
-
-
-# idat$t.start1 <- as.POSIXct(round_date(idat$t.start, '10 min'), tz = 'UTC')
-# 
-# ndat <- merge(idat, tdat, by = 't.start1')
-# 
-# 
-# 
-# tdat1 <- tdat[tdat$pos == 'out', ]
-# colnames(tdat1) <- paste('o', colnames(tdat1), sep = '.')
-# 
-# tdat2 <- tdat[tdat$pos == 'in', ]
-# colnames(tdat2) <- paste('i', colnames(tdat2), sep = '.')
-# 
-# tdat3 <- cbind(tdat1, tdat2)
