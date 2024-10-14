@@ -1,0 +1,108 @@
+---
+title: 'Linear model analysis for temperature difference size'
+output: pdf_document
+author: 
+date: "`r Sys.time()`"
+---
+
+```{r}
+library(viridisLite)
+```
+
+Temperature difference.
+
+```{r}
+d2$dtemp <- d2$Itemp - d2$Otemp
+```
+
+```{r}
+fit1 <- lm(Itemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3), data = d2)
+fit2 <- lm(dtemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3), data = d2)
+```
+
+Check results
+
+```{r}
+summary(fit1)
+summary(fit2)
+```
+
+Temperature difference model is better--lower residual standard error.
+(R-squared is lower but that is just because we have already removed a lot of the variation by calculating a difference.)
+
+Let's generate scaled predictor variables for standardized coefficients (relative to 1 standard deviation of predictor variable).
+This will show which predictors are the most important compared to how much they vary.
+
+```{r}
+fit3 <- lm(dtemp ~ poly(scale(glorad), 3) + poly(scale(Otemp), 3) + poly(scale(wv2), 3), data = d2)
+```
+
+```{r}
+summary(fit3)
+```
+
+It looks like temperature (`Otemp`) is the most important.
+Is that supported by the measurements?
+
+```{r}
+pairs(d2[, .(Otemp, glorad, wv2, dtemp)])
+```
+
+Seem so, yes.
+
+Let's see how much worse the model is without the other two.
+
+```{r}
+fit4 <- lm(dtemp ~ poly(Otemp, 3), data = d2)
+```
+
+```{r}
+summary(fit4)
+```
+
+It is almost the same as 2.
+So effects of radiation and wind look small, surprisingly.
+
+Generate predictions for plotting.
+
+```{r}
+d2$Itemp.pred <- predict(fit1)
+d2$dtemp.pred2 <- predict(fit2)
+d2$dtemp.pred4 <- predict(fit4)
+```
+
+And take a look.
+
+```{r}
+ggplot(d2, aes(Otemp, dtemp, colour = glorad)) + 
+  geom_line(aes(Otemp, dtemp.pred2), colour = 'blue') + 
+  geom_line(aes(Otemp, dtemp.pred4), colour = 'red') + 
+  geom_point() + 
+  scale_color_viridis_c(option = 'magma') +
+  theme_bw() +
+  xlab('Ambient soil surface temperature (C)') + ylab('DFC soil surface temperature (C)')
+```
+
+So, temperature alone indeed does as well as the most complete model.
+But both miss a lot of the variation.
+How about effects of earlier weather?
+For that we need to add lagged predictor variables.
+
+```{r}
+d2[, etime := as.numeric(difftime(t.start, min(t.start), units = 'hours'))]
+d2
+head(table(d2$etime))
+tail(table(d2$etime))
+```
+
+Hmm, why do we have multiple observations for each unique value?
+Oh, were there 7 different DFCs?
+In that case we need a DFC ID/key in this data frame.
+
+```{r}
+names(d2)
+```
+
+
+
+
