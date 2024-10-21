@@ -1,0 +1,417 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Linear model analysis for temperature difference size},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Linear model analysis for temperature difference size}
+\author{}
+\date{\vspace{-2.5em}2024-10-21 12:35:23.673092}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(viridisLite)}
+\end{Highlighting}
+\end{Shaded}
+
+Temperature difference.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d2}\SpecialCharTok{$}\NormalTok{dtemp }\OtherTok{\textless{}{-}}\NormalTok{ d2}\SpecialCharTok{$}\NormalTok{Itemp }\SpecialCharTok{{-}}\NormalTok{ d2}\SpecialCharTok{$}\NormalTok{Otemp}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Itemp }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(glorad, }\DecValTok{3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(Otemp, }\DecValTok{3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(wv2, }\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d2)}
+\NormalTok{fit2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(dtemp }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(glorad, }\DecValTok{3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(Otemp, }\DecValTok{3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(wv2, }\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d2)}
+\end{Highlighting}
+\end{Shaded}
+
+Check results
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(fit1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Itemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 
+##     3), data = d2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.8227 -0.5742  0.0287  0.5749  7.5529 
+## 
+## Coefficients:
+##                   Estimate Std. Error  t value Pr(>|t|)    
+## (Intercept)       15.07577    0.01404 1073.801  < 2e-16 ***
+## poly(glorad, 3)1  47.94051    1.59253   30.103  < 2e-16 ***
+## poly(glorad, 3)2  -6.16850    1.24507   -4.954 7.42e-07 ***
+## poly(glorad, 3)3   5.05989    1.21319    4.171 3.07e-05 ***
+## poly(Otemp, 3)1  472.01562    1.38080  341.841  < 2e-16 ***
+## poly(Otemp, 3)2   62.94090    1.23672   50.894  < 2e-16 ***
+## poly(Otemp, 3)3   37.86700    1.22338   30.953  < 2e-16 ***
+## poly(wv2, 3)1     -0.85992    1.41834   -0.606 0.544345    
+## poly(wv2, 3)2     -1.13793    1.25875   -0.904 0.366016    
+## poly(wv2, 3)3     -4.73877    1.22117   -3.881 0.000105 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.195 on 7230 degrees of freedom
+## Multiple R-squared:  0.9607, Adjusted R-squared:  0.9606 
+## F-statistic: 1.963e+04 on 9 and 7230 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(fit2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = dtemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 
+##     3), data = d2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.8227 -0.5742  0.0287  0.5749  7.5529 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)       1.11794    0.01404  79.627  < 2e-16 ***
+## poly(glorad, 3)1 47.94051    1.59253  30.103  < 2e-16 ***
+## poly(glorad, 3)2 -6.16850    1.24507  -4.954 7.42e-07 ***
+## poly(glorad, 3)3  5.05989    1.21319   4.171 3.07e-05 ***
+## poly(Otemp, 3)1  80.78311    1.38080  58.504  < 2e-16 ***
+## poly(Otemp, 3)2  62.94090    1.23672  50.894  < 2e-16 ***
+## poly(Otemp, 3)3  37.86700    1.22338  30.953  < 2e-16 ***
+## poly(wv2, 3)1    -0.85992    1.41834  -0.606 0.544345    
+## poly(wv2, 3)2    -1.13793    1.25875  -0.904 0.366016    
+## poly(wv2, 3)3    -4.73877    1.22117  -3.881 0.000105 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.195 on 7230 degrees of freedom
+## Multiple R-squared:  0.6411, Adjusted R-squared:  0.6406 
+## F-statistic:  1435 on 9 and 7230 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+Temperature difference model is better--lower residual standard error.
+(R-squared is lower but that is just because we have already removed a
+lot of the variation by calculating a difference.)
+
+Let's generate scaled predictor variables for standardized coefficients
+(relative to 1 standard deviation of predictor variable). This will show
+which predictors are the most important compared to how much they vary.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(dtemp }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(}\FunctionTok{scale}\NormalTok{(glorad), }\DecValTok{3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(}\FunctionTok{scale}\NormalTok{(Otemp), }\DecValTok{3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(}\FunctionTok{scale}\NormalTok{(wv2), }\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(fit3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = dtemp ~ poly(scale(glorad), 3) + poly(scale(Otemp), 
+##     3) + poly(scale(wv2), 3), data = d2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.8227 -0.5742  0.0287  0.5749  7.5529 
+## 
+## Coefficients:
+##                         Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)              1.11794    0.01404  79.627  < 2e-16 ***
+## poly(scale(glorad), 3)1 47.94051    1.59253  30.103  < 2e-16 ***
+## poly(scale(glorad), 3)2 -6.16850    1.24507  -4.954 7.42e-07 ***
+## poly(scale(glorad), 3)3  5.05989    1.21319   4.171 3.07e-05 ***
+## poly(scale(Otemp), 3)1  80.78311    1.38080  58.504  < 2e-16 ***
+## poly(scale(Otemp), 3)2  62.94090    1.23672  50.894  < 2e-16 ***
+## poly(scale(Otemp), 3)3  37.86700    1.22338  30.953  < 2e-16 ***
+## poly(scale(wv2), 3)1    -0.85992    1.41834  -0.606 0.544345    
+## poly(scale(wv2), 3)2    -1.13793    1.25875  -0.904 0.366016    
+## poly(scale(wv2), 3)3    -4.73877    1.22117  -3.881 0.000105 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.195 on 7230 degrees of freedom
+## Multiple R-squared:  0.6411, Adjusted R-squared:  0.6406 
+## F-statistic:  1435 on 9 and 7230 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+It looks like temperature (\texttt{Otemp}) is the most important. Is
+that supported by the measurements?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pairs}\NormalTok{(d2[, .(Otemp, glorad, wv2, dtemp)])}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/au583430/OneDrive - Aarhus universitet/Documents/GitHub/Pedersen-2024-MAG/stats-temp/temp_stats_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+Seem so, yes.
+
+Let's see how much worse the model is without the other two.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit4 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(dtemp }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(Otemp, }\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(fit4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = dtemp ~ poly(Otemp, 3), data = d2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.2102 -0.7387 -0.0205  0.5493  7.8603 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)       1.11794    0.01519   73.60   <2e-16 ***
+## poly(Otemp, 3)1 103.12430    1.29249   79.79   <2e-16 ***
+## poly(Otemp, 3)2  69.13284    1.29249   53.49   <2e-16 ***
+## poly(Otemp, 3)3  35.25896    1.29249   27.28   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.292 on 7236 degrees of freedom
+## Multiple R-squared:  0.5795, Adjusted R-squared:  0.5793 
+## F-statistic:  3324 on 3 and 7236 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+It is almost the same as 2. So effects of radiation and wind look small,
+surprisingly.
+
+Generate predictions for plotting.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d2}\SpecialCharTok{$}\NormalTok{Itemp.pred }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(fit1)}
+\NormalTok{d2}\SpecialCharTok{$}\NormalTok{dtemp.pred2 }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(fit2)}
+\NormalTok{d2}\SpecialCharTok{$}\NormalTok{dtemp.pred4 }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(fit4)}
+\end{Highlighting}
+\end{Shaded}
+
+And take a look.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(d2, }\FunctionTok{aes}\NormalTok{(Otemp, dtemp, }\AttributeTok{colour =}\NormalTok{ glorad)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(Otemp, dtemp.pred2), }\AttributeTok{colour =} \StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(Otemp, dtemp.pred4), }\AttributeTok{colour =} \StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{scale\_color\_viridis\_c}\NormalTok{(}\AttributeTok{option =} \StringTok{\textquotesingle{}magma\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{\textquotesingle{}Ambient soil surface temperature (C)\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{ylab}\NormalTok{(}\StringTok{\textquotesingle{}DFC soil surface temperature (C)\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/au583430/OneDrive - Aarhus universitet/Documents/GitHub/Pedersen-2024-MAG/stats-temp/temp_stats_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+So, temperature alone indeed does as well as the most complete model.
+But both miss a lot of the variation. How about effects of earlier
+weather? For that we need to add lagged predictor variables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d2[, etime }\SpecialCharTok{:=} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{difftime}\NormalTok{(t.start, }\FunctionTok{min}\NormalTok{(t.start), }\AttributeTok{units =} \StringTok{\textquotesingle{}hours\textquotesingle{}}\NormalTok{))]}
+\NormalTok{d2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                   t.start pos.x    Itemp pos.y     Otemp temp       date     time prec surfwet glorad metp megrtp mesotp10 mesotp30 meanrh
+##    1: 2024-04-24 19:00:00    in  7.11750   out  6.239167  5.5 2024-04-24 19:00:00  0.0       0    7.1  5.2    4.9      7.4      7.0   86.4
+##    2: 2024-04-24 19:00:00    in  7.11750   out  6.239167  5.5 2024-04-24 19:00:00  0.0       0    7.1  5.2    4.9      7.4      7.0   86.4
+##    3: 2024-04-24 19:00:00    in  7.11750   out  6.239167  5.5 2024-04-24 19:00:00  0.0       0    7.1  5.2    4.9      7.4      7.0   86.4
+##    4: 2024-04-24 19:00:00    in  7.11750   out  6.239167  5.5 2024-04-24 19:00:00  0.0       0    7.1  5.2    4.9      7.4      7.0   86.4
+##    5: 2024-04-24 19:00:00    in  7.11750   out  6.239167  5.5 2024-04-24 19:00:00  0.0       0    7.1  5.2    4.9      7.4      7.0   86.4
+##   ---                                                                                                                                     
+## 7236: 2024-07-05 05:00:00    in 11.22333   out 11.042500 11.8 2024-07-05 05:00:00  0.3       0  120.6  9.6    9.4     14.3     14.9   91.3
+## 7237: 2024-07-05 05:00:00    in 11.22333   out 11.042500 11.8 2024-07-05 05:00:00  0.3       0  120.6  9.6    9.4     14.3     14.9   91.3
+## 7238: 2024-07-05 05:00:00    in 11.22333   out 11.042500 11.8 2024-07-05 05:00:00  0.3       0  120.6  9.6    9.4     14.3     14.9   91.3
+## 7239: 2024-07-05 05:00:00    in 11.22333   out 11.042500 11.8 2024-07-05 05:00:00  0.3       0  120.6  9.6    9.4     14.3     14.9   91.3
+## 7240: 2024-07-05 05:00:00    in 11.22333   out 11.042500 11.8 2024-07-05 05:00:00  0.3       0  120.6  9.6    9.4     14.3     14.9   91.3
+##       meanwd meanwv   wd2 wv2  pres netrad heatflux     dtemp Itemp.pred dtemp.pred2 dtemp.pred4 etime
+##    1:  234.1      0 234.1 0.0 997.5  -19.7        8 0.8783333   6.337001  0.09783421   0.2499027     0
+##    2:  234.1      0 234.1 0.0 997.5  -19.7        8 0.8783333   6.337001  0.09783421   0.2499027     0
+##    3:  234.1      0 234.1 0.0 997.5  -19.7        8 0.8783333   6.337001  0.09783421   0.2499027     0
+##    4:  234.1      0 234.1 0.0 997.5  -19.7        8 0.8783333   6.337001  0.09783421   0.2499027     0
+##    5:  234.1      0 234.1 0.0 997.5  -19.7        8 0.8783333   6.337001  0.09783421   0.2499027     0
+##   ---                                                                                                 
+## 7236:  194.8      0 194.8 2.5 991.5   27.7      -10 0.1808333  11.574261  0.53176128   0.3800066  1714
+## 7237:  194.8      0 194.8 2.5 991.5   27.7      -10 0.1808333  11.574261  0.53176128   0.3800066  1714
+## 7238:  194.8      0 194.8 2.5 991.5   27.7      -10 0.1808333  11.574261  0.53176128   0.3800066  1714
+## 7239:  194.8      0 194.8 2.5 991.5   27.7      -10 0.1808333  11.574261  0.53176128   0.3800066  1714
+## 7240:  194.8      0 194.8 2.5 991.5   27.7      -10 0.1808333  11.574261  0.53176128   0.3800066  1714
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(}\FunctionTok{table}\NormalTok{(d2}\SpecialCharTok{$}\NormalTok{etime))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## 0 1 2 3 4 5 
+## 5 7 6 7 6 6
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tail}\NormalTok{(}\FunctionTok{table}\NormalTok{(d2}\SpecialCharTok{$}\NormalTok{etime))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## 1709 1710 1711 1712 1713 1714 
+##    7    5    7    6    7    6
+\end{verbatim}
+
+Hmm, why do we have multiple observations for each unique value? Oh,
+were there 7 different DFCs? In that case we need a DFC ID/key in this
+data frame.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(d2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "t.start"     "pos.x"       "Itemp"       "pos.y"       "Otemp"       "temp"        "date"        "time"        "prec"        "surfwet"    
+## [11] "glorad"      "metp"        "megrtp"      "mesotp10"    "mesotp30"    "meanrh"      "meanwd"      "meanwv"      "wd2"         "wv2"        
+## [21] "pres"        "netrad"      "heatflux"    "dtemp"       "Itemp.pred"  "dtemp.pred2" "dtemp.pred4" "etime"
+\end{verbatim}
+
+\end{document}
