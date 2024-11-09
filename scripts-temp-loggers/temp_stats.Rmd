@@ -92,6 +92,7 @@ Try previous hour.
 ```{r}
 wthr <- unique(d2[, .(t.start, Otemp, glorad, wv2)])
 wthr[, t.start := t.start - 3600]
+d2.orig <- d2
 d2 <- merge(d2, wthr, by = 't.start', suffixes = c('', '.lag1'))
 wthr[, t.start := t.start - 3600]
 d2 <- merge(d2, wthr, by = 't.start', suffixes = c('', '.lag2'))
@@ -142,5 +143,14 @@ newdat[dtemp.pred5 > 3, ]
 newdat[dtemp.pred5 > 5, ]
 newdat[dtemp.pred5 > 8, ]
 ```
+
+How common were the high temperatures and temperature differences?
+
+```{r}
+quantile(d2.orig$Otemp)
+quantile(d2.orig$dtemp)
+```
+
+
 
 
