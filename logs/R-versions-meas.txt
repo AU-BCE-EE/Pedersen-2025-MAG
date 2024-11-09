@@ -1,23 +1,35 @@
-R version 4.3.1 (2023-06-16 ucrt)
-Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 11 x64 (build 22631)
+R version 4.4.2 (2024-10-31)
+Platform: x86_64-pc-linux-gnu
+Running under: Ubuntu 24.04.1 LTS
 
 Matrix products: default
-
+BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.12.0 
+LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.12.0
 
 locale:
-[1] LC_COLLATE=Danish_Denmark.utf8  LC_CTYPE=Danish_Denmark.utf8    LC_MONETARY=Danish_Denmark.utf8 LC_NUMERIC=C                    LC_TIME=Danish_Denmark.utf8    
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
-time zone: Europe/Copenhagen
-tzcode source: internal
+time zone: America/New_York
+tzcode source: system (glibc)
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] gridExtra_2.3     lme4_1.1-35.5     Matrix_1.5-4.1    multcomp_1.4-25   TH.data_1.1-2     MASS_7.3-60       survival_3.5-5    mvtnorm_1.2-3     data.table_1.14.8 ggplot2_3.4.3    
+[1] viridisLite_0.4.2 rmarkdown_2.28    dplyr_1.1.4       lubridate_1.9.3  
+[5] data.table_1.16.2 ggplot2_3.5.1     nvimcom_0.9.52   
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.3      dplyr_1.1.2       compiler_4.3.1    tidyselect_1.2.0  Rcpp_1.0.12       splines_4.3.1     scales_1.2.1      boot_1.3-28.1     lattice_0.21-8    R6_2.5.1          labeling_0.4.2    generics_0.1.3    tibble_3.2.1     
-[14] nloptr_2.0.3      munsell_0.5.0     minqa_1.2.5       pillar_1.9.0      rlang_1.1.1       utf8_1.2.3        cli_3.6.1         withr_2.5.0       magrittr_2.0.3    grid_4.3.1        rstudioapi_0.15.0 sandwich_3.0-2    lifecycle_1.0.3  
-[27] nlme_3.1-166      vctrs_0.6.3       glue_1.6.2        farver_2.1.1      codetools_0.2-19  zoo_1.8-12        fansi_1.0.4       colorspace_2.1-0  tools_4.3.1       pkgconfig_2.0.3  
+ [1] vctrs_0.6.5       knitr_1.48        cli_3.6.3         xfun_0.48        
+ [5] rlang_1.1.4       generics_0.1.3    labeling_0.4.3    glue_1.8.0       
+ [9] isoband_0.2.7     colorspace_2.1-1  htmltools_0.5.8.1 scales_1.3.0     
+[13] fansi_1.0.6       grid_4.4.2        munsell_0.5.1     evaluate_1.0.1   
+[17] tibble_3.2.1      fastmap_1.2.0     lifecycle_1.0.4   compiler_4.4.2   
+[21] timechange_0.3.0  pkgconfig_2.0.3   farver_2.1.2      digest_0.6.37    
+[25] R6_2.5.1          tidyselect_1.2.1  utf8_1.2.4        pillar_1.9.0     
+[29] magrittr_2.0.3    tools_4.4.2       withr_3.0.2       gtable_0.3.6     
