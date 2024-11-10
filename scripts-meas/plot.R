@@ -158,7 +158,7 @@ ggplot(isumm, aes(treat1, e.rel.150, color = treat1)) +
   geom_point() + 
   facet_wrap(~ new.ID, scales = 'free_x') + 
   theme_bw() + 
-  labs(y = 'Loss (% of TAN) h') + 
+  labs(y = 'Loss (fraktion of TAN)') + 
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esumm, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE)
 ggsave2x('../plots-meas/cum.emis01', height = 10, width = 10)
@@ -169,10 +169,10 @@ ggplot(isummMac, aes(treat1, e.rel.150, color = treat1)) +
   geom_point() + 
   facet_wrap(~ new.ID, scales = 'free_x') + 
   theme_bw() + 
-  labs(y = 'Loss (% of TAN) h') + 
+  labs(y = 'Loss (fraktion of TAN)') + 
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esummMac, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE)
-ggsave2x('../plots-meas/cum.emis.Machine', height = 5, width = 5)
+ggsave2x('../plots-meas/cum.emis.Machine', height = 5, width = 8)
 
 isummMan <- isumm[isumm$new.ID == '1' | isumm$new.ID == '2', ]
 esummMan <- esumm[esumm$new.ID == '1' | esumm$new.ID == '2', ]
@@ -180,10 +180,10 @@ ggplot(isummMan, aes(treat1, e.rel.150, color = treat1)) +
   geom_point() + 
   facet_wrap(~ new.ID, scales = 'free_x') + 
   theme_bw() + 
-  labs(y = 'Loss (% of TAN) h') + 
+  labs(y = 'fraktion (% of TAN)') + 
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esummMan, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE)
-ggsave2x('../plots-meas/cum.emis.Manual', height = 5, width = 5)
+ggsave2x('../plots-meas/cum.emis.Manual', height = 5, width = 8)
 
 
 # temperature

@@ -87,20 +87,68 @@ So, temperature alone indeed does as well as the most complete model.
 But both miss a lot of the variation.
 How about effects of earlier weather?
 For that we need to add lagged predictor variables.
+Try previous hour.
 
 ```{r}
-d2[, etime := as.numeric(difftime(t.start, min(t.start), units = 'hours'))]
-d2
-head(table(d2$etime))
-tail(table(d2$etime))
+wthr <- unique(d2[, .(t.start, Otemp, glorad, wv2)])
+wthr[, t.start := t.start - 3600]
+d2.orig <- d2
+d2 <- merge(d2, wthr, by = 't.start', suffixes = c('', '.lag1'))
+wthr[, t.start := t.start - 3600]
+d2 <- merge(d2, wthr, by = 't.start', suffixes = c('', '.lag2'))
 ```
 
-Hmm, why do we have multiple observations for each unique value?
-Oh, were there 7 different DFCs?
-In that case we need a DFC ID/key in this data frame.
+```{r}
+fit5 <- lm(dtemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3) + poly(glorad.lag1, 3) + poly(Otemp.lag1, 3) + poly(wv2.lag1, 3), data = d2)
+summary(fit5)
+summary(fit2)
+```
+
+Not a lot of improvement really.
 
 ```{r}
-names(d2)
+d2$dtemp.pred5 <- predict(fit5)
+```
+
+```{r}
+ggplot(d2, aes(Otemp, dtemp, colour = glorad)) + 
+  geom_line(aes(Otemp, dtemp.pred2), colour = 'blue') + 
+  geom_line(aes(Otemp, dtemp.pred4), colour = 'red') + 
+  geom_line(aes(Otemp, dtemp.pred5), colour = 'orange') + 
+  geom_point() + 
+  scale_color_viridis_c(option = 'magma') +
+  theme_bw() +
+  xlab('Ambient soil surface temperature (C)') + ylab('DFC soil surface temperature (C)')
+```
+
+```{r}
+ggplot(d2) +
+  geom_point(aes(dtemp, dtemp.pred2), colour = 'blue', alpha = 0.2) +
+  geom_point(aes(dtemp, dtemp.pred4), colour = 'red', alpha = 0.2) +
+  geom_point(aes(dtemp, dtemp.pred5), colour = 'orange', alpha = 0.2) +
+  theme_bw() 
+```
+
+```{r}
+newdat <- expand.grid(glorad = 0:10 * 100, Otemp = 0:10 * 3, wv2 = 2)
+setDT(newdat)
+newdat$dtemp.pred5 <- predict(fit2, newdata = newdat)
+newdat[dtemp.pred5 > 5, ]
+```
+
+Looks at some subsets.
+
+```{r}
+newdat[dtemp.pred5 > 3, ]
+newdat[dtemp.pred5 > 5, ]
+newdat[dtemp.pred5 > 8, ]
+```
+
+How common were the high temperatures and temperature differences?
+
+```{r}
+quantile(d2.orig$Otemp)
+quantile(d2.orig$dtemp)
 ```
 
 
