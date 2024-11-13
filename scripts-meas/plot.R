@@ -25,7 +25,7 @@ f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   guides(colour = guide_legend(nrow = 2,byrow = TRUE)) + 
   xlim(NA, 150)
@@ -36,7 +36,7 @@ f11 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) 
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   guides(colour = guide_legend(nrow = 2,byrow = TRUE)) + 
   xlim(NA, 50)
@@ -47,7 +47,7 @@ f2 <- ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
   ylim(NA, 0.025) + 
   xlim(NA, 150)
@@ -58,7 +58,7 @@ f22 <- ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) 
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
   ylim(NA, 0.025) + 
   xlim(NA, 50)
@@ -72,7 +72,7 @@ f3 <- ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   ylim(NA, 0.075) +
   xlim(NA, 150)
@@ -83,7 +83,7 @@ f33 <- ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) 
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   ylim(NA, 0.075) +
   xlim(NA, 50)
@@ -108,7 +108,7 @@ ggplot(fsumm[fsumm$new.ID == '15', ], aes(cta, j.rel.mn, color = treat1, fill = 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux.DFCmov', height = 3, width = 4)
@@ -121,10 +121,35 @@ ggplot(fsumm[fsumm$new.ID == '9' | fsumm$new.ID == '10', ],
   facet_wrap(~ new.ID.f) + 
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux.speed', height = 3, width = 7)
+
+# Flux plot for 'Oversigt over landsforsøg', send to Torben Frandsen in november 2024
+dfTF <- fsumm[fsumm$new.ID == '11' | fsumm$new.ID == '12', ]
+dfTF$new.IDv2 <- dfTF$new.ID
+dfTF$new.IDv2 <- gsub('11', 'Forsøg 1', dfTF$new.IDv2)
+dfTF$new.IDv2 <- gsub('12', 'Forsøg 2', dfTF$new.IDv2)
+
+IDs <- c(`TH` =  'Slæbeslange',
+         `TS1` =  'Slæbesko',
+         `TS1 + acid` =  'Slæbesko + syre',
+         `OSI` =  'Åben rende nedfældning')
+dfTF[, new.treat1 := IDs[treat1]]
+
+dfTF <- dfTF[! c(dfTF$new.ID == '11' & dfTF$treat1 == 'TS1 + acid'), ]
+
+dfTF$new.ID.f <- factor(dfTF$new.IDv2, levels = c('Forsøg 1', 'Forsøg 2'))
+ggplot(dfTF, aes(cta, j.rel.mn, color = new.treat1, fill = new.treat1)) + 
+  geom_point(shape = 1, size = 0.5) + geom_line() + 
+  facet_wrap(~ new.ID.f, scales = 'free') + 
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (frak. TAN  ', time^-1,')'))) + xlab('Tid efter udbringing (timer)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  xlim(NA, 40)
+ggsave2x('../plots-meas/NH3.flux.11and12', height = 4, width = 6)
 
 
 fsumm.prop <- fsumm[is.element(fsumm$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), ]
@@ -133,7 +158,7 @@ ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   facet_wrap(~ new.ID, ncol = 5) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux.prop', height = 4, width = 8)
@@ -158,7 +183,7 @@ ggplot(isumm, aes(treat1, e.rel.150, color = treat1)) +
   geom_point() + 
   facet_wrap(~ new.ID, scales = 'free_x') + 
   theme_bw() + 
-  labs(y = 'Loss (fraktion of TAN)') + 
+  labs(y = 'Loss (frac. of TAN)') + 
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esumm, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE)
 ggsave2x('../plots-meas/cum.emis01', height = 10, width = 10)
@@ -169,7 +194,7 @@ ggplot(isummMac, aes(treat1, e.rel.150, color = treat1)) +
   geom_point() + 
   facet_wrap(~ new.ID, scales = 'free_x') + 
   theme_bw() + 
-  labs(y = 'Loss (fraktion of TAN)') + 
+  labs(y = 'Loss (frac. of TAN)') + 
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esummMac, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE)
 ggsave2x('../plots-meas/cum.emis.Machine', height = 5, width = 8)
@@ -180,7 +205,7 @@ ggplot(isummMan, aes(treat1, e.rel.150, color = treat1)) +
   geom_point() + 
   facet_wrap(~ new.ID, scales = 'free_x') + 
   theme_bw() + 
-  labs(y = 'fraktion (% of TAN)') + 
+  labs(y = 'frac. (% of TAN)') + 
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esummMan, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE)
 ggsave2x('../plots-meas/cum.emis.Manual', height = 5, width = 8)
