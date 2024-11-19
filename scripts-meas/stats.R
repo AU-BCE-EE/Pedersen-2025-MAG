@@ -28,11 +28,12 @@ abline(0,0)
 # reults 
 summary(m1)
 
-# tuckey's 
-tuk <- glht(m1, linfct = mcp(dis = 'Tukey'))
+# Marginal means, export, save?
+mmeans <- emmeans(m1, 'treat1')
+mmeans
+# Tukey's test
+pairs(mmeans)
 
-summary(tuk)
-cld(tuk)
 
 # 
 # # data check
@@ -98,11 +99,11 @@ abline(0,0)
 # reults 
 summary(m1)
 
-# tuckey's 
-tuk <- glht(m1, linfct = mcp(treat1 = 'Tukey'))
-
-summary(tuk)
-cld(tuk)
+# Marginal means, export, save?
+mmeans <- emmeans(m1, 'treat1')
+mmeans
+# Tukey's test
+pairs(mmeans)
 
 
 ########## stats for trials 5-10 (app tech on winter wheat)
@@ -127,11 +128,11 @@ abline(0,0)
 # reults 
 summary(m1)
 
-# tuckey's 
-tuk <- glht(m1, linfct = mcp(treat1 = 'Tukey'))
-
-summary(tuk)
-cld(tuk)
+# Marginal means, export, save?
+mmeans <- emmeans(m1, 'treat1')
+mmeans
+# Tukey's test
+pairs(mmeans)
 
 ########## stats for trials 11-12 (app tech on grass)
 
@@ -153,11 +154,11 @@ abline(0,0)
 # reults 
 summary(m1)
 
-# tuckey's 
-tuk <- glht(m1, linfct = mcp(treat1 = 'Tukey'))
-
-summary(tuk)
-cld(tuk)
+# Marginal means, export, save?
+mmeans <- emmeans(m1, 'treat1')
+mmeans
+# Tukey's test
+pairs(mmeans)
 
 ########## stats for trials 1-4 (treatment effect) 
 isumm1 <- isumm[isumm$new.ID == '1' | isumm$new.ID == '2' | isumm$new.ID == '3' | isumm$new.ID == '4' , ]
@@ -177,8 +178,10 @@ abline(0,0)
 # reults 
 summary(m1)
 
-# tuckey's 
-tuk <- glht(m1, linfct = mcp(treat1 = 'Tukey'))
+# Marginal means, export, save?
+mmeans <- emmeans(m1, 'treat1')
+mmeans
+# Tukey's test
+pairs(mmeans)
 
-summary(tuk)
-cld(tuk)
+
