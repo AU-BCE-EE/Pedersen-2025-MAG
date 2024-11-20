@@ -15,3 +15,9 @@ esumm.prop <- esumm[is.element(esumm$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), c
 write.csv(esumm.treat, '../output/cum.emis.treat.csv', row.names = FALSE)
 write.csv(esumm.treat.sup, '../output/cum.emis.treat.sup.csv', row.names = FALSE)
 write.csv(esumm.prop, '../output/cum.emis.prop.csv', row.names = FALSE)
+
+
+# table with cumulative emission at chamber level for digestate property stats
+isumm3 <- isumm[is.element(isumm$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), c('new.ID', 'treat1', 'e.rel.150')]
+write.csv(isumm3, '../output/cum.emis.ID.prop.csv', row.names = FALSE)
+
