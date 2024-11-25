@@ -1,0 +1,180 @@
+---
+title: 'Statistical analysis'
+author: 'Sasha D. Hafner'
+date: "`r format(Sys.time(), '%H:%M - %d %B, %Y')`"
+---
+
+# Data table
+```{r}
+setDT(isumm)
+```
+
+# Trials 1-4 (digestate treatment effects)
+
+Subset.
+
+```{r}
+isumm1 <- isumm[new.ID %in% as.character(1:4)]
+```
+
+Separate digestate type from treatment
+
+```{r}
+isumm1[, dig.ID := substr(treat1, 1, 1)]
+isumm1[, dig.treat := gsub('^[ABC]', '', treat1)]
+```
+
+Fit mixed-effects model.
+
+```{r}
+m0 <- lm(e.rel.150 ~ dig.treat * dig.ID + new.ID, data = isumm1)
+m1 <- lmer(e.rel.150 ~ dig.treat + (1|dig.ID) + (1|new.ID), data = isumm1)
+m2 <- lmer(e.rel.150 ~ dig.treat + (1|dig.ID/dig.treat) + (1|new.ID), data = isumm1)
+m3 <- lmer(e.rel.150 ~ treat1 + (1|new.ID), data = isumm1)
+```
+
+```{r}
+summary(m0)
+anova(m0)
+mmeans <- emmeans(m0, 'dig.treat')
+```
+
+```{r}
+summary(m1)
+summary(m2)
+summary(m3)
+```
+
+Check for interaction with odds ratio test (?).
+
+```{r}
+anova(m2, m1, test = 'Chisq')
+```
+
+Plot to check.
+
+```{r}
+ggplot(isumm1, aes(dig.treat, e.rel.150, colour = dig.ID)) +
+  geom_jitter(height = 0) +
+  theme_bw()
+```
+
+Hmm.
+
+```{r}
+table(isumm1[, .(dig.ID, dig.treat)])
+```
+
+Not close to balanced.
+
+
+Marginal means.
+
+```{r}
+mmeans1.4 <- emmeans(m3, 'treat1')
+mmeans
+```
+
+Need name for export.
+
+Tukey's test, all compared to each other
+NEED TO GET a, b, c etc.
+
+```{r}
+contrast(mmeans, 'tukey', ref = '')
+pairs(mmeans)
+```
+
+Residuals.
+
+```{r}
+res <- resid(m1)
+plot(fitted(m1), res)
+abline(0,0)
+qqnorm(res)
+qqline(res)
+```
+
+# Trials 5-10 (app tech on winter wheat)
+
+Subset.
+
+```{r}
+setDT(isumm)
+isumm1 <- droplevels(isumm[new.ID %in% c('5', '6', '7', '8', '9', '10') & !treat1 %in% c('TH-4', 'TS1-4')])
+```
+
+```{r}
+table(isumm1[, .(new.ID, treat1)])
+```
+
+Fit mixed-effects model.
+
+```{r}
+m1 <- lmer(e.rel.150 ~ treat1 + (1|new.ID), data = isumm1)
+```
+
+```{r}
+summary(m1)
+```
+
+Marginal means.
+
+```{r}
+mmeans <- emmeans(m1, 'treat1')
+mmeans
+```
+
+Need name for export.
+
+Tukey's test
+
+```{r}
+pairs(mmeans)
+```
+
+Residuals.
+
+```{r}
+res <- resid(m1)
+plot(fitted(m1), res)
+abline(0,0)
+qqnorm(res)
+qqline(res)
+```
+
+Marginal means, export, save?
+
+```{r}
+mmeans <- emmeans(m1, 'treat1')
+mmeans
+```
+
+Tukey's test
+```{r}
+pairs(mmeans)
+```
+
+# Add 11-12
+
+```{r}
+isumm1 <- droplevels(isumm[new.ID %in% c('11', '12') & treat1 != 'TS1 + acid', ])
+table(isumm1[, .(new.ID, treat1)])
+```
+
+```{r}
+
+```
+
+
+9 and 10 driving speed may not have stats, may need it, section 3 supp
+Relative differences there
+
+supp sec 4, bands
+hose distance, 13 and 14
+
+chamber movement supp sec 5
+trial 15
+
+Then temperature stuff
+Add to supporting material
