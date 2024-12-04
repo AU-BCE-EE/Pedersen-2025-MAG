@@ -166,7 +166,6 @@ ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux.prop', height = 4, width = 8)
 
-
 # cumulative loss for trial 11 + 12
 idat11.12 <- idat[idat$new.ID == '11' | idat$new.ID == '12', ]
 idat11.12 <- idat11.12[!idat11.12$treat1 == 'TS1 + acid', ]
@@ -212,6 +211,28 @@ ggplot(isummMan, aes(treat1, e.rel.150, color = treat1)) +
   theme(legend.title = element_blank()) + 
   geom_boxplot(data = esummMan, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE)
 ggsave2x('../plots-meas/cum.emis.Manual', height = 5, width = 8)
+
+isumm4 <- isumm[isumm$new.ID == '4', ]
+esumm4 <- esumm[esumm$new.ID == '4', ]
+
+isumm4$treat1 <- gsub('A MF liquid', 'Micro filter\nliquid', isumm4$treat1); esumm4$treat1 <- gsub('A MF liquid', 'Micro filter\nliquid', esumm4$treat1)
+isumm4$treat1 <- gsub('A MF slurry', 'Micro filter\nslurry', isumm4$treat1); esumm4$treat1 <- gsub('A MF slurry', 'Micro filter\nslurry', esumm4$treat1)
+isumm4$treat1 <- gsub('A Sep-D', 'Decanter\nliquid', isumm4$treat1); esumm4$treat1 <- gsub('A Sep-D', 'Decanter\nliquid', esumm4$treat1)
+isumm4$treat1 <- gsub('A Sep-S', 'Screw press\nliquid', isumm4$treat1); esumm4$treat1 <- gsub('A Sep-S', 'Screw press\nliquid', esumm4$treat1)
+isumm4$treat1 <- gsub('A', 'Unseparated', isumm4$treat1); esumm4$treat1 <- gsub('A', 'Unseparated', esumm4$treat1)
+
+isumm4$treat2 <- factor(isumm4$treat1, levels = c('Unseparated', 'Screw press\nliquid', 'Decanter\nliquid', 'Micro filter\nslurry', 'Micro filter\nliquid'))
+
+ggplot(isumm4, aes(treat2, e.rel.150, color = treat2)) + 
+  geom_point() + 
+  facet_wrap(~ new.ID, scales = 'free_x') + 
+  theme_bw() + 
+  labs(y = 'Emission (frac. applied TAN)') + 
+  theme(axis.title.x = element_blank()) + 
+  theme(legend.title = element_blank()) + theme(legend.position = 'none') + 
+  geom_boxplot(data = esumm4, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE) 
+ # theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
+ggsave2x('../plots-meas/cum.emis.4', height = 4, width = 4.5)
 
 
 # temperature
