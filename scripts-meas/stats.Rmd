@@ -24,7 +24,7 @@ isumm1[, dig.ID := substr(treat1, 1, 1)]
 isumm1[, dig.treat := gsub('^[ABC]', '', treat1)]
 ```
 
-Fit mixed-effects model.
+Fit mixed-effects model and fixed-effects for comparison.
 
 ```{r}
 m0 <- lm(e.rel.150 ~ dig.treat * dig.ID + new.ID, data = isumm1)
@@ -36,7 +36,6 @@ m3 <- lmer(e.rel.150 ~ treat1 + (1|new.ID), data = isumm1)
 ```{r}
 summary(m0)
 anova(m0)
-mmeans <- emmeans(m0, 'dig.treat')
 ```
 
 ```{r}
@@ -45,7 +44,7 @@ summary(m2)
 summary(m3)
 ```
 
-Check for interaction with odds ratio test (?).
+Check for interaction likelihood ratio test.
 
 ```{r}
 anova(m2, m1, test = 'Chisq')
@@ -59,40 +58,52 @@ ggplot(isumm1, aes(dig.treat, e.rel.150, colour = dig.ID)) +
   theme_bw()
 ```
 
-Hmm.
-
 ```{r}
 table(isumm1[, .(dig.ID, dig.treat)])
 ```
 
-Not close to balanced.
-
-
-Marginal means.
+Major imbalance.
+Get marginal means.
 
 ```{r}
-mmeans1.4 <- emmeans(m3, 'treat1')
-mmeans
+emmeans(m3, 'treat1')
+mmeans1_4 <- emmeans(m3, 'treat1')
+mmeans1_4
 ```
 
-Need name for export.
+```{r}
+pairs(mmeans1_4)
+```
 
-Tukey's test, all compared to each other
-NEED TO GET a, b, c etc.
+Get letters.
 
 ```{r}
-contrast(mmeans, 'tukey', ref = '')
-pairs(mmeans)
+letters1_4 <- cld(object = mmeans1_4,
+                  adjust = "Tukey",
+                  Letters = letters,
+                  alpha = 0.05)
+letters1_4
+```
+
+Sort letters by treat1 and replace mmeans.
+
+```{r}
+mmeans1_4 <- letters1_4[order(letters1_4$treat1), ]
+```
+
+And get a column for copy/paste into paper.
+
+```{r}
+mmeans1_4$tabval <- paste(100 * signif(mmeans1_4$emmean, 3), gsub(' ', '', mmeans1_4$.group))
 ```
 
 Residuals.
 
 ```{r}
-res <- resid(m1)
-plot(fitted(m1), res)
+plot(fitted(m3), resid(m3))
 abline(0,0)
-qqnorm(res)
-qqline(res)
+qqnorm(resid(m3))
+qqline(resid(m3))
 ```
 
 # Trials 5-10 (app tech on winter wheat)
@@ -100,12 +111,19 @@ qqline(res)
 Subset.
 
 ```{r}
-setDT(isumm)
 isumm1 <- droplevels(isumm[new.ID %in% c('5', '6', '7', '8', '9', '10') & !treat1 %in% c('TH-4', 'TS1-4')])
 ```
 
 ```{r}
 table(isumm1[, .(new.ID, treat1)])
+```
+
+Close to balanced.
+
+```{r}
+ggplot(isumm1, aes(new.ID, e.rel.150, colour = treat1)) +
+  geom_jitter(height = 0) +
+  theme_bw()
 ```
 
 Fit mixed-effects model.
@@ -130,30 +148,28 @@ Need name for export.
 Tukey's test
 
 ```{r}
-pairs(mmeans)
+mmeans5_10 <- emmeans(m1, 'treat1')
+pairs(mmeans5_10)
 ```
-
-Residuals.
 
 ```{r}
-res <- resid(m1)
-plot(fitted(m1), res)
-abline(0,0)
-qqnorm(res)
-qqline(res)
+letters5_10 <- cld(object = mmeans5_10,
+                  adjust = "Tukey",
+                  Letters = letters,
+                  alpha = 0.05)
+letters5_10
 ```
-
-Marginal means, export, save?
 
 ```{r}
-mmeans <- emmeans(m1, 'treat1')
-mmeans
+mmeans5_10 <- letters5_10[order(letters5_10$treat1), ]
 ```
 
-Tukey's test
+And get a column for copy/paste into paper.
+
 ```{r}
-pairs(mmeans)
+mmeans5_10$tabval <- paste(100 * signif(mmeans5_10$emmean, 3), gsub(' ', '', mmeans5_10$.group))
 ```
+
 
 # Add 11-12
 
