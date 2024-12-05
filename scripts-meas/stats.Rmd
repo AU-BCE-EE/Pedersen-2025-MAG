@@ -94,7 +94,7 @@ mmeans1_4 <- letters1_4[order(letters1_4$treat1), ]
 And get a column for copy/paste into paper.
 
 ```{r}
-mmeans1_4$tabval <- paste(100 * signif(mmeans1_4$emmean, 3), gsub(' ', '', mmeans1_4$.group))
+mmeans1_4$tabval <- paste(round(100 * mmeans1_4$emmean, 1), gsub(' ', '', mmeans1_4$.group))
 ```
 
 Residuals.
@@ -167,7 +167,7 @@ mmeans5_10 <- letters5_10[order(letters5_10$treat1), ]
 And get a column for copy/paste into paper.
 
 ```{r}
-mmeans5_10$tabval <- paste(100 * signif(mmeans5_10$emmean, 3), gsub(' ', '', mmeans5_10$.group))
+mmeans5_10$tabval <- paste(round(100 * mmeans5_10$emmean, 1), gsub(' ', '', mmeans5_10$.group))
 ```
 
 
