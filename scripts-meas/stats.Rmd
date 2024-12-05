@@ -175,12 +175,57 @@ mmeans5_10$tabval <- paste(round(100 * mmeans5_10$emmean, 1), gsub(' ', '', mmea
 
 ```{r}
 isumm1 <- droplevels(isumm[new.ID %in% c('11', '12') & treat1 != 'TS1 + acid', ])
-table(isumm1[, .(new.ID, treat1)])
 ```
 
 ```{r}
-
+table(isumm1[, .(new.ID, treat1)])
 ```
+
+Completely balanced and only two experiments, so no need for mixed-effects model.
+
+```{r}
+m1 <- lm(e.rel.150 ~ treat1 + new.ID, data = isumm1)
+```
+
+```{r}
+summary(m1)
+```
+
+Marginal means.
+
+```{r}
+mmeans <- emmeans(m1, 'treat1')
+mmeans
+```
+
+Need name for export.
+
+Tukey's test
+
+```{r}
+mmeans11_12 <- emmeans(m1, 'treat1')
+pairs(mmeans11_12)
+```
+
+```{r}
+letters11_12 <- cld(object = mmeans11_12,
+                  adjust = "Tukey",
+                  Letters = letters,
+                  alpha = 0.05)
+```
+
+Order.
+
+```{r}
+mmeans11_12 <- letters11_12[c(3, 2, 1), ]
+```
+
+And get a column for copy/paste into paper.
+
+```{r}
+mmeans11_12$tabval <- paste(round(100 * mmeans11_12$emmean, 1), gsub(' ', '', mmeans11_12$.group))
+```
+
 
 
 9 and 10 driving speed may not have stats, may need it, section 3 supp
