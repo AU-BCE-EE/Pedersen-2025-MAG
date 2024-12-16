@@ -29,7 +29,6 @@ f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   guides(colour = guide_legend(nrow = 2,byrow = TRUE)) + 
   xlim(NA, 150)
-# ggsave2x('../plots-meas/NH3.flux.treat01', height = 4, width = 8)
 
 f11 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
@@ -67,9 +66,11 @@ fsumm.treat03 <- fsumm.treat[fsumm.treat$new.ID == '9' | fsumm.treat$new.ID == '
 fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TH-4', ]
 fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TS1-4', ]
 fsumm.treat03 <- fsumm.treat03[! fsumm.treat03$treat == 'TS1 + acid', ]
+fsumm.treat03$new.ID.f <- factor(fsumm.treat03$new.ID, levels = c('9', '10', '11', '12'))
+
 f3 <- ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
-  facet_wrap(~ new.ID, ncol = 4) +
+  facet_wrap(~ new.ID.f, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
@@ -80,7 +81,7 @@ f3 <- ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
 
 f33 <- ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
-  facet_wrap(~ new.ID, ncol = 4) +
+  facet_wrap(~ new.ID.f, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
@@ -126,33 +127,33 @@ ggplot(fsumm[fsumm$new.ID == '9' | fsumm$new.ID == '10', ],
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux.speed', height = 3, width = 7)
 
-# Flux plot for 'Oversigt over landsforsøg', send to Torben Frandsen in november 2024
-dfTF <- fsumm[fsumm$new.ID == '11' | fsumm$new.ID == '12', ]
-dfTF$new.IDv2 <- dfTF$new.ID
-dfTF$new.IDv2 <- gsub('11', 'Fs 001', dfTF$new.IDv2)
-dfTF$new.IDv2 <- gsub('12', 'Fs 002', dfTF$new.IDv2)
-
-IDs <- c(`TH` =  'Slæbeslange',
-         `TS1` =  'Slæbesko',
-         `TS1 + acid` =  'Slæbesko + syre',
-         `OSI` =  'Nedfældning')
-dfTF[, new.treat1 := IDs[treat1]]
-
-dfTF <- dfTF[! c(dfTF$new.ID == '11' & dfTF$treat1 == 'TS1 + acid'), ]
-
-dfTF$j.rel.mn1 <- dfTF$j.rel.mn * 100
-dfTF$j.rel.sd1 <- dfTF$j.rel.sd * 100
-
-dfTF$new.ID.f <- factor(dfTF$new.IDv2, levels = c('Fs 001', 'Fs 002'))
-ggplot(dfTF, aes(cta, j.rel.mn1, color = new.treat1, fill = new.treat1)) + 
-  geom_point(shape = 1, size = 0.5) + geom_line() + 
-  facet_wrap(~ new.ID.f) + 
-  theme_bw() + 
-  geom_ribbon(aes (ymax = j.rel.mn1 + j.rel.sd1, ymin = j.rel.mn1 - j.rel.sd1, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (% TAN  ', time^-1,')'))) + xlab('Tid efter udbringing (timer)') +
-  theme(legend.position = 'bottom', legend.title = element_blank()) +
-  xlim(NA, 40)
-ggsave2x('../plots-meas/NH3.flux.11and12', height = 4, width = 6)
+# # Flux plot for 'Oversigt over landsforsøg', send to Torben Frandsen in november 2024
+# dfTF <- fsumm[fsumm$new.ID == '11' | fsumm$new.ID == '12', ]
+# dfTF$new.IDv2 <- dfTF$new.ID
+# dfTF$new.IDv2 <- gsub('11', 'Fs 001', dfTF$new.IDv2)
+# dfTF$new.IDv2 <- gsub('12', 'Fs 002', dfTF$new.IDv2)
+# 
+# IDs <- c(`TH` =  'Slæbeslange',
+#          `TS1` =  'Slæbesko',
+#          `TS1 + acid` =  'Slæbesko + syre',
+#          `OSI` =  'Nedfældning')
+# dfTF[, new.treat1 := IDs[treat1]]
+# 
+# dfTF <- dfTF[! c(dfTF$new.ID == '11' & dfTF$treat1 == 'TS1 + acid'), ]
+# 
+# dfTF$j.rel.mn1 <- dfTF$j.rel.mn * 100
+# dfTF$j.rel.sd1 <- dfTF$j.rel.sd * 100
+# 
+# dfTF$new.ID.f <- factor(dfTF$new.IDv2, levels = c('Fs 001', 'Fs 002'))
+# ggplot(dfTF, aes(cta, j.rel.mn1, color = new.treat1, fill = new.treat1)) + 
+#   geom_point(shape = 1, size = 0.5) + geom_line() + 
+#   facet_wrap(~ new.ID.f) + 
+#   theme_bw() + 
+#   geom_ribbon(aes (ymax = j.rel.mn1 + j.rel.sd1, ymin = j.rel.mn1 - j.rel.sd1, group = treat1), alpha = 0.3, color = NA) + 
+#   ylab(expression(paste('Flux (% TAN  ', time^-1,')'))) + xlab('Tid efter udbringing (timer)') +
+#   theme(legend.position = 'bottom', legend.title = element_blank()) +
+#   xlim(NA, 40)
+# ggsave2x('../plots-meas/NH3.flux.11and12', height = 4, width = 6)
 
 
 fsumm.prop <- fsumm[is.element(fsumm$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), ]
