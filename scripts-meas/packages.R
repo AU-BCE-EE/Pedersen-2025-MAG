@@ -7,6 +7,7 @@ library(multcompView)
 library(lme4)
 library(gridExtra)
 library(rmarkdown)
+library(scales)
 
 
 sink('../logs/R-versions-meas.txt')

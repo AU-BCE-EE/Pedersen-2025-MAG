@@ -172,10 +172,10 @@ idat11.12 <- idat[idat$new.ID == '11' | idat$new.ID == '12', ]
 idat11.12 <- idat11.12[!idat11.12$treat1 == 'TS1 + acid', ]
 
 idat11.12dummy <- idat11.12[idat11.12$cta == idat11.12$cta[1], ]
-idat11.12dummy$cta <- '0'
-idat11.12dummy$e.cum <- '0'
+idat11.12dummy$cta <- 0
+idat11.12dummy$e.cum <- 0
 
-class(idat11.12dummy$e.cum)
+idat11.12 <- rbind(idat11.12, idat11.12dummy)
 
 ggplot(idat11.12, aes(cta, e.cum, group = pmid, color = treat1)) +
   geom_point(shape = 1, size = 0.5) + geom_line() + 
@@ -264,6 +264,20 @@ ggplot(idat.treat[idat.treat$treat1 == 'A' & idat.treat$rep == '1' | idat.treat$
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
   xlim(NA, 150)
 ggsave2x('../plots-meas/temp.treat', height = 10, width = 8)
+
+idat.treat$new.ID.f <- factor(idat.treat$new.ID, levels = c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'))
+idat.treat.temp <- idat.treat[idat.treat$cta <= 150, ]
+ggplot(idat.treat.temp[idat.treat.temp$treat1 == 'A' & idat.treat.temp$rep == '1' | idat.treat.temp$treat1 == '2-Pos' & idat.treat.temp$rep == '1' | idat.treat.temp$treat1 == 'TS1-4' & 
+                         idat.treat.temp$rep == '1' | idat.treat.temp$treat1 == 'TH' & idat.treat.temp$rep == '1' | idat.treat.temp$treat1 == 'Un12' & idat.treat.temp$rep == '1', ], 
+       aes(t.start, air.temp, group = pmid)) + 
+  geom_line() + 
+  facet_wrap(~ new.ID.f, scales = 'free_x') +
+  theme_bw() + 
+#  scale_x_datetime(labels = date_format("%H:%M:%S")) + 
+  labs(x = 'Time', y = 'Air temperature (°C)') + 
+  theme(legend.position = 'bottom', legend.title = element_blank())
+ggsave2x('../plots-meas/temp.treatA', height = 10, width = 8)
+
 
 ggplot(idat[idat$new.ID == '13' & idat$treat1 == 'Un12' & idat$rep == '1' | idat$new.ID == '14' & idat$treat1 == 'Un12' & idat$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
