@@ -170,6 +170,13 @@ ggsave2x('../plots-meas/NH3.flux.prop', height = 4, width = 8)
 # cumulative loss for trial 11 + 12
 idat11.12 <- idat[idat$new.ID == '11' | idat$new.ID == '12', ]
 idat11.12 <- idat11.12[!idat11.12$treat1 == 'TS1 + acid', ]
+
+idat11.12dummy <- idat11.12[idat11.12$cta == idat11.12$cta[1], ]
+idat11.12dummy$cta <- '0'
+idat11.12dummy$e.cum <- '0'
+
+class(idat11.12dummy$e.cum)
+
 ggplot(idat11.12, aes(cta, e.cum, group = pmid, color = treat1)) +
   geom_point(shape = 1, size = 0.5) + geom_line() + 
   facet_wrap(~ new.ID) +
