@@ -362,9 +362,6 @@ isumm1[, .(mn = mean(e.rel.150), sd = sd(e.rel.150)), by = .(new.ID, sep, distan
 # Other stuff
 I still need to sort this stuff out!
 
-supp sec 4, bands
-hose distance, 13 and 14
-
 chamber movement supp sec 5
 trial 15
 
