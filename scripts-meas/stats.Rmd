@@ -230,10 +230,137 @@ And get a column for copy/paste into paper.
 mmeans11_12$tabval <- paste(round(100 * mmeans11_12$emmean, 1), gsub(' ', '', mmeans11_12$.group))
 ```
 
+# Trials 9 and 10 for driving speed
+
+Subset.
+
+```{r}
+isumm1 <- isumm[new.ID %in% as.character(c(9, 10))]
+```
+
+Extract driving speed and application method.
+
+```{r}
+table(isumm1$treat)
+isumm1[, speed := factor('12', levels = c(4, 12))]
+isumm1[grepl('-4', treat1), speed := '4']
+```
+
+```{r}
+isumm1[, app.mthd := factor(sub('-4', '', treat1), levels = c('TH', 'TS1'))]
+```
+
+```{r}
+table(isumm1[, .(new.ID, app.mthd, speed)]) 
+```
+
+Completely crossed, perfectly balanced.
+
+Plot.
+
+```{r}
+ggplot(isumm1, aes(as.numeric(speed), e.rel.150, colour = interaction(app.mthd, new.ID), shape = new.ID, lty = new.ID)) +
+	geom_smooth(method = lm, se = FALSE) +
+	geom_jitter(height = 0)
+```
 
 
-9 and 10 driving speed may not have stats, may need it, section 3 supp
-Relative differences there
+Fit model.
+
+```{r}
+m1 <- lm(log10(e.rel.150) ~ app.mthd * speed * new.ID, data = isumm1)
+m2 <- aov(log10(e.rel.150) ~ (app.mthd + speed + new.ID)^2, data = isumm1)
+m3 <- aov(e.rel.150 ~ (app.mthd + speed + new.ID)^2, data = isumm1)
+```
+
+```{r}
+summary(m1)
+anova(m1)
+drop1(m1, test = 'F')
+drop1(m2, test = 'F')
+drop1(m3, test = 'F')
+summary(m3, test = 'F')
+```
+
+```{r}
+plot(m1, ask = FALSE)
+```
+
+```{r}
+model.tables(m2, 'means')
+```
+
+More useful means.
+
+```{r}
+isumm1[, .(mn = mean(e.rel.150), sd = sd(e.rel.150)), by = .(new.ID, app.mthd, speed)]
+```
+
+# Trials 13 and 14 for hose distance effect
+
+Subset.
+
+```{r}
+isumm1 <- isumm[new.ID %in% as.character(c(13, 14))]
+```
+
+Extract separation status and hose distance.
+
+```{r}
+table(isumm1$treat)
+class(isumm1)
+isumm1[, treat1 := tolower(treat1)]
+isumm1[, distancef := factor(sub('sep|un', '', treat1))]
+isumm1[, distancen := as.numeric(sub('sep|un', '', treat1))]
+isumm1[, sep := factor(sub('[0-9]+$', '', treat1))]
+```
+
+```{r}
+table(isumm1[, .(new.ID, sep, distancef)]) 
+```
+
+Subset is completely crossed, perfectly balanced.
+But `un` has an additional distance of 12 cm.
+
+Plot.
+
+```{r}
+ggplot(isumm1, aes(as.numeric(distancen), e.rel.150, colour = interaction(sep, new.ID), shape = new.ID, lty = new.ID)) +
+	geom_smooth(method = lm, se = FALSE) +
+	geom_point(height = 0)
+```
+
+Hmm, might be some interactions.
+Fit model.
+
+```{r}
+m1 <- lm(e.rel.150 ~ sep * distancen * new.ID, data = isumm1)
+m2 <- lm(e.rel.150 ~ (sep + distancen + new.ID)^2, data = isumm1)
+m2b <- lm(e.rel.150 ~ (sep + distancen + new.ID)^2, data = isumm1, subset = sep != 'sep' | new.ID != 13)
+```
+
+```{r}
+summary(m1)
+anova(m1)
+drop1(m1, test = 'F')
+drop1(m2, test = 'F')
+summary(m2b)
+```
+
+No clear distance effects, marginal interaction evidence, but all related to those negative values.
+
+```{r}
+plot(m1, ask = FALSE)
+```
+
+Means.
+
+```{r}
+isumm1[, .(mn = mean(e.rel.150), sd = sd(e.rel.150)), by = .(new.ID, sep, distancef)]
+```
+
+# Other stuff
+I still need to sort this stuff out!
 
 supp sec 4, bands
 hose distance, 13 and 14
