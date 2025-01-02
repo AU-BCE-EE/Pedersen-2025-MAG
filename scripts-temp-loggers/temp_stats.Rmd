@@ -15,9 +15,25 @@ Temperature difference.
 d2$dtemp <- d2$Itemp - d2$Otemp
 ```
 
+Check interpretation.
+
 ```{r}
-fit1 <- lm(Itemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3), data = d2)
-fit2 <- lm(dtemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3), data = d2)
+d2[, plot := factor(plot)]
+```
+
+Should have 0 or 1 below.
+
+```{r}
+table(table(d2[, .(plot, t.start)]))
+```
+
+Looks good.
+
+```{r}
+fit1 <- lm(Itemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3) + plot, data = d2)
+fit2 <- lm(dtemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3) + plot, data = d2)
+fit2e <- lm(dtemp ~ glorad + I(glorad^2) + I(glorad^3) + Otemp + I(Otemp^2) + I(Otemp^3) + 
+	    wv2 + I(wv2^2) + I(wv2^3) + plot, data = d2)
 ```
 
 Check results
@@ -25,16 +41,18 @@ Check results
 ```{r}
 summary(fit1)
 summary(fit2)
+summary(fit2e)
 ```
 
-Temperature difference model is better--lower residual standard error.
-(R-squared is lower but that is just because we have already removed a lot of the variation by calculating a difference.)
+The two models are identical.
+(R-squared is lower for dtemp but that is just because we have already removed a lot of the variation by calculating a difference.)
+Interesting and reassuring that `plot` effects are small.
 
 Let's generate scaled predictor variables for standardized coefficients (relative to 1 standard deviation of predictor variable).
 This will show which predictors are the most important compared to how much they vary.
 
 ```{r}
-fit3 <- lm(dtemp ~ poly(scale(glorad), 3) + poly(scale(Otemp), 3) + poly(scale(wv2), 3), data = d2)
+fit3 <- lm(Itemp ~ poly(scale(glorad), 3) + poly(scale(Otemp), 3) + poly(scale(wv2), 3) + plot, data = d2)
 ```
 
 ```{r}
@@ -53,30 +71,31 @@ Seem so, yes.
 Let's see how much worse the model is without the other two.
 
 ```{r}
-fit4 <- lm(dtemp ~ poly(Otemp, 3), data = d2)
+fit4 <- lm(Itemp ~ Otemp + I(Otemp^2) + I(Otemp^3)  + plot, data = d2)
 ```
 
 ```{r}
 summary(fit4)
+summary(fit1)
 ```
 
-It is almost the same as 2.
-So effects of radiation and wind look small, surprisingly.
+Worse than 2, not that much though.
+So effects of radiation and wind are not huge.
 
 Generate predictions for plotting.
 
 ```{r}
 d2$Itemp.pred <- predict(fit1)
-d2$dtemp.pred2 <- predict(fit2)
-d2$dtemp.pred4 <- predict(fit4)
+d2$Itemp.pred2 <- predict(fit2)
+d2$Itemp.pred4 <- predict(fit4)
 ```
 
 And take a look.
 
 ```{r}
-ggplot(d2, aes(Otemp, dtemp, colour = glorad)) + 
-  geom_line(aes(Otemp, dtemp.pred2), colour = 'blue') + 
-  geom_line(aes(Otemp, dtemp.pred4), colour = 'red') + 
+ggplot(d2, aes(Otemp, Itemp, colour = glorad)) + 
+  geom_line(aes(Otemp, Itemp.pred), colour = 'blue') + 
+  geom_line(aes(Otemp, Itemp.pred4), colour = 'red') + 
   geom_point() + 
   scale_color_viridis_c(option = 'magma') +
   theme_bw() +
@@ -98,23 +117,32 @@ wthr[, t.start := t.start - 3600]
 d2 <- merge(d2, wthr, by = 't.start', suffixes = c('', '.lag2'))
 ```
 
+First, try interactions.
+Then include lagged predictors.
+
 ```{r}
-fit5 <- lm(dtemp ~ poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3) + poly(glorad.lag1, 3) + poly(Otemp.lag1, 3) + poly(wv2.lag1, 3), data = d2)
+fit5 <- lm(Itemp ~ (poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3))^2 + plot, data = d2)
+fit6 <- lm(Itemp ~ (poly(glorad, 3) + poly(Otemp, 3) + poly(wv2, 3) + 
+	   poly(glorad.lag1, 3) + poly(Otemp.lag1, 3) + poly(wv2.lag1, 3) + 
+	   poly(Otemp.lag2, 3))^2 + plot, data = d2)
 summary(fit5)
+summary(fit6)
 summary(fit2)
 ```
 
-Not a lot of improvement really.
+A lot of improvement (with interactions included).
 
 ```{r}
-d2$dtemp.pred5 <- predict(fit5)
+d2$Itemp.pred5 <- predict(fit5)
+d2$Itemp.pred6 <- predict(fit6)
 ```
 
 ```{r}
-ggplot(d2, aes(Otemp, dtemp, colour = glorad)) + 
-  geom_line(aes(Otemp, dtemp.pred2), colour = 'blue') + 
-  geom_line(aes(Otemp, dtemp.pred4), colour = 'red') + 
-  geom_line(aes(Otemp, dtemp.pred5), colour = 'orange') + 
+ggplot(d2, aes(Otemp, Itemp, colour = glorad)) + 
+  geom_line(aes(Otemp, Itemp.pred), colour = 'blue') + 
+  geom_line(aes(Otemp, Itemp.pred4), colour = 'red') + 
+  geom_line(aes(Otemp, Itemp.pred5), colour = 'orange') + 
+  geom_line(aes(Otemp, Itemp.pred6), colour = 'skyblue') + 
   geom_point() + 
   scale_color_viridis_c(option = 'magma') +
   theme_bw() +
@@ -123,33 +151,50 @@ ggplot(d2, aes(Otemp, dtemp, colour = glorad)) +
 
 ```{r}
 ggplot(d2) +
-  geom_point(aes(dtemp, dtemp.pred2), colour = 'blue', alpha = 0.2) +
-  geom_point(aes(dtemp, dtemp.pred4), colour = 'red', alpha = 0.2) +
-  geom_point(aes(dtemp, dtemp.pred5), colour = 'orange', alpha = 0.2) +
+  geom_point(aes(Itemp, Itemp.pred), colour = 'blue', alpha = 0.2) +
+  geom_point(aes(Itemp, Itemp.pred4), colour = 'red', alpha = 0.2) +
+  geom_point(aes(Itemp, Itemp.pred5), colour = 'orange', alpha = 0.2) +
   theme_bw() 
 ```
 
 ```{r}
-newdat <- expand.grid(glorad = 0:10 * 100, Otemp = 0:10 * 3, wv2 = 2)
-setDT(newdat)
-newdat$dtemp.pred5 <- predict(fit2, newdata = newdat)
-newdat[dtemp.pred5 > 5, ]
+#newdat <- expand.grid(glorad = 0:10 * 100, Otemp = 0:10 * 3, wv2 = 2)
+#setDT(newdat)
+#newdat$dtemp.pred5 <- predict(fit2, newdata = newdat)
+#newdat[dtemp.pred5 > 5, ]
 ```
 
 Looks at some subsets.
 
 ```{r}
-newdat[dtemp.pred5 > 3, ]
-newdat[dtemp.pred5 > 5, ]
-newdat[dtemp.pred5 > 8, ]
+#newdat[dtemp.pred5 > 3, ]
+#newdat[dtemp.pred5 > 5, ]
+#newdat[dtemp.pred5 > 8, ]
 ```
 
 How common were the high temperatures and temperature differences?
 
 ```{r}
 quantile(d2.orig$Otemp)
+quantile(d2.orig$Itemp)
 quantile(d2.orig$dtemp)
 ```
+
+Mean difference by plot.
+
+```{r}
+summ <- d2[, .(dtemp.mean = mean(dtemp), dtemp.med = median(dtemp)), by = plot]
+summ
+```
+
+```{r}
+t.test(summ$dtemp.med)
+t.test(summ$dtemp.mean)
+```
+
+
+
+
 
 
 
