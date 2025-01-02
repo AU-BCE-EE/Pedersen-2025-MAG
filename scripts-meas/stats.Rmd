@@ -359,11 +359,58 @@ Means.
 isumm1[, .(mn = mean(e.rel.150), sd = sd(e.rel.150)), by = .(new.ID, sep, distancef)]
 ```
 
+# Trial 15, chamber movement
+
+Subset.
+
+```{r}
+isumm1 <- isumm[new.ID == 15, ]
+```
+
+Set reference.
+
+```{r}
+isumm1[, treat1 := factor(treat1, levels = c('No', '2-Pos', '7-Pos'))]
+```
+
+Fit model.
+
+```{r}
+m1 <- aov(e.rel.150 ~ treat1, data = isumm1)
+```
+
+Tukey's test.
+
+```{r}
+summary(m1)
+TukeyHSD(m1)
+```
+
+Dunnett test.
+
+```{r}
+mmeans15 <- emmeans(m1, 'treat1')
+mmeans15
+contrast(mmeans15, 'trt.vs.ctrl')
+contrast(mmeans15, 'tukey')
+pairs(mmeans15)
+```
+
+Relative effects.
+
+```{r}
+coef(m1)
+coef(m1) / coef(m1)[1]
+```
+
+```{r}
+plot(m1)
+```
+
+
+
 # Other stuff
 I still need to sort this stuff out!
-
-chamber movement supp sec 5
-trial 15
 
 Then temperature stuff
 Add to supporting material

@@ -25,7 +25,7 @@ other attached packages:
  [4] lme4_1.1-35.5       Matrix_1.7-1        multcompView_0.1-10
  [7] multcomp_1.4-26     TH.data_1.1-2       MASS_7.3-61        
 [10] survival_3.7-0      mvtnorm_1.3-2       emmeans_1.10.5     
-[13] data.table_1.16.2   ggplot2_3.5.1       nvimcom_0.9.52     
+[13] data.table_1.16.2   ggplot2_3.5.1       nvimcom_0.9.60     
 
 loaded via a namespace (and not attached):
  [1] gtable_0.3.6       dplyr_1.1.4        compiler_4.4.2     Rcpp_1.0.13-1     
