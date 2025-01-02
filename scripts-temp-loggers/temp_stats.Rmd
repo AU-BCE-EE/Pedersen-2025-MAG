@@ -192,6 +192,27 @@ t.test(summ$dtemp.med)
 t.test(summ$dtemp.mean)
 ```
 
+Quantiles above and below 20C.
+And make sure each plot (mostly) has some high temperature measurements.
+
+```{r}
+d2.orig[, .(quantile(dtemp)), by = Otemp < 20]
+d2.orig[, .N, by = Otemp < 20]
+d2.orig[, .N, by = .(plot, Otemp < 20)]
+822 / 6418
+```
+
+```{r}
+ggplot(d2, aes(Otemp, Itemp, colour = plot)) +
+  geom_abline(intercept = 0, slope = 1, colour = 'gray55', lty = 2) +
+  geom_point() +
+  coord_fixed() +
+  theme_bw() +
+  labs(x = expression('Ambient soil surface temperature'~(degree*C)),
+       y = expression('DFC soil surface temperature'~(degree*C)),
+       colour = 'Radiation')
+```
+
 
 
 
