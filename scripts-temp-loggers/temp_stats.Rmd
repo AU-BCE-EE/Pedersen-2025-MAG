@@ -9,6 +9,10 @@ date: "`r Sys.time()`"
 library(viridisLite)
 ```
 
+```{r}
+d2[, hour := format(t.start, format = '%H')]
+```
+
 Temperature difference.
 
 ```{r}
@@ -213,6 +217,29 @@ ggplot(d2, aes(Otemp, Itemp, colour = plot)) +
        colour = 'Radiation')
 ```
 
+
+Time of day (hour) of high temperatures.
+
+```{r}
+ggplot(d2, aes(as.integer(hour), Otemp, colour = plot)) +
+  geom_point() +
+  geom_path(alpha = 0.1) +
+  theme_bw()
+```
+
+```{r}
+ggplot(d2, aes(as.integer(hour), dtemp, colour = plot)) +
+  geom_point() +
+  geom_path(alpha = 0.1) +
+  theme_bw()
+```
+
+```{r}
+ggplot(d2, aes(as.integer(hour), dtemp, colour = plot)) +
+  geom_point() +
+  xlim(9, 15) +
+  theme_bw()
+```
 
 
 
