@@ -51,3 +51,5 @@ isumm <- rounddf(as.data.frame(isumm), digits = 3, func = signif)
 esumm <- rounddf(as.data.frame(esumm), 3, func = signif)
 wsumm <- rounddf(as.data.frame(wsumm), 3, func = signif)
 
+# Add predictor variables to isumm for models
+isumm <- merge(isumm, pdat[, .(pmid, man.dm, man.ph)], by = 'pmid')
