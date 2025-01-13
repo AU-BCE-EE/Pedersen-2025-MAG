@@ -123,12 +123,16 @@ Look for DM and pH explanation of digestate variability.
 ```{r}
 dref <- isumm1[dig.treat == 'none', ]
 m4 <- lmer(e.rel.150 ~ (1|dig.ID) + (1|new.ID), data = dref)
+m4b <- lmer(e.rel.150 ~ (1|dig.ID/new.ID), data = dref)
 m5 <- lmer(e.rel.150 ~ (1|dig.ID) + (1|new.ID) + man.dm + man.ph, data = dref)
+m6 <- lmer(e.rel.150 ~ (1|dig.ID/new.ID) + man.dm + man.ph, data = dref)
 ```
 
 ```{r}
 summary(m4)
+summary(m4b)
 summary(m5)
+summary(m6)
 AIC(m4, m5)
 anova(m4, m5, test = 'Chisq')
 ```
@@ -138,9 +142,15 @@ But see reduction in dig.ID standard deviation when DM and pH are included.
 And see likelihood ratio tests below.
 
 ```{r}
-m5noph <- lmer(e.rel.150 ~ (1|dig.ID) + (1|new.ID) + man.dm, data = dref)
-m5nodm <- lmer(e.rel.150 ~ (1|dig.ID) + (1|new.ID) + man.ph, data = dref)
+m5noph <- update(m5, ~ . - man.ph)
+m5nodm <- update(m5, ~ . - man.dm)
 ```
+
+```{r}
+m6noph <- update(m6, ~ . - man.ph)
+m6nodm <- update(m6, ~ . - man.dm)
+```
+
 
 ```{r}
 summary(m5noph)
@@ -150,6 +160,11 @@ summary(m5nodm)
 ```{r}
 anova(m5, m5noph, test = 'Chisq')
 anova(m5, m5nodm, test = 'Chisq')
+```
+
+```{r}
+anova(m6, m6noph, test = 'Chisq')
+anova(m6, m6nodm, test = 'Chisq')
 ```
 
 Plots to look at apparent effects.
@@ -168,6 +183,31 @@ ggplot(dref, aes(man.dm, e.rel.150, colour = man.ph)) +
 
 ```{r}
 ggplot(dref, aes(man.ph, e.rel.150, colour = dig.ID)) +
+  geom_text(aes(label = paste0(dig.ID, '-', new.ID))) +
+  theme_bw()
+```
+
+Take means--I do not believe pH result.
+
+```{r}
+dmn <- dref[, .(e.rel.150 = mean(e.rel.150), man.dm = mean(man.dm), man.ph = mean(man.ph)),
+     by = .(dig.ID, new.ID)]
+```
+
+```{r}
+m10 <- lmer(e.rel.150 ~ (1|dig.ID), data = dmn)
+m10b <- lm(e.rel.150 ~ 1, data = dmn)
+m11 <- lm(e.rel.150 ~ man.dm + man.ph, data = dmn)
+```
+
+```{r}
+summary(m10)
+summary(m10b)
+summary(m11)
+```
+
+```{r}
+ggplot(dmn, aes(man.dm, e.rel.150, colour = man.ph)) +
   geom_text(aes(label = paste0(dig.ID, '-', new.ID))) +
   theme_bw()
 ```
