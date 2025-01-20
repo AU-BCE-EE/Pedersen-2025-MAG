@@ -242,7 +242,6 @@ ggplot(isumm4, aes(treat2, e.rel.150, color = treat2)) +
  # theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
 ggsave2x('../plots-meas/cum.emis.4', height = 4, width = 4.5)
 
-
 # temperature
 ggplot(idat[idat$treat1 == 'A' & idat$rep == '1' | idat$treat1 == '2-Pos' & idat$rep == '1' | idat$treat1 == 'TS1-4' & idat$rep == '1' | idat$treat1 == 'TH' & idat$rep == '1' | idat$treat1 == 'Un12' & idat$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
