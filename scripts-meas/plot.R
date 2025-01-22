@@ -30,15 +30,30 @@ f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   guides(colour = guide_legend(nrow = 2,byrow = TRUE)) + 
   xlim(NA, 150)
 
-f11 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
-  geom_point(shape = 1, size = 0.5) + geom_line() + 
+
+  # Create and sort factor for plot labels
+  setorder(fsumm.treat01, new.ID, treat1)
+  ll <- unique(fsumm.treat01[, treat1])
+  labs <- data.table(treat1 = ll, i = as.integer(factor(ll, levels = ll)))
+  labs[, leg.lab := paste0(i, '. ', treat1)]
+  fsumm.treat01[, tfact := factor(treat1, levels = ll)]
+  fsumm.treat01[, leg.lab := factor(paste0(as.integer(tfact), '. ', tfact), levels = labs$leg.lab)]
+
+  # Get integer codes and initial emission
+  d0 <- fsumm.treat01[, .(y = j.rel.mn[cta == min(cta)]), by = .(new.ID, leg.lab)]
+  labs <- merge(labs, d0)
+  
+f11 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
+  geom_point(shape = 1, size = 0.5) + 
+  geom_line() + 
+  geom_text(data = labs, x = 2, aes(y = y, label = i), hjust = 1, size = 3.2, show.legend = FALSE) +
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
-  guides(colour = guide_legend(nrow = 2,byrow = TRUE)) + 
-  xlim(NA, 50)
+  guides(colour = guide_legend(nrow = 3, byrow = TRUE)) + 
+  xlim(-0.2, 50)
 
 fsumm.treat02 <- fsumm.treat[fsumm.treat$new.ID == '5' | fsumm.treat$new.ID == '6' | fsumm.treat$new.ID == '7' | fsumm.treat$new.ID == '8', ]
 f2 <- ggplot(fsumm.treat02, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
@@ -97,13 +112,13 @@ mat <- matrix(c(1,
 pff <- grid.arrange(f1, f2, f3, layout_matrix = mat)
 ggsave2x('../plots-meas/NH3.flux.comm.150', plot = pff, height = 11, width = 8)
 
-mat <- matrix(c(1, 
-                2,
-                3),
+mat <- matrix(c(1, 1, 1, 1,
+                2, 2, 2,
+                3, 3, 3),
               ncol = 1)
 
 pfff <- grid.arrange(f11, f22, f33, layout_matrix = mat)
-ggsave2x('../plots-meas/NH3.flux.comm.50', plot = pfff, height = 11, width = 8)
+ggsave2x('../plots-meas/NH3.flux.comm.50', plot = pfff, height = 10, width = 8)
 
 ggplot(fsumm[fsumm$new.ID == '15', ], aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 
