@@ -42,7 +42,7 @@ f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   # Manual adjustments to avoid overplotting
   adj <- data.table(i      = c(4,           6,      9,     1,      4,     7),
 		    new.ID = c(1,           2,      2,     3,      4,     3),
-		    yshift = c(-0.003, -0.003, -0.002, 0.003, -0.003, 0.001))
+		    yshift = c(-0.002, -0.003, -0.002, 0.003, -0.001, 0.001))
   adj[, new.ID := as.character(new.ID)]
 
   # Get integer codes and initial emission
