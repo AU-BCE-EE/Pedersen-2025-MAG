@@ -39,9 +39,18 @@ f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) +
   fsumm.treat01[, tfact := factor(treat1, levels = ll)]
   fsumm.treat01[, leg.lab := factor(paste0(as.integer(tfact), '. ', tfact), levels = labs$leg.lab)]
 
+  # Manual adjustments to avoid overplotting
+  adj <- data.table(i      = c(4,           6,      9,     1,      4,     7),
+		    new.ID = c(1,           2,      2,     3,      4,     3),
+		    yshift = c(-0.003, -0.003, -0.002, 0.003, -0.003, 0.001))
+  adj[, new.ID := as.character(new.ID)]
+
   # Get integer codes and initial emission
   d0 <- fsumm.treat01[, .(y = j.rel.mn[cta == min(cta)]), by = .(new.ID, leg.lab)]
   labs <- merge(labs, d0)
+  labs <- merge(labs, adj, all = TRUE, by = c('i', 'new.ID'))
+  labs[is.na(yshift), yshift := 0]
+  labs[, y := y + yshift]
   
 f11 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
   geom_point(shape = 1, size = 0.5) + 
