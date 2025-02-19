@@ -98,3 +98,18 @@ RMD file can be found in `scripts-temp-loggers`.
 ## `sup-data`
 Auxiliary/supporting data to the emission measurements. 
 Digestate properties, exposed surface area (ESA) data, soil properties, and slurry surface pH. 
+
+# Links to manuscript A
+This section give the sources of tables, figures, and some statistical results presented in the paper.
+
+| Paper component          |  Repo source                             |  Repo scripts             |
+|-----------------         |-----------------                         |---------------            |
+|    Figure 4              | `plots-field-trials/flux_weather1.pdf`       | `scripts-field-trials/plot.R` |
+
+
+# Links to manuscript B
+This section give the sources of tables, figures, and some statistical results presented in the paper.
+
+| Paper component          |  Repo source                             |  Repo scripts             |
+|-----------------         |-----------------                         |---------------            |
+|      |      ||
