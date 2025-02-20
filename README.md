@@ -106,9 +106,6 @@ This section give the sources of tables, figures, and some statistical results p
 
 | Paper component          |  Repo source                             |  Repo scripts             |
 |-----------------         |-----------------                         |---------------            |
-|    Table 1             | `plots-field-trials/flux_weather1.pdf`       | `scripts-field-trials/plot.R` |
-
-
 |  Table 2   | `output/soil.table.treat.csv` | `scripts-pub-tables/export.R` |
 |  Table 3  | `output/digestate.table.treat1.csv` | `` |
 |  Fig. 1    | `plots-meas/NH3.flux.comm.50.pdf` | `scripts-meas/plot.R` |
