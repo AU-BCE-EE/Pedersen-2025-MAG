@@ -107,7 +107,7 @@ This section give the sources of tables, figures, and some statistical results p
 | Paper component          |  Repo source                             |  Repo scripts             |
 |-----------------         |-----------------                         |---------------            |
 |  Table 2   | `output/soil.table.treat.csv` | `scripts-pub-tables/export.R` |
-|  Table 3  | `output/digestate.table.treat1.csv` | `` |
+|  Table 3  | `output/digestate.table.treat1.csv` | `scripts-pub-table/export.R` |
 |  Fig. 1    | `plots-meas/NH3.flux.comm.50.pdf` | `scripts-meas/plot.R` |
 |  Table 4   | `output/cum.emis.treat.csv` | `scripts-meas/export.R` |
 |  Table 5  | `output/mmeans1_4` and `output/mmeans5-10` | `scripts-meas/export.R` |
