@@ -4,7 +4,9 @@ Data from the project: Methods for reducing Ammonia loss and increased methane y
 Repository contains data and data treatment related to NH3 emissions after field application of digestates, and associated data such as slurry surface pH and infiltration. 
 
 The data is presented in two manuscripts: 
+
 A: Pedersen, J., Hafner, S. D., Romio, C., Pacholski, A. S. Evaluation of application and treatment options for reducing ammonia emissions after field-applied slurry digestate. In preparation, February 2025.
+
 B: Pedersen, J., Labouriau, R., Romio, C., Pacholski, A. S., Hafner, S. D. Effect of digestate and untreated slurry properties on ammonia emission after field application. In preparation, February 2025. 
 
 # Maintainer
@@ -104,7 +106,24 @@ This section give the sources of tables, figures, and some statistical results p
 
 | Paper component          |  Repo source                             |  Repo scripts             |
 |-----------------         |-----------------                         |---------------            |
-|    Figure 4              | `plots-field-trials/flux_weather1.pdf`       | `scripts-field-trials/plot.R` |
+|    Table 1             | `plots-field-trials/flux_weather1.pdf`       | `scripts-field-trials/plot.R` |
+
+
+|  Table 2   | `output/soil.table.treat.csv` | `scripts-pub-tables/export.R` |
+|  Table 3  | `output/digestate.table.treat1.csv` | `` |
+|  Fig. 1    | `plots-meas/NH3.flux.comm.50.pdf` | `scripts-meas/plot.R` |
+|  Table 4   | `output/cum.emis.treat.csv` | `scripts-meas/export.R` |
+|  Table 5  | `output/mmeans1_4` and `output/mmeans5-10` | `scripts-meas/export.R` |
+|   Table S2 | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
+|  Fig. S4 | `plots-meas/NH3.flux.speed.pdf` | `scripts-meas/plot.R` |
+|  Table S3 | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
+|  Table S4  | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
+|  Fig. S5  | `plots-meas/NH3.flux.DFCmov.pdf` | `scripts-meas/plot.R` |
+| Fig. S10 | `plots-temp-loggers/temp_elevation.pdf` | `scripts-temp-loggers/plot.R` |
+|  Fig. S11  | `plots-meas/temp.treat.R` | `scripts-meas/plot.R` |
+|  Table S5  | `output/digestate.table.treat2.csv` | `scripts-pub-tables/export.R` |
+|  Fig. S11 | `plots-meas/NH3.flux.comm.150.pdf` | `scripts-meas/plot.R` |
+|  Fig. S12 | `plots-meas/NH3.flux.trial12.pdf` | `scripts-meas/plot.R` |
 
 
 # Links to manuscript B
