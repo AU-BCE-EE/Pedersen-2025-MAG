@@ -3,7 +3,7 @@ Data from the project: Methods for reducing Ammonia loss and increased methane y
 
 Repository contains data and data treatment related to NH3 emissions after field application of digestates, and associated data such as slurry surface pH and infiltration. 
 
-The data is presented in two manuscripts: 
+The data is presented in two manuscripts in preparation: 
 
 A: Pedersen, J., Hafner, S. D., Romio, C., Pacholski, A. S. Evaluation of application and treatment options for reducing ammonia emissions after field-applied slurry digestate. In preparation, February 2025.
 
