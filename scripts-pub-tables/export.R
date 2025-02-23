@@ -34,7 +34,7 @@ dsumm.treat2 <- dsumm[is.element(dsumm$Trial_B, c('1', '2', '3', '4', '9', '5', 
                       c('new.ID', 'dig', 'straw', 'treat', 'mm2', 'mm2TS', 'ssa', 'swm', 'vwm', 'mm1', 'mm12', 'K', 'n')] 
 
 # Paper on digestate properties:
-dsumm.prop <- dsumm[is.element(dsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D4')), 
+dsumm.prop <- dsumm[is.element(dsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')), 
                    c('new.ID', 'dig', 'straw', 'treat', 'TS', 'VS', 'mm2', 'mm2TS', 
                      'K.mn', 'n.mn', 'ESA', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
 
@@ -58,7 +58,7 @@ stsumm <- merge(temp.dat, ssumm, by = c('Trial_B'))
 stsumm.treat <- stsumm[is.element(stsumm$Trial_B, c('1', '2', '3', '4', '9', '5', '6', '10', '7', '8', '11', '12')),
                        c('new.ID', 'water', 'bulk', 'pH', 'crop.height', 'air.temp.start', 'temp.mean')]
 
-stsumm.prop <- stsumm[is.element(stsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D4')), 
+stsumm.prop <- stsumm[is.element(stsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')), 
                        c('new.ID', 'water', 'bulk', 'pH', 'crop.height', 'air.temp.start', 'temp.mean')]
 
 write.csv(stsumm.treat, '../output/soil.table.treat.csv', row.names = FALSE)
@@ -67,7 +67,7 @@ write.csv(stsumm.prop, '../output/soil.table.prop.csv', row.names = FALSE)
 # Column with measurement duration 
 dt.treat <- stsumm[is.element(stsumm$Trial_B, c('1', '2', '3', '4', '9', '5', '6', '10', '7', '8', '11', '12')),
                        c('new.ID', 'dt')]
-dt.prop <- stsumm[is.element(stsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D4')),
+dt.prop <- stsumm[is.element(stsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')),
                     c('new.ID', 'dt')]
 
 write.csv(dt.treat, '../output/dt.treat.csv', row.names = FALSE)
