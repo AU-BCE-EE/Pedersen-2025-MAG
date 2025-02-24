@@ -1,7 +1,6 @@
 
 # Combinding ESA data with digestate properties data
 colnames(Esumm)[which(names(Esumm) == 'treat')] <- 'dig'
-colnames(Esumm)[which(names(Esumm) == 'experiment')] <- 'Trial_B'
 dsumm <- merge(dsumm, Esumm, by = c('Trial_B', 'dig'), all.x = TRUE)
 
 # Digestate properties 
@@ -34,15 +33,11 @@ dsumm.treat2 <- dsumm[is.element(dsumm$Trial_B, c('1', '2', '3', '4', '9', '5', 
                       c('new.ID', 'dig', 'straw', 'treat', 'mm2', 'mm2TS', 'ssa', 'swm', 'vwm', 'mm1', 'mm12', 'K', 'n')] 
 
 # Paper on digestate properties:
-# dsumm.prop <- dsumm[is.element(dsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')), 
-#                    c('new.ID', 'dig', 'straw', 'treat', 'TS', 'VS', 'mm2', 'mm2TS', 
-#                      'K.mn', 'n.mn', 'ESA', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
-
 dsumm.prop1 <- dsumm[is.element(dsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')), 
                       c('new.ID', 'dig', 'straw', 'treat', 'TS', 'VS', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
 
 dsumm.prop2 <- dsumm[is.element(dsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')), 
-                      c('new.ID', 'dig', 'straw', 'treat', 'mm2', 'mm2TS', 'ssa', 'swm', 'vwm', 'mm1', 'mm12', 'K', 'n')] 
+                      c('new.ID', 'dig', 'straw', 'treat', 'mm2', 'mm2TS', 'ssa', 'swm', 'vwm', 'mm1', 'mm12', 'K', 'n', 'ESA')] 
 
 
 write.csv(dsumm.treat1, '../output/digestate.table.treat1.csv', row.names = FALSE)
