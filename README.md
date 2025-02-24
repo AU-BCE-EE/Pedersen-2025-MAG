@@ -130,5 +130,5 @@ This section give the sources of tables, figures, and some statistical results p
 |-----------------         |-----------------                         |---------------            |
 |    Table GGG, all digestate and slurry properties |   `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
 |    Table GGG, cumulative NH3 emission  |    `output/cum.emis.prop.csv`   | `scripts-meas/export.R`  |
-|    Table SHHH  |   `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
+|    Table SHHH and SIII  |   `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
 |      |      ||
