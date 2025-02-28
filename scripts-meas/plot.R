@@ -115,13 +115,13 @@ f33 <- ggplot(fsumm.treat03, aes(cta, j.rel.mn, color = treat1, fill = treat1)) 
   ylim(NA, 0.075) +
   xlim(NA, 50)
 
-mat <- matrix(c(1, 
-                2,
-                3),
+mat <- matrix(c(1, 1, 1, 1,
+                2, 2, 2,
+                3, 3, 3),
               ncol = 1)
 
 pff <- grid.arrange(f1, f2, f3, layout_matrix = mat)
-ggsave2x('../plots-meas/NH3.flux.comm.150', plot = pff, height = 11, width = 8)
+ggsave2x('../plots-meas/NH3.flux.comm.150', plot = pff, height = 10, width = 8)
 
 mat <- matrix(c(1, 1, 1, 1,
                 2, 2, 2,
