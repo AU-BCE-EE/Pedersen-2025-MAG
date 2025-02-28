@@ -20,38 +20,40 @@ ggsave2x('../plots-meas/NH3.flux01', height = 10, width = 10)
 
 fsumm.treat01 <- fsumm.treat[fsumm.treat$new.ID == '1' | fsumm.treat$new.ID == '2' | fsumm.treat$new.ID == '3' | fsumm.treat$new.ID == '4', ]
 fsumm.treat01 <- fsumm.treat01[! c(fsumm.treat01$new.ID == '3' & fsumm.treat01$treat1 == 'B Sep-S'), ]
-f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
-  geom_point(shape = 1, size = 0.5) + geom_line() + 
+
+# Create and sort factor for plot labels
+setorder(fsumm.treat01, new.ID, treat1)
+ll <- unique(fsumm.treat01[, treat1])
+labs <- data.table(treat1 = ll, i = as.integer(factor(ll, levels = ll)))
+labs[, leg.lab := paste0(i, '. ', treat1)]
+fsumm.treat01[, tfact := factor(treat1, levels = ll)]
+fsumm.treat01[, leg.lab := factor(paste0(as.integer(tfact), '. ', tfact), levels = labs$leg.lab)]
+
+# Manual adjustments to avoid overplotting
+adj <- data.table(i      = c(4,           6,      9,     1,      4,     7),
+                  new.ID = c(1,           2,      2,     3,      4,     3),
+                  yshift = c(-0.002, -0.003, -0.002, 0.003, -0.001, 0.001))
+adj[, new.ID := as.character(new.ID)]
+
+# Get integer codes and initial emission
+d0 <- fsumm.treat01[, .(y = j.rel.mn[cta == min(cta)]), by = .(new.ID, leg.lab)]
+labs <- merge(labs, d0)
+labs <- merge(labs, adj, all = TRUE, by = c('i', 'new.ID'))
+labs[is.na(yshift), yshift := 0]
+labs[, y := y + yshift]
+
+f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
+  geom_point(shape = 1, size = 0.5) + 
+  geom_line() + 
+  geom_text(data = labs, x = 2, aes(y = y, label = i), hjust = 1, size = 3.2, show.legend = FALSE) +
   facet_wrap(~ new.ID, ncol = 4) +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
-  guides(colour = guide_legend(nrow = 2,byrow = TRUE)) + 
-  xlim(NA, 150)
+  guides(colour = guide_legend(nrow = 3, byrow = TRUE)) + 
+  xlim(-0.2, 150)
 
-
-  # Create and sort factor for plot labels
-  setorder(fsumm.treat01, new.ID, treat1)
-  ll <- unique(fsumm.treat01[, treat1])
-  labs <- data.table(treat1 = ll, i = as.integer(factor(ll, levels = ll)))
-  labs[, leg.lab := paste0(i, '. ', treat1)]
-  fsumm.treat01[, tfact := factor(treat1, levels = ll)]
-  fsumm.treat01[, leg.lab := factor(paste0(as.integer(tfact), '. ', tfact), levels = labs$leg.lab)]
-
-  # Manual adjustments to avoid overplotting
-  adj <- data.table(i      = c(4,           6,      9,     1,      4,     7),
-		    new.ID = c(1,           2,      2,     3,      4,     3),
-		    yshift = c(-0.002, -0.003, -0.002, 0.003, -0.001, 0.001))
-  adj[, new.ID := as.character(new.ID)]
-
-  # Get integer codes and initial emission
-  d0 <- fsumm.treat01[, .(y = j.rel.mn[cta == min(cta)]), by = .(new.ID, leg.lab)]
-  labs <- merge(labs, d0)
-  labs <- merge(labs, adj, all = TRUE, by = c('i', 'new.ID'))
-  labs[is.na(yshift), yshift := 0]
-  labs[, y := y + yshift]
-  
 f11 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
   geom_point(shape = 1, size = 0.5) + 
   geom_line() + 
