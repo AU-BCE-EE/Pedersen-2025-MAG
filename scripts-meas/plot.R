@@ -182,16 +182,61 @@ ggsave2x('../plots-meas/NH3.flux.speed', height = 3, width = 7)
 # ggsave2x('../plots-meas/NH3.flux.11and12', height = 4, width = 6)
 
 
+
 fsumm.prop <- fsumm[is.element(fsumm$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), ]
-ggplot(fsumm.prop, aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
-  geom_point(shape = 1, size = 0.5) + geom_line() + 
-  facet_wrap(~ new.ID, ncol = 5) +
+
+# Create and sort factor for plot labels
+setorder(fsumm.prop, new.ID, treat1)
+ll <- unique(fsumm.prop[, treat1])
+labs <- data.table(treat1 = ll, i = as.integer(factor(ll, levels = ll)))
+labs[, leg.lab := paste0(i, '. ', treat1)]
+fsumm.prop[, tfact := factor(treat1, levels = ll)]
+fsumm.prop[, leg.lab := factor(paste0(as.integer(tfact), '. ', tfact), levels = labs$leg.lab)]
+
+# Manual adjustments to avoid overplotting
+adj <- data.table(i      = c(1, 2, 3, 4, 5, 1, 6, 7, 8, 9, 1, 3, 8, 10, 11, 1, 6, 7, 12, 13, 1, 2, 4, 14, 15),
+                  new.ID = c('D1', 'D1', 'D1', 'D1', 'D1', 'D2', 'D2', 'D2', 'D2', 'D2', 
+                             'D3', 'D3', 'D3', 'D3', 'D3', 'D4', 'D4', 'D4', 'D4', 'D4', 
+                             'D5', 'D5', 'D5', 'D5', 'D5'),
+                  yshift = c(-0.003, -0.003, -0.003, 0.002, 0.003, -0.002, -0.005, 0.002, 0, 0, 
+                             0.001, 0.001, 0.00, 0, 0, -0.0002, 0, 0, 0, 0, -0.001, -0.001, 0.003, 0, 0))
+adj[, new.ID := as.character(new.ID)]
+
+# Get integer codes and initial emission
+d0 <- fsumm.prop[, .(y = j.rel.mn[cta == min(cta)]), by = .(new.ID, leg.lab)]
+labs <- merge(labs, d0)
+labs <- merge(labs, adj, all = TRUE, by = c('i', 'new.ID'))
+labs[is.na(yshift), yshift := 0]
+labs[, y := y + yshift]
+
+ggplot(fsumm.prop, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
+  geom_point(shape = 1, size = 0.5) + 
+  geom_line() + 
+  geom_text(data = labs, x = 2, aes(y = y, label = i), hjust = 1, size = 4.2, show.legend = FALSE) +
+  facet_wrap(~ new.ID, ncol = 1, scale = 'free_y') +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
-  xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux.prop', height = 4, width = 8)
+  guides(color = guide_legend(nrow = 5)) + 
+  xlim(-0.02, 52)
+ggsave2x('../plots-meas/NH3.flux.prop50', height = 10, width = 3.4)
+
+
+ggplot(fsumm.prop, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
+  geom_point(shape = 1, size = 0.5) + 
+  geom_line() + 
+  geom_text(data = labs, x = 2, aes(y = y, label = i), hjust = 1, size = 4.2, show.legend = FALSE) +
+  facet_wrap(~ new.ID, ncol = 1, scale = 'free_y') +
+  theme_bw() + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  guides(color = guide_legend(nrow = 3)) + 
+  xlim(-0.02, 150)
+ggsave2x('../plots-meas/NH3.flux.prop150', height = 9, width = 7)
+
+######### CUMULATIVE EMISSION
 
 # cumulative loss for trial 11 + 12
 idat11.12 <- idat[idat$new.ID == '11' | idat$new.ID == '12', ]
@@ -323,7 +368,7 @@ ggplot(idat[idat$new.ID == '15' & idat$treat1 == '2-Pos' & idat$rep == '1', ],
   xlim(NA, 150)
 ggsave2x('../plots-meas/temp.treat.DFCmov', height = 3, width = 2.5)
 
-ggplot(idat.prop[idat.prop$treat1 == 'A' & idat.prop$rep == '1' | idat.prop$treat1 == '2-Pos' & idat.prop$rep == '1' | idat.prop$treat1 == 'TS1-4' & idat.prop$rep == '1' | idat.prop$treat1 == 'TH' & idat.prop$rep == '1' | idat.prop$treat1 == 'Un12' & idat.prop$rep == '1', ], 
+ggplot(idat.prop[idat.prop$treat1 == 'A' & idat.prop$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
   geom_line() + 
   facet_wrap(~ new.ID, scales = 'free_x') +
