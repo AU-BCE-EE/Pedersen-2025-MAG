@@ -45,6 +45,8 @@ write.csv(dsumm.treat2, '../output/digestate.table.treat2.csv', row.names = FALS
 write.csv(dsumm.prop1, '../output/digestate.table.prop1.csv', row.names = FALSE)
 write.csv(dsumm.prop2, '../output/digestate.table.prop2.csv', row.names = FALSE)
 
+write.csv(dsumm[is.element(dsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')), ], '../output/digestate.prop.supMat.csv', row.names = FALSE)
+
 # Experimental time, soil conditions and temperature 
 
 # Temperature

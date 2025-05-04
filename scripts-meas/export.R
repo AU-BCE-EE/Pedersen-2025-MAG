@@ -26,3 +26,10 @@ write.csv(isumm3, '../output/cum.emis.ID.prop.csv', row.names = FALSE)
 # Marginal means by analysis
 write.csv(mmeans1_4, '../output/mmeans1_4.csv', row.names = FALSE)
 write.csv(mmeans5_10, '../output/mmeans5_10.csv', row.names = FALSE)
+
+
+# table with cumulative emission for sup mat plot
+esumm.prop.supMat <- esumm[is.element(esumm$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), c('new.ID', 'treat1', 'e.rel.150')] 
+write.csv(esumm.prop.supMat, '../output/esumm.prop.supMat.csv', row.names = FALSE)
+
+
