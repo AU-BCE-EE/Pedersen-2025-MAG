@@ -3,7 +3,6 @@
 idat.treat <- idat[is.element(idat$new.ID, c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')), ]
 idat.prop <- idat[is.element(idat$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), ]
 
-
 fsumm.treat <- fsumm[is.element(fsumm$new.ID, c('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')), ]
 
 
@@ -209,11 +208,20 @@ labs <- merge(labs, adj, all = TRUE, by = c('i', 'new.ID'))
 labs[is.na(yshift), yshift := 0]
 labs[, y := y + yshift]
 
+# define new labels for each subplot (Tral X instead of DX)
+custom_labels <- c(
+  'D1' = 'Trial 1',
+  'D2' = 'Trial 2',
+  'D3' = 'Trial 3',
+  'D4' = 'Trial 4',
+  'D5' = 'Trial 5'
+)
+
 ggplot(fsumm.prop, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
   geom_point(shape = 1, size = 0.5) + 
   geom_line() + 
   geom_text(data = labs, x = 2, aes(y = y, label = i), hjust = 1, size = 4.2, show.legend = FALSE) +
-  facet_wrap(~ new.ID, ncol = 1, scale = 'free_y') +
+  facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), ncol = 1, scale = 'free_y') +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
@@ -227,7 +235,7 @@ ggplot(fsumm.prop, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) +
   geom_point(shape = 1, size = 0.5) + 
   geom_line() + 
   geom_text(data = labs, x = 2, aes(y = y, label = i), hjust = 1, size = 4.2, show.legend = FALSE) +
-  facet_wrap(~ new.ID, ncol = 1, scale = 'free_y') +
+  facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), ncol = 1, scale = 'free_y') +
   theme_bw() + 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
@@ -368,10 +376,20 @@ ggplot(idat[idat$new.ID == '15' & idat$treat1 == '2-Pos' & idat$rep == '1', ],
   xlim(NA, 150)
 ggsave2x('../plots-meas/temp.treat.DFCmov', height = 3, width = 2.5)
 
+
+# define new labels for each subplot (Tral X instead of DX)
+custom_labels <- c(
+  'D1' = 'Trial 1',
+  'D2' = 'Trial 2',
+  'D3' = 'Trial 3',
+  'D4' = 'Trial 4',
+  'D5' = 'Trial 5'
+)
+
 ggplot(idat.prop[idat.prop$treat1 == 'A' & idat.prop$rep == '1', ], 
        aes(cta, air.temp, group = pmid)) + 
   geom_line() + 
-  facet_wrap(~ new.ID, scales = 'free_x') +
+  facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), scales = 'free_x') +
   theme_bw() + 
   labs(x = 'Time after application (h)', y = 'Air temperature (°C)') + 
   theme(legend.position = 'bottom', legend.title = element_blank()) + 
