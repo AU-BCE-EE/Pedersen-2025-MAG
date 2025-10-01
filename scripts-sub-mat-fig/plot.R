@@ -56,52 +56,6 @@ ggsave2x('../plots-meas/dig.prop.supMat1', plot = pf, height = 3.5, width = 5.5)
 
 
 
-
-# f1 <- ggplot(ds, aes(TS.mn, e.rel.150, color = dig)) + 
-#   geom_point() + 
-#   theme_bw() + 
-#   xlab('Dry matter (%)') + ylab(expression(paste(NH[3],' (% of TAN)'))) +
-#   theme(legend.position = 'bottom', legend.title = element_blank())
-# 
-# f2 <- ggplot(ds, aes(pH.lab.mn, e.rel.150, color = dig)) + 
-#   geom_point() + 
-#   theme_bw() + 
-#   xlab('pH') + ylab(expression(paste(NH[3],' (% of TAN)'))) + 
-#   theme(legend.position = 'bottom', legend.title = element_blank())
-# 
-# f3 <- ggplot(ds, aes(area.perc.mn, e.rel.150, color = dig)) + 
-#   geom_point() + 
-#   theme_bw() + 
-#   xlab('Exposed surface area (%)') + ylab(expression(paste(NH[3],' (% of TAN)'))) + 
-#   theme(legend.position = 'bottom', legend.title = element_blank())
-# 
-# f4 <- ggplot(ds, aes(n.mn, e.rel.150, color = dig)) + 
-#   geom_point() + 
-#   theme_bw() + 
-#   xlab('n') + ylab(expression(paste(NH[3],' (% of TAN)'))) + 
-#   theme(legend.position = 'bottom', legend.title = element_blank())
-# 
-# f5 <- ggplot(ds, aes(TS.mn, area.perc.mn, color = dig)) + 
-#   geom_point() +
-#   theme_bw() + 
-#   xlab('Dry matter (%)') + ylab('Exposed surface area (%)') +
-#   theme(legend.position = 'bottom', legend.title = element_blank())
-# 
-# f6 <- ggplot(ds, aes(TS.mn, n.mn, color = dig)) + 
-#   geom_point() +
-#   theme_bw() + 
-#   xlab('Dry matter (%)') + ylab('n') +
-#   theme(legend.position = 'bottom', legend.title = element_blank())
-# 
-# mat <- matrix(c(1, 2,
-#                 3, 4, 
-#                 5, 6),
-#               nrow = 3, byrow = TRUE)
-# 
-# pf <- grid.arrange(f1, f2, f3, f4, f5, f6, layout_matrix = mat)
-# ggsave2x('../plots-meas/dig.prop.supMat2', plot = pf, height = 13, width = 8)
-
-
 f1 <- ggplot(ds, aes(TS.mn, e.rel.150, color = dig1, shape = trial.ID)) + 
   geom_point() + 
   theme_bw() + 
@@ -172,4 +126,35 @@ mat <- matrix(c(1, 2,
 
 pf <- grid.arrange(f5, f6, f7, f8, layout_matrix = mat)
 ggsave2x('../plots-meas/dig.prop.supMat3', plot = pf, height = 8, width = 6)
+
+
+# Plots for Ramiran presentation october 2025
+# long format: 
+ds.long <- melt(
+  ds,
+  id.vars = 'dig1',
+  measure.vars = c('TS.mn', 'K.mn', 'n.mn', 'pH.lab.mn'),
+  variable.name = 'parameter',
+  value.name = 'value'
+)
+
+names <- c(`TS.mn` =  'DM (%)',
+         `K.mn` =  'K (viscosity)',
+         `n.mn` =  'm (viscosity)',
+         `pH.lab.mn` =  'pH')
+ds.long[, names := names[parameter]]
+
+dig2 <- c(`Digestate` =  'Digestate',
+           `Pig` =  'Pig slurry',
+           `Cattle` = 'Cattle slurry')
+ds.long[, dig2 := dig2[dig1]]
+
+ggplot(ds.long, aes(names, value)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color = dig2), width = 0.2, size = 2, alpha = 0.5) + 
+  facet_wrap(~ names, scales = 'free', ncol = 4) +
+  theme_bw() + 
+  labs(x = NULL, y = NULL, color = NULL) +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+ggsave2x('../plots-meas/dig.prop.Ramiran', plot = pf, height = 8, width = 6)
 

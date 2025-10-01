@@ -17,6 +17,17 @@ ggplot(idat, aes(cta, j.NH3, group = pmid, color = treat1)) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux01', height = 10, width = 10)
 
+# # plot for ramiran poster
+# ggplot(idat.treat, aes(cta, j.NH3, group = pmid)) +
+#   geom_line(size = 0.2) + 
+#   theme_bw() +
+#   labs(x = 'Time after application (h)', y = expression('NH'[3]~'flux'~('kg N h'^'-1'~ha^'-1'))) +
+#   theme(legend.position = 'bottom', legend.title = element_blank()) +
+#   xlim(NA, 150)
+# ggsave2x('../plots-meas/NH3.flux.ramiran', height = 3, width = 6)
+
+
+
 fsumm.treat01 <- fsumm.treat[fsumm.treat$new.ID == '1' | fsumm.treat$new.ID == '2' | fsumm.treat$new.ID == '3' | fsumm.treat$new.ID == '4', ]
 fsumm.treat01 <- fsumm.treat01[! c(fsumm.treat01$new.ID == '3' & fsumm.treat01$treat1 == 'B Sep-S'), ]
 
