@@ -17,7 +17,7 @@ ggplot(idat, aes(cta, j.NH3, group = pmid, color = treat1)) +
   xlim(NA, 150)
 ggsave2x('../plots-meas/NH3.flux01', height = 10, width = 10)
 
-# # plot for ramiran poster
+# # plot for ramiran poster - not used
 # ggplot(idat.treat, aes(cta, j.NH3, group = pmid)) +
 #   geom_line(size = 0.2) + 
 #   theme_bw() +
@@ -27,9 +27,8 @@ ggsave2x('../plots-meas/NH3.flux01', height = 10, width = 10)
 # ggsave2x('../plots-meas/NH3.flux.ramiran', height = 3, width = 6)
 
 
-
 fsumm.treat01 <- fsumm.treat[fsumm.treat$new.ID == '1' | fsumm.treat$new.ID == '2' | fsumm.treat$new.ID == '3' | fsumm.treat$new.ID == '4', ]
-fsumm.treat01 <- fsumm.treat01[! c(fsumm.treat01$new.ID == '3' & fsumm.treat01$treat1 == 'B Sep-S'), ]
+fsumm.treat01 <- fsumm.treat01[! c(fsumm.treat01$new.ID == '3' & fsumm.treat01$treat1 == 'B Sep-S' & fsumm.treat01$cta == '0'), ]
 
 # Create and sort factor for plot labels
 setorder(fsumm.treat01, new.ID, treat1)
@@ -40,9 +39,9 @@ fsumm.treat01[, tfact := factor(treat1, levels = ll)]
 fsumm.treat01[, leg.lab := factor(paste0(as.integer(tfact), '. ', tfact), levels = labs$leg.lab)]
 
 # Manual adjustments to avoid overplotting
-adj <- data.table(i      = c(4,           6,      9,     1,      4,     7),
-                  new.ID = c(1,           2,      2,     3,      4,     3),
-                  yshift = c(-0.002, -0.003, -0.002, 0.003, -0.001, 0.001))
+adj <- data.table(i      = c(4,           6,      9,     1,      4,     7, 11, 10),
+                  new.ID = c(1,           2,      2,     3,      4,     3, 3, 3),
+                  yshift = c(-0.002, -0.003, -0.002, 0.003, -0.001, 0.001, -0.003, -0.002))
 adj[, new.ID := as.character(new.ID)]
 
 # Get integer codes and initial emission
@@ -62,7 +61,7 @@ f1 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab))
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
   guides(colour = guide_legend(nrow = 3, byrow = TRUE)) + 
-  xlim(-0.2, 150)
+  xlim(-2, 150)
 
 f11 <- ggplot(fsumm.treat01, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
   geom_point(shape = 1, size = 0.5) + 
@@ -140,6 +139,59 @@ mat <- matrix(c(1, 1, 1, 1,
 
 pfff <- grid.arrange(f11, f22, f33, layout_matrix = mat)
 ggsave2x('../plots-meas/NH3.flux.comm.50', plot = pfff, height = 10, width = 8)
+
+
+####################################
+# plots for ramiran poster
+
+
+treat2 <- c(`A` =  'Dig. A',
+         `B` =  'Dig. B',
+         `C` =  'Dig. C',
+         `B Sep-S` =  'Dig. B liquid',
+         `C Sep-D` =  'Dig. C liquid')
+
+fsumm.treat01[, treat2 := treat2[treat1]]
+
+
+treat2 <- c(`TH` =  'Trailing hose',
+         `TS1` =  'Trailing shoe 1',
+         `TS2` =  'Trailing shoe 2',
+         `TS3` =  'Trailing shoe + harrowing tine')
+
+fsumm.treat02[, treat2 := treat2[treat1]]
+
+
+ggplot(fsumm.treat01[fsumm.treat01$new.ID == '3', ], aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
+  geom_point(shape = 1, size = 0.5) + 
+  geom_line() + 
+  facet_wrap(~ new.ID, labeller = as_labeller(c('3' = 'Trial 3'))) +
+  theme_bw() +
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) +
+  ylab(expression(paste(NH[3], '  flux'))) + xlab('Time from application (h)') +
+  theme(axis.text.y = element_blank()) + 
+  theme(legend.position = 'bottom', ncol = 2, legend.title = element_blank()) +
+  xlim(-0.2, 50) + 
+  scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1")
+ggsave2x('../plots-meas/NH3.flux3.Ramiran', height = 3, width = 4.5)
+
+ggplot(fsumm.treat02[fsumm.treat02$new.ID == '7', ], aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
+  geom_point(shape = 1, size = 0.5) + 
+  geom_line() + 
+  facet_wrap(~ new.ID, labeller = as_labeller(c('7' = 'Trial 7'))) +
+  theme_bw() +
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) +
+  ylab(expression(paste(NH[3], '  flux'))) + xlab('Time from application (h)') +
+  theme(axis.text.y = element_blank()) + 
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  guides(color = guide_legend(nrow = 2)) + 
+  xlim(-0.2, 50) + 
+  scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1")
+ggsave2x('../plots-meas/NH3.flux7.Ramiran', height = 3, width = 4.5)
+
+####################################
 
 ggplot(fsumm[fsumm$new.ID == '15', ], aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
   geom_point(shape = 1, size = 0.5) + geom_line() + 

@@ -155,6 +155,7 @@ ggplot(ds.long, aes(names, value)) +
   facet_wrap(~ names, scales = 'free', ncol = 4) +
   theme_bw() + 
   labs(x = NULL, y = NULL, color = NULL) +
+  theme(legend.position = "left") + 
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-ggsave2x('../plots-meas/dig.prop.Ramiran', plot = pf, height = 8, width = 6)
+ggsave2x('../plots-meas/dig.prop.Ramiran', height = 2, width = 6)
 
