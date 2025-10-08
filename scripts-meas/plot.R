@@ -141,55 +141,55 @@ pfff <- grid.arrange(f11, f22, f33, layout_matrix = mat)
 ggsave2x('../plots-meas/NH3.flux.comm.50', plot = pfff, height = 10, width = 8)
 
 
-####################################
-# plots for ramiran poster
-
-
-treat2 <- c(`A` =  'Dig. A',
-         `B` =  'Dig. B',
-         `C` =  'Dig. C',
-         `B Sep-S` =  'Dig. B liquid',
-         `C Sep-D` =  'Dig. C liquid')
-
-fsumm.treat01[, treat2 := treat2[treat1]]
-
-
-treat2 <- c(`TH` =  'Trailing hose',
-         `TS1` =  'Trailing shoe 1',
-         `TS2` =  'Trailing shoe 2',
-         `TS3` =  'Trailing shoe + harrowing tine')
-
-fsumm.treat02[, treat2 := treat2[treat1]]
-
-
-ggplot(fsumm.treat01[fsumm.treat01$new.ID == '3', ], aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
-  geom_point(shape = 1, size = 0.5) + 
-  geom_line() + 
-  facet_wrap(~ new.ID, labeller = as_labeller(c('3' = 'Trial 3'))) +
-  theme_bw() +
-  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) +
-  ylab(expression(paste(NH[3], '  flux'))) + xlab('Time from application (h)') +
-  theme(axis.text.y = element_blank()) + 
-  theme(legend.position = 'bottom', ncol = 1, legend.title = element_blank()) +
-  xlim(-0.2, 50) + 
-  scale_color_brewer(palette = "Set1") +
-  scale_fill_brewer(palette = "Set1")
-ggsave2x('../plots-meas/NH3.flux3.Ramiran', height = 3, width = 5.5)
-
-ggplot(fsumm.treat02[fsumm.treat02$new.ID == '7', ], aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
-  geom_point(shape = 1, size = 0.5) + 
-  geom_line() + 
-  facet_wrap(~ new.ID, labeller = as_labeller(c('7' = 'Trial 7'))) +
-  theme_bw() +
-  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) +
-  ylab(expression(paste(NH[3], '  flux'))) + xlab('Time from application (h)') +
-  theme(axis.text.y = element_blank()) + 
-  theme(legend.position = 'bottom', legend.title = element_blank()) +
-  guides(color = guide_legend(nrow = 1)) + 
-  xlim(-0.2, 50) + 
-  scale_color_brewer(palette = "Set1") +
-  scale_fill_brewer(palette = "Set1")
-ggsave2x('../plots-meas/NH3.flux7.Ramiran', height = 3, width = 5.5)
+# ####################################
+# # plots for ramiran poster
+# 
+# 
+# treat2 <- c(`A` =  'Dig. A',
+#          `B` =  'Dig. B',
+#          `C` =  'Dig. C',
+#          `B Sep-S` =  'Dig. B liquid',
+#          `C Sep-D` =  'Dig. C liquid')
+# 
+# fsumm.treat01[, treat2 := treat2[treat1]]
+# 
+# 
+# treat2 <- c(`TH` =  'Trailing hose',
+#          `TS1` =  'Trailing shoe 1',
+#          `TS2` =  'Trailing shoe 2',
+#          `TS3` =  'Trailing shoe + harrowing tine')
+# 
+# fsumm.treat02[, treat2 := treat2[treat1]]
+# 
+# 
+# ggplot(fsumm.treat01[fsumm.treat01$new.ID == '3', ], aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
+#   geom_point(shape = 1, size = 0.5) + 
+#   geom_line() + 
+#   facet_wrap(~ new.ID, labeller = as_labeller(c('3' = 'Trial 3'))) +
+#   theme_bw() +
+#   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) +
+#   ylab(expression(paste(NH[3], '  flux'))) + xlab('Time from application (h)') +
+#   theme(axis.text.y = element_blank()) + 
+#   theme(legend.position = 'bottom', ncol = 1, legend.title = element_blank()) +
+#   xlim(-0.2, 50) + 
+#   scale_color_brewer(palette = "Set1") +
+#   scale_fill_brewer(palette = "Set1")
+# ggsave2x('../plots-meas/NH3.flux3.Ramiran', height = 3, width = 5.5)
+# 
+# ggplot(fsumm.treat02[fsumm.treat02$new.ID == '7', ], aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
+#   geom_point(shape = 1, size = 0.5) + 
+#   geom_line() + 
+#   facet_wrap(~ new.ID, labeller = as_labeller(c('7' = 'Trial 7'))) +
+#   theme_bw() +
+#   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) +
+#   ylab(expression(paste(NH[3], '  flux'))) + xlab('Time from application (h)') +
+#   theme(axis.text.y = element_blank()) + 
+#   theme(legend.position = 'bottom', legend.title = element_blank()) +
+#   guides(color = guide_legend(nrow = 1)) + 
+#   xlim(-0.2, 50) + 
+#   scale_color_brewer(palette = "Set1") +
+#   scale_fill_brewer(palette = "Set1")
+# ggsave2x('../plots-meas/NH3.flux7.Ramiran', height = 3, width = 5.5)
 
 ####################################
 
@@ -383,6 +383,69 @@ ggplot(isumm4, aes(treat2, e.rel.150, color = treat2)) +
   geom_boxplot(data = esumm4, aes(x = treat1, y = e.rel.150, color = treat1), show.legend = FALSE) 
  # theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
 ggsave2x('../plots-meas/cum.emis.4', height = 4, width = 4.5)
+
+##################################################################
+# # Plots for ramiran presentation
+# 
+# isummR <- as.data.table(isumm[isumm$new.ID == 'D1' | isumm$new.ID == 'D2' | isumm$new.ID == 'D3' | isumm$new.ID == 'D4' | isumm$new.ID == 'D5', ])
+# esummR <- as.data.table(esumm[esumm$new.ID == 'D1' | esumm$new.ID == 'D2' | esumm$new.ID == 'D3' | esumm$new.ID == 'D4' | esumm$new.ID == 'D5', ])
+# 
+# # define new labels for each subplot (Tral X instead of DX)
+# custom_labels <- c(
+#   'D1' = 'Trial 1',
+#   'D2' = 'Trial 2',
+#   'D3' = 'Trial 3',
+#   'D4' = 'Trial 4',
+#   'D5' = 'Trial 5'
+# )
+# 
+# IDs <- c(`A` =  'D1',
+#          `B` =  'D2',
+#          `C` =  'D3',
+#          `D` =  'D4', 
+#          `E` =  'D5',
+#          `F` =  'D6',
+#          `G` =  'D7',
+#          `H` =  'D8',
+#          `I` =  'D9',
+#          `Cattle A` =  'C1',
+#          `Cattle B` =  'C2',
+#          `Cattle C` =  'C3',
+#          `Pig A` =  'P1',
+#          `Pig B` =  'P2',
+#          `Pig C` =  'P3')
+# isummR[, new.treat1 := IDs[treat1]]
+# esummR[, new.treat1 := IDs[treat1]]
+# 
+# treat_colors <- c(
+#   'D1' = '#c6dbef',  
+#   'D2' = '#6baed6',  
+#   'D3' = '#2171b5',
+#   'D4' = '#08306b',  
+#   'D5' = '#9ecae1',  
+#   'D6' = '#4292c6', 
+#   'D7' = '#08519c', 
+#   'D8' = '#3182bd', 
+#   'D9' = '#bdd7e7',  
+#   'C1' = '#a1d99b',
+#   'C2' = '#31a354', 
+#   'C3' = '#006d2c', 
+#   'P1' = '#fc9272',  
+#   'P2' = '#de2d26',
+#   'P3' = '#a50f15')
+# 
+# ggplot(isummR, aes(new.treat1, e.rel.150, color = new.treat1)) + 
+#   geom_point() + 
+#   facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), scales = 'free_x', ncol = 5) + 
+#   theme_bw() + 
+#   labs(y = 'Emission (frac. applied TAN)') + 
+#   theme(axis.title.x = element_blank()) + 
+#   theme(legend.title = element_blank()) + theme(legend.position = 'none') + 
+#   geom_boxplot(data = esummR, aes(x = new.treat1, y = e.rel.150, color = new.treat1), show.legend = FALSE) + 
+#   scale_color_manual(values = treat_colors)
+# ggsave2x('../plots-meas/cum.emis.Ramiran', height = 3, width = 7.5)
+
+############################################################################
 
 # temperature
 ggplot(idat[idat$treat1 == 'A' & idat$rep == '1' | idat$treat1 == '2-Pos' & idat$rep == '1' | idat$treat1 == 'TS1-4' & idat$rep == '1' | idat$treat1 == 'TH' & idat$rep == '1' | idat$treat1 == 'Un12' & idat$rep == '1', ], 
