@@ -170,11 +170,11 @@ ggplot(fsumm.treat01[fsumm.treat01$new.ID == '3', ], aes(cta, j.rel.mn, color = 
   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) +
   ylab(expression(paste(NH[3], '  flux'))) + xlab('Time from application (h)') +
   theme(axis.text.y = element_blank()) + 
-  theme(legend.position = 'bottom', ncol = 2, legend.title = element_blank()) +
+  theme(legend.position = 'bottom', ncol = 1, legend.title = element_blank()) +
   xlim(-0.2, 50) + 
   scale_color_brewer(palette = "Set1") +
   scale_fill_brewer(palette = "Set1")
-ggsave2x('../plots-meas/NH3.flux3.Ramiran', height = 3, width = 4.5)
+ggsave2x('../plots-meas/NH3.flux3.Ramiran', height = 3, width = 5.5)
 
 ggplot(fsumm.treat02[fsumm.treat02$new.ID == '7', ], aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
   geom_point(shape = 1, size = 0.5) + 
@@ -185,11 +185,11 @@ ggplot(fsumm.treat02[fsumm.treat02$new.ID == '7', ], aes(cta, j.rel.mn, color = 
   ylab(expression(paste(NH[3], '  flux'))) + xlab('Time from application (h)') +
   theme(axis.text.y = element_blank()) + 
   theme(legend.position = 'bottom', legend.title = element_blank()) +
-  guides(color = guide_legend(nrow = 2)) + 
+  guides(color = guide_legend(nrow = 1)) + 
   xlim(-0.2, 50) + 
   scale_color_brewer(palette = "Set1") +
   scale_fill_brewer(palette = "Set1")
-ggsave2x('../plots-meas/NH3.flux7.Ramiran', height = 3, width = 4.5)
+ggsave2x('../plots-meas/NH3.flux7.Ramiran', height = 3, width = 5.5)
 
 ####################################
 
