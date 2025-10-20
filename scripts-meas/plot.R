@@ -385,65 +385,68 @@ ggplot(isumm4, aes(treat2, e.rel.150, color = treat2)) +
 ggsave2x('../plots-meas/cum.emis.4', height = 4, width = 4.5)
 
 ##################################################################
-# # Plots for ramiran presentation
-# 
-# isummR <- as.data.table(isumm[isumm$new.ID == 'D1' | isumm$new.ID == 'D2' | isumm$new.ID == 'D3' | isumm$new.ID == 'D4' | isumm$new.ID == 'D5', ])
-# esummR <- as.data.table(esumm[esumm$new.ID == 'D1' | esumm$new.ID == 'D2' | esumm$new.ID == 'D3' | esumm$new.ID == 'D4' | esumm$new.ID == 'D5', ])
-# 
-# # define new labels for each subplot (Tral X instead of DX)
-# custom_labels <- c(
-#   'D1' = 'Trial 1',
-#   'D2' = 'Trial 2',
-#   'D3' = 'Trial 3',
-#   'D4' = 'Trial 4',
-#   'D5' = 'Trial 5'
-# )
-# 
-# IDs <- c(`A` =  'D1',
-#          `B` =  'D2',
-#          `C` =  'D3',
-#          `D` =  'D4', 
-#          `E` =  'D5',
-#          `F` =  'D6',
-#          `G` =  'D7',
-#          `H` =  'D8',
-#          `I` =  'D9',
-#          `Cattle A` =  'C1',
-#          `Cattle B` =  'C2',
-#          `Cattle C` =  'C3',
-#          `Pig A` =  'P1',
-#          `Pig B` =  'P2',
-#          `Pig C` =  'P3')
-# isummR[, new.treat1 := IDs[treat1]]
-# esummR[, new.treat1 := IDs[treat1]]
-# 
-# treat_colors <- c(
-#   'D1' = '#c6dbef',  
-#   'D2' = '#6baed6',  
-#   'D3' = '#2171b5',
-#   'D4' = '#08306b',  
-#   'D5' = '#9ecae1',  
-#   'D6' = '#4292c6', 
-#   'D7' = '#08519c', 
-#   'D8' = '#3182bd', 
-#   'D9' = '#bdd7e7',  
-#   'C1' = '#a1d99b',
-#   'C2' = '#31a354', 
-#   'C3' = '#006d2c', 
-#   'P1' = '#fc9272',  
-#   'P2' = '#de2d26',
-#   'P3' = '#a50f15')
-# 
-# ggplot(isummR, aes(new.treat1, e.rel.150, color = new.treat1)) + 
-#   geom_point() + 
-#   facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), scales = 'free_x', ncol = 5) + 
-#   theme_bw() + 
-#   labs(y = 'Emission (frac. applied TAN)') + 
-#   theme(axis.title.x = element_blank()) + 
-#   theme(legend.title = element_blank()) + theme(legend.position = 'none') + 
-#   geom_boxplot(data = esummR, aes(x = new.treat1, y = e.rel.150, color = new.treat1), show.legend = FALSE) + 
-#   scale_color_manual(values = treat_colors)
-# ggsave2x('../plots-meas/cum.emis.Ramiran', height = 3, width = 7.5)
+# Plots for ramiran presentation
+
+isummR <- as.data.table(isumm[isumm$new.ID == 'D1' | isumm$new.ID == 'D2' | isumm$new.ID == 'D3' | isumm$new.ID == 'D4' | isumm$new.ID == 'D5', ])
+esummR <- as.data.table(esumm[esumm$new.ID == 'D1' | esumm$new.ID == 'D2' | esumm$new.ID == 'D3' | esumm$new.ID == 'D4' | esumm$new.ID == 'D5', ])
+
+# define new labels for each subplot (Tral X instead of DX)
+custom_labels <- c(
+  'D1' = 'Trial 1',
+  'D2' = 'Trial 2',
+  'D3' = 'Trial 3',
+  'D4' = 'Trial 4',
+  'D5' = 'Trial 5'
+)
+
+IDs <- c(`A` =  'D1',
+         `B` =  'D2',
+         `C` =  'D3',
+         `D` =  'D4',
+         `E` =  'D5',
+         `F` =  'D6',
+         `G` =  'D7',
+         `H` =  'D8',
+         `I` =  'D9',
+         `Cattle A` =  'C1',
+         `Cattle B` =  'C2',
+         `Cattle C` =  'C3',
+         `Pig A` =  'P1',
+         `Pig B` =  'P2',
+         `Pig C` =  'P3')
+isummR[, new.treat1 := IDs[treat1]]
+esummR[, new.treat1 := IDs[treat1]]
+
+treat_colors <- c(
+  'D1' = '#c6dbef',
+  'D2' = '#6baed6',
+  'D3' = '#2171b5',
+  'D4' = '#08306b',
+  'D5' = '#9ecae1',
+  'D6' = '#4292c6',
+  'D7' = '#08519c',
+  'D8' = '#3182bd',
+  'D9' = '#bdd7e7',
+  'C1' = '#a1d99b',
+  'C2' = '#31a354',
+  'C3' = '#006d2c',
+  'P1' = '#fc9272',
+  'P2' = '#de2d26',
+  'P3' = '#a50f15')
+
+isummR$e.rel.150 <- isummR$e.rel.150 * 100
+esummR$e.rel.150 <- esummR$e.rel.150 * 100
+
+ggplot(isummR, aes(new.treat1, e.rel.150, color = new.treat1)) +
+  geom_point() +
+  facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), scales = 'free_x', ncol = 5) +
+  theme_bw() +
+  labs(y = 'Emission (frac. applied TAN)') +
+  theme(axis.title.x = element_blank()) +
+  theme(legend.title = element_blank()) + theme(legend.position = 'none') +
+  geom_boxplot(data = esummR, aes(x = new.treat1, y = e.rel.150, color = new.treat1), show.legend = FALSE) +
+  scale_color_manual(values = treat_colors)
+ggsave2x('../plots-meas/cum.emis.Ramiran', height = 3, width = 7.5)
 
 ############################################################################
 
