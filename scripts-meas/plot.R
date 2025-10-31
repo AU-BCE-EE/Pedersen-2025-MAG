@@ -193,27 +193,77 @@ ggsave2x('../plots-meas/NH3.flux.comm.50', plot = pfff, height = 10, width = 8)
 
 ####################################
 
-ggplot(fsumm[fsumm$new.ID == '15', ], aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
-  geom_point(shape = 1, size = 0.5) + geom_line() + 
-  theme_bw() + 
-  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
-  theme(legend.position = 'bottom', legend.title = element_blank()) +
-  xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux.DFCmov', height = 3, width = 4)
+# ggplot(fsumm[fsumm$new.ID == '15', ], aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+#   geom_point(shape = 1, size = 0.5) + geom_line() + 
+#   theme_bw() + 
+#   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+#   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+#   theme(legend.position = 'bottom', legend.title = element_blank()) +
+#   xlim(NA, 150)
+# ggsave2x('../plots-meas/NH3.flux.DFCmov', height = 3, width = 4)
+# 
+# 
+# fsumm$new.ID.f <- factor(fsumm$new.ID, levels = c('9', '10'))
+# ggplot(fsumm[fsumm$new.ID == '9' | fsumm$new.ID == '10', ], 
+#        aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
+#   geom_point(shape = 1, size = 0.5) + geom_line() + 
+#   facet_wrap(~ new.ID.f) + 
+#   theme_bw() + 
+#   geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+#   ylab(expression(paste('Flux (frac TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+#   theme(legend.position = 'bottom', legend.title = element_blank()) +
+#   xlim(NA, 150)
+# ggsave2x('../plots-meas/NH3.flux.speed', height = 3, width = 7)
+# 
 
+# plot for technical note, combining the two above
+fsumm1 <- fsumm[fsumm$new.ID == '9' | fsumm$new.ID == '10' | fsumm$new.ID == '15', ]
 
-fsumm$new.ID.f <- factor(fsumm$new.ID, levels = c('9', '10'))
-ggplot(fsumm[fsumm$new.ID == '9' | fsumm$new.ID == '10', ], 
-       aes(cta, j.rel.mn, color = treat1, fill = treat1)) + 
-  geom_point(shape = 1, size = 0.5) + geom_line() + 
-  facet_wrap(~ new.ID.f) + 
-  theme_bw() + 
-  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
-  ylab(expression(paste('Flux (frac TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+new.ID2 <- c(`9` =  'Trial 1',
+         `10` =  'Trial 2',
+         `15` =  'Trial 5')
+fsumm1[, new.ID2 := new.ID2[new.ID]]
+
+treat2_labels <- c(
+  `2-Pos` = '2 positions',
+  `7-Pos` = 'New daily position',
+  `No` = 'No movement',
+  `TH` = 'TH 12 km^-1',
+  `TH-4` = 'TH 4 km^-1',
+  `TS1` = 'TS 12 km^-1',
+  `TS1-4` = 'TS 4 km^-1'
+)
+
+fsumm1[, treat2 := treat2_labels[treat1]]
+
+treat2_expressions <- c(
+  `2 positions` = expression("2 positions"),
+  `New daily position` = expression("New daily position"),
+  `No movement` = expression("No movement"),
+  `TH 12 km^-1` = expression("TH 12 km"^-1),
+  `TH 4 km^-1` = expression("TH 4 km"^-1),
+  `TS 12 km^-1` = expression("TS 12 km"^-1),
+  `TS 4 km^-1` = expression("TS 4 km"^-1)
+)
+
+ggplot(fsumm1, aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
+  geom_point(size = 0.5) + 
+  geom_line() + 
+  geom_ribbon(aes(
+    ymax = j.rel.mn + j.rel.sd,
+    ymin = j.rel.mn - j.rel.sd,
+    group = treat2
+  ), alpha = 0.3, color = NA) + 
+  facet_wrap(~ new.ID2, scales = 'free_y') +
+  scale_color_discrete(labels = treat2_expressions) +
+  scale_fill_discrete(labels = treat2_expressions) +
+  theme_bw() +
+  ylab(expression(paste('Flux (frac TAN  ', h^-1,')'))) +
+  xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
-  xlim(NA, 150)
-ggsave2x('../plots-meas/NH3.flux.speed', height = 3, width = 7)
+  xlim(NA, 75)
+ggsave2x('../plots-meas/tech.note', height = 4, width = 8)
+
 
 # # Flux plot for 'Oversigt over landsforsøg', send to Torben Frandsen in november 2024
 # dfTF <- fsumm[fsumm$new.ID == '11' | fsumm$new.ID == '12', ]
@@ -384,71 +434,71 @@ ggplot(isumm4, aes(treat2, e.rel.150, color = treat2)) +
  # theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
 ggsave2x('../plots-meas/cum.emis.4', height = 4, width = 4.5)
 
-##################################################################
-# Plots for ramiran presentation
-
-isummR <- as.data.table(isumm[isumm$new.ID == 'D1' | isumm$new.ID == 'D2' | isumm$new.ID == 'D3' | isumm$new.ID == 'D4' | isumm$new.ID == 'D5', ])
-esummR <- as.data.table(esumm[esumm$new.ID == 'D1' | esumm$new.ID == 'D2' | esumm$new.ID == 'D3' | esumm$new.ID == 'D4' | esumm$new.ID == 'D5', ])
-
-# define new labels for each subplot (Tral X instead of DX)
-custom_labels <- c(
-  'D1' = 'Trial 1',
-  'D2' = 'Trial 2',
-  'D3' = 'Trial 3',
-  'D4' = 'Trial 4',
-  'D5' = 'Trial 5'
-)
-
-IDs <- c(`A` =  'D1',
-         `B` =  'D2',
-         `C` =  'D3',
-         `D` =  'D4',
-         `E` =  'D5',
-         `F` =  'D6',
-         `G` =  'D7',
-         `H` =  'D8',
-         `I` =  'D9',
-         `Cattle A` =  'C1',
-         `Cattle B` =  'C2',
-         `Cattle C` =  'C3',
-         `Pig A` =  'P1',
-         `Pig B` =  'P2',
-         `Pig C` =  'P3')
-isummR[, new.treat1 := IDs[treat1]]
-esummR[, new.treat1 := IDs[treat1]]
-
-treat_colors <- c(
-  'D1' = '#c6dbef',
-  'D2' = '#6baed6',
-  'D3' = '#2171b5',
-  'D4' = '#08306b',
-  'D5' = '#9ecae1',
-  'D6' = '#4292c6',
-  'D7' = '#08519c',
-  'D8' = '#3182bd',
-  'D9' = '#bdd7e7',
-  'C1' = '#a1d99b',
-  'C2' = '#31a354',
-  'C3' = '#006d2c',
-  'P1' = '#fc9272',
-  'P2' = '#de2d26',
-  'P3' = '#a50f15')
-
-isummR$e.rel.150 <- isummR$e.rel.150 * 100
-esummR$e.rel.150 <- esummR$e.rel.150 * 100
-
-ggplot(isummR, aes(new.treat1, e.rel.150, color = new.treat1)) +
-  geom_point() +
-  facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), scales = 'free_x', ncol = 5) +
-  theme_bw() +
-  labs(y = 'Emission (frac. applied TAN)') +
-  theme(axis.title.x = element_blank()) +
-  theme(legend.title = element_blank()) + theme(legend.position = 'none') +
-  geom_boxplot(data = esummR, aes(x = new.treat1, y = e.rel.150, color = new.treat1), show.legend = FALSE) +
-  scale_color_manual(values = treat_colors)
-ggsave2x('../plots-meas/cum.emis.Ramiran', height = 3, width = 7.5)
-
-############################################################################
+# ##################################################################
+# # Plots for ramiran presentation
+# 
+# isummR <- as.data.table(isumm[isumm$new.ID == 'D1' | isumm$new.ID == 'D2' | isumm$new.ID == 'D3' | isumm$new.ID == 'D4' | isumm$new.ID == 'D5', ])
+# esummR <- as.data.table(esumm[esumm$new.ID == 'D1' | esumm$new.ID == 'D2' | esumm$new.ID == 'D3' | esumm$new.ID == 'D4' | esumm$new.ID == 'D5', ])
+# 
+# # define new labels for each subplot (Tral X instead of DX)
+# custom_labels <- c(
+#   'D1' = 'Trial 1',
+#   'D2' = 'Trial 2',
+#   'D3' = 'Trial 3',
+#   'D4' = 'Trial 4',
+#   'D5' = 'Trial 5'
+# )
+# 
+# IDs <- c(`A` =  'D1',
+#          `B` =  'D2',
+#          `C` =  'D3',
+#          `D` =  'D4',
+#          `E` =  'D5',
+#          `F` =  'D6',
+#          `G` =  'D7',
+#          `H` =  'D8',
+#          `I` =  'D9',
+#          `Cattle A` =  'C1',
+#          `Cattle B` =  'C2',
+#          `Cattle C` =  'C3',
+#          `Pig A` =  'P1',
+#          `Pig B` =  'P2',
+#          `Pig C` =  'P3')
+# isummR[, new.treat1 := IDs[treat1]]
+# esummR[, new.treat1 := IDs[treat1]]
+# 
+# treat_colors <- c(
+#   'D1' = '#c6dbef',
+#   'D2' = '#6baed6',
+#   'D3' = '#2171b5',
+#   'D4' = '#08306b',
+#   'D5' = '#9ecae1',
+#   'D6' = '#4292c6',
+#   'D7' = '#08519c',
+#   'D8' = '#3182bd',
+#   'D9' = '#bdd7e7',
+#   'C1' = '#a1d99b',
+#   'C2' = '#31a354',
+#   'C3' = '#006d2c',
+#   'P1' = '#fc9272',
+#   'P2' = '#de2d26',
+#   'P3' = '#a50f15')
+# 
+# isummR$e.rel.150 <- isummR$e.rel.150 * 100
+# esummR$e.rel.150 <- esummR$e.rel.150 * 100
+# 
+# ggplot(isummR, aes(new.treat1, e.rel.150, color = new.treat1)) +
+#   geom_point() +
+#   facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), scales = 'free_x', ncol = 5) +
+#   theme_bw() +
+#   labs(y = 'Emission (frac. applied TAN)') +
+#   theme(axis.title.x = element_blank()) +
+#   theme(legend.title = element_blank()) + theme(legend.position = 'none') +
+#   geom_boxplot(data = esummR, aes(x = new.treat1, y = e.rel.150, color = new.treat1), show.legend = FALSE) +
+#   scale_color_manual(values = treat_colors)
+# ggsave2x('../plots-meas/cum.emis.Ramiran', height = 3, width = 7.5)
+# 
+# ############################################################################
 
 # temperature
 ggplot(idat[idat$treat1 == 'A' & idat$rep == '1' | idat$treat1 == '2-Pos' & idat$rep == '1' | idat$treat1 == 'TS1-4' & idat$rep == '1' | idat$treat1 == 'TH' & idat$rep == '1' | idat$treat1 == 'Un12' & idat$rep == '1', ], 
