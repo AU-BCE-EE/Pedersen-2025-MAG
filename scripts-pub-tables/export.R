@@ -32,6 +32,10 @@ dsumm.treat1 <- dsumm[is.element(dsumm$Trial_B, c('1', '2', '3', '4', '9', '5', 
 dsumm.treat2 <- dsumm[is.element(dsumm$Trial_B, c('1', '2', '3', '4', '9', '5', '6', '10', '7', '8', '11', '12')), 
                       c('new.ID', 'dig', 'straw', 'treat', 'mm2', 'mm2TS', 'ssa', 'swm', 'vwm', 'mm1', 'mm12', 'K', 'n')] 
 
+# Technical note to follow paper on digesate application and treatment: 
+dsumm.tech <- dsumm[is.element(dsumm$Trial_B, c('9', '10', '13', '14', '15')), 
+                      c('new.ID', 'dig', 'treat', 'TS', 'VS', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
+
 # Paper on digestate properties:
 dsumm.prop1 <- dsumm[is.element(dsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')), 
                       c('new.ID', 'dig', 'straw', 'treat', 'TS', 'VS', 'NH4', 'totN', 'pH.lab', 'pH.field', 'amount.mn', 'app.rate.mn')] 
@@ -42,6 +46,7 @@ dsumm.prop2 <- dsumm[is.element(dsumm$Trial_B, c('D1', 'D2', 'D3', 'D4', 'D5')),
 
 write.csv(dsumm.treat1, '../output/digestate.table.treat1.csv', row.names = FALSE)
 write.csv(dsumm.treat2, '../output/digestate.table.treat2.csv', row.names = FALSE)
+write.csv(dsumm.tech, '../output/digestate.table.tech.csv', row.names = FALSE)
 write.csv(dsumm.prop1, '../output/digestate.table.prop1.csv', row.names = FALSE)
 write.csv(dsumm.prop2, '../output/digestate.table.prop2.csv', row.names = FALSE)
 
