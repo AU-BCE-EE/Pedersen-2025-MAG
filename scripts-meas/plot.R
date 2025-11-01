@@ -226,8 +226,8 @@ fsumm1[, new.ID2 := new.ID2[new.ID]]
 
 treat2_labels <- c(
   `2-Pos` = '2 positions',
-  `7-Pos` = 'New daily position',
-  `No` = 'No movement',
+  `7-Pos` = '7 positions',
+  `No` = '1 position',
   `TH` = 'TH 12 km^-1',
   `TH-4` = 'TH 4 km^-1',
   `TS1` = 'TS 12 km^-1',
@@ -238,13 +238,23 @@ fsumm1[, treat2 := treat2_labels[treat1]]
 
 treat2_expressions <- c(
   `2 positions` = expression("2 positions"),
-  `New daily position` = expression("New daily position"),
-  `No movement` = expression("No movement"),
+  `7 positions` = expression("7 positions"),
+  `1 position` = expression("1 position"),
   `TH 12 km^-1` = expression("TH 12 km"^-1),
   `TH 4 km^-1` = expression("TH 4 km"^-1),
   `TS 12 km^-1` = expression("TS 12 km"^-1),
   `TS 4 km^-1` = expression("TS 4 km"^-1)
 )
+
+fsumm1[, treat2 := factor(treat2, levels = c(
+  'TH 12 km^-1',
+  'TH 4 km^-1',
+  'TS 12 km^-1',
+  'TS 4 km^-1', 
+  '1 position',
+  '2 positions',
+  '7 positions'
+))]
 
 ggplot(fsumm1, aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
   geom_point(size = 0.5) + 
