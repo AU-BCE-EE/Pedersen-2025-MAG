@@ -5,9 +5,11 @@ Repository contains data and data treatment related to NH3 emissions after field
 
 The data is presented in two manuscripts in preparation: 
 
-A: Pedersen, J., Hafner, S. D., Romio, C., Pacholski, A. S. Evaluation of application and treatment options for reducing ammonia emissions after field-applied slurry digestate. In preparation, February 2025.
+Manuscript A: Pedersen, J., Hafner, S. D., Romio, C., Pacholski, A. S. Assessment of ammonia emission mitigation efficiency of established and novel field application techniques for slurry digestates. In review, November 2025.
 
-B: Pedersen, J., Labouriau, R., Romio, C., Pacholski, A. S., Hafner, S. D. Effect of digestate and untreated slurry properties on ammonia emission after field application. In preparation, February 2025. 
+Technical note: Pedersen, J., Hafner, S. D., Pacholski, A. S. Methodological factors affecting ammonia emission meas-urement with flux chambers from field-applied biogas diges-tate slurry (Technical note), In preparation, November 2025. 
+
+Manuscript B: Pedersen, J., Labouriau, R., Romio, C., Pacholski, A. S., Hafner, S. D. Effect of digestate and untreated slurry properties on ammonia emission after field application. In preparation, November 2025. 
 
 # Maintainer
 Johanna Pedersen. Contact information here: https://www.researchgate.net/profile/Johanna-Pedersen 
@@ -122,6 +124,16 @@ This section give the sources of tables, figures, and some statistical results p
 |  Fig. S11 | `plots-meas/NH3.flux.comm.150.pdf` | `scripts-meas/plot.R` |
 |  Fig. S12 | `plots-meas/NH3.flux.trial12.pdf` | `scripts-meas/plot.R` |
 
+# Links to technical note
+This section give the sources of tables, figures, and some statistical results presented in the technical note.
+
+| Paper component          |  Repo source                             |  Repo scripts             |
+|-----------------         |-----------------                         |---------------            |
+|  Table 2 | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
+|  Table 3  | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
+|  Table 4  | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
+|  Table 5  | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
+|  Fig. 1 | `plots-meas/tech.note.pdf` | `scripts-meas/plot.R` |
 
 # Links to manuscript B
 This section give the sources of tables, figures, and some statistical results presented in the paper.
