@@ -113,14 +113,10 @@ This section give the sources of tables, figures, and some statistical results p
 |  Fig. 1    | `plots-meas/NH3.flux.comm.50.pdf` | `scripts-meas/plot.R` |
 |  Table 4   | `output/cum.emis.treat.csv` | `scripts-meas/export.R` |
 |  Table 5  | `output/mmeans1_4` and `output/mmeans5-10` | `scripts-meas/export.R` |
-|   Table S2 | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
 |  Fig. S4 | `plots-meas/NH3.flux.speed.pdf` | `scripts-meas/plot.R` |
-|  Table S3 | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
-|  Table S4  | `output/cum.emis.treat.sup.csv` | `scripts-meas/export.R` |
 |  Fig. S5  | `plots-meas/NH3.flux.DFCmov.pdf` | `scripts-meas/plot.R` |
 | Fig. S10 | `plots-temp-loggers/temp_elevation.pdf` | `scripts-temp-loggers/plot.R` |
 |  Fig. S11  | `plots-meas/temp.treat.R` | `scripts-meas/plot.R` |
-|  Table S5  | `output/digestate.table.treat2.csv` | `scripts-pub-tables/export.R` |
 |  Fig. S11 | `plots-meas/NH3.flux.comm.150.pdf` | `scripts-meas/plot.R` |
 |  Fig. S12 | `plots-meas/NH3.flux.trial12.pdf` | `scripts-meas/plot.R` |
 
