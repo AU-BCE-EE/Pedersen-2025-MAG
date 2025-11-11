@@ -219,9 +219,9 @@ ggsave2x('../plots-meas/NH3.flux.comm.50', plot = pfff, height = 10, width = 8)
 # plot for technical note, combining the two above
 fsumm1 <- fsumm[fsumm$new.ID == '9' | fsumm$new.ID == '10' | fsumm$new.ID == '15', ]
 
-new.ID2 <- c(`9` =  'Trial 1',
-         `10` =  'Trial 2',
-         `15` =  'Trial 5')
+new.ID2 <- c(`9` =  'Trial 2a',
+         `10` =  'Trial 2b',
+         `15` =  'Trial 4')
 fsumm1[, new.ID2 := new.ID2[new.ID]]
 
 treat2_labels <- c(
