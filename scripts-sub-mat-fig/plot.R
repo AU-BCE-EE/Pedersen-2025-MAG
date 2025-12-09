@@ -24,96 +24,103 @@ IDs <- c(`A` =  'Digestate',
 ds[, dig1 := IDs[dig]]
 dsd[, dig1 := IDs[dig]]
 
-IDs <- c(`D1` =  'Trial 1',
-         `D2` =  'Trial 2',
-         `D3` =  'Trial 3',
-         `D4` =  'Trial 4',
-         `D5` =  'Trial 5')
+IDs <- c(`D1` =  '1',
+         `D2` =  '2',
+         `D3` =  '3',
+         `D4` =  '4',
+         `D5` =  '5')
 
 ds[, trial.ID := IDs[new.ID.x]]
 dsd[, trial.ID := IDs[new.ID.x]]
 
 
-f11 <- ggplot(dsd, aes(area.perc.mn, e.rel.150, color = dig1, shape = trial.ID)) + 
-  geom_point(color = '#00BA38') + 
-  theme_bw() + 
-  ylab(expression(paste(NH[3],' (% of TAN)'))) + xlab('Exposed surface area (%)') +
-  theme(legend.position = 'bottom', legend.title = element_blank()) +
-  guides(shape = guide_legend(nrow = 2))
+f11 <- ggplot(dsd, aes(area.perc.mn, e.rel.150)) + 
+  geom_text(aes(label = trial.ID)) +
+  theme_bw() +
+  ylab(expression(paste(NH[3],' (% of TAN)'))) +
+  xlab('Exposed surface area (%)') +
+  theme(legend.position = 'bottom', legend.title = element_blank())
 
-f22 <- ggplot(dsd, aes(area.perc.mn, TS.mn, color = dig1, shape = trial.ID)) + 
-  geom_point(color = '#00BA38') +
-  theme_bw() + 
-  ylab('Dry matter (%)') + xlab('Exposed surface area (%)') +
-  theme(legend.position = 'bottom', legend.title = element_blank()) +
-  guides(shape = guide_legend(nrow = 2))
+f112 <- ggplot(dsd, aes(TS.mn, e.rel.150)) + 
+  geom_text(aes(label = trial.ID)) +
+  theme_bw() +
+  ylab(expression(paste(NH[3],' (% of TAN)'))) +
+  xlab('Dry matter (%)') +
+  theme(legend.position = 'bottom', legend.title = element_blank())
 
-mat <- matrix(c(1, 2),
+f22 <- ggplot(dsd, aes(area.perc.mn, TS.mn)) + 
+  geom_text(aes(label = trial.ID)) +
+  theme_bw() + 
+  ylab('Dry matter (%)') + 
+  xlab('Exposed surface area (%)') +
+  theme(legend.position = 'bottom', legend.title = element_blank())
+
+mat <- matrix(c(1, 2, 3),
               nrow = 1)
 
-pf <- grid.arrange(f11, f22, layout_matrix = mat)
-ggsave2x('../plots-meas/dig.prop.supMat1', plot = pf, height = 3.5, width = 5.5)
+pf <- grid.arrange(f11, f112, f22, layout_matrix = mat)
+ggsave2x('../plots-meas/dig.prop.supMat1', plot = pf, height = 3, width = 8)
 
 
 ##########################################################
-# Plot for Ramiran presentation
-
-treat_colors <- c(
-  'A' = '#c6dbef',
-  'B' = '#6baed6',
-  'C' = '#2171b5',
-  'D' = '#08306b',
-  'E' = '#9ecae1',
-  'F' = '#4292c6',
-  'G' = '#08519c',
-  'H' = '#3182bd',
-  'I' = '#bdd7e7')
-
-IDs <- c(`A` =  'D1',
-         `B` =  'D2',
-         `C` =  'D3',
-         `D` =  'D4',
-         `E` =  'D5',
-         `F` =  'D6',
-         `G` =  'D7',
-         `H` =  'D8',
-         `I` =  'D9')
-dsd[, new.treat1 := IDs[treat1]]
-dsd[, new.treat1 := IDs[treat1]]
-
-treat_colors <- c(
-  'D1' = '#c6dbef',
-  'D2' = '#6baed6',
-  'D3' = '#2171b5',
-  'D4' = '#08306b',
-  'D5' = '#9ecae1',
-  'D6' = '#4292c6',
-  'D7' = '#08519c',
-  'D8' = '#3182bd',
-  'D9' = '#bdd7e7')
-
-
-f11 <- ggplot(dsd, aes(area.perc.mn, e.rel.150, color = new.treat1, shape = trial.ID)) +
-  geom_point(size = 3) +
-  theme_bw() +
-  ylab(expression(paste(NH[3],' (% of TAN)'))) + xlab('Exposed surface area (%)') +
-  theme(legend.position = 'left', legend.title = element_blank()) +
-  scale_color_manual(values = treat_colors) + 
-  guides(color = 'none')
-
-f22 <- ggplot(dsd, aes(area.perc.mn, TS.mn, color = new.treat1, shape = trial.ID)) +
-  geom_point(size = 3) +
-  theme_bw() +
-  ylab('Dry matter (%)') + xlab('Exposed surface area (%)') +
-  theme(legend.title = element_blank()) +
-  scale_color_manual(values = treat_colors) + 
-  guides(color = 'none')
-
-mat <- matrix(c(1, 2),
-              nrow = 1)
-
-pf <- grid.arrange(f11, f22, layout_matrix = mat)
-ggsave2x('../plots-meas/dig.prop.supMat1_Ramiran', plot = pf, height = 3.5, width = 8.5)
+# # Plot for Ramiran presentation
+# 
+# treat_colors <- c(
+#   'A' = '#c6dbef',
+#   'B' = '#6baed6',
+#   'C' = '#2171b5',
+#   'D' = '#08306b',
+#   'E' = '#9ecae1',
+#   'F' = '#4292c6',
+#   'G' = '#08519c',
+#   'H' = '#3182bd',
+#   'I' = '#bdd7e7')
+# 
+# IDs <- c(`A` =  'D1',
+#          `B` =  'D2',
+#          `C` =  'D3',
+#          `D` =  'D4',
+#          `E` =  'D5',
+#          `F` =  'D6',
+#          `G` =  'D7',
+#          `H` =  'D8',
+#          `I` =  'D9')
+# dsd[, new.treat1 := IDs[treat1]]
+# dsd[, new.treat1 := IDs[treat1]]
+# 
+# treat_colors <- c(
+#   'D1' = '#c6dbef',
+#   'D2' = '#6baed6',
+#   'D3' = '#2171b5',
+#   'D4' = '#08306b',
+#   'D5' = '#9ecae1',
+#   'D6' = '#4292c6',
+#   'D7' = '#08519c',
+#   'D8' = '#3182bd',
+#   'D9' = '#bdd7e7')
+# 
+# 
+# f11 <- ggplot(dsd, aes(area.perc.mn, e.rel.150, color = new.treat1, shape = trial.ID)) +
+#   geom_point(size = 3) +
+#   theme_bw() +
+#   ylab(expression(paste(NH[3],' (% of TAN)'))) + xlab('Exposed surface area (%)') +
+#   theme(legend.position = 'left', legend.title = element_blank()) +
+#   scale_color_manual(values = treat_colors) + 
+#   guides(color = 'none')
+# 
+# f22 <- ggplot(dsd, aes(area.perc.mn, TS.mn, color = new.treat1, shape = trial.ID)) +
+#   geom_point(size = 3) +
+#   theme_bw() +
+#   ylab('Dry matter (%)') + xlab('Exposed surface area (%)') +
+#   theme(legend.title = element_blank()) +
+#   scale_color_manual(values = treat_colors) + 
+#   guides(color = 'none')
+# 
+# mat <- matrix(c(1, 2),
+#               nrow = 1)
+# 
+# pf <- grid.arrange(f11, f22, layout_matrix = mat)
+# ggsave2x('../plots-meas/dig.prop.supMat1_Ramiran', plot = pf, height = 3.5, width = 8.5)
 
 ########################################################
 
