@@ -274,6 +274,24 @@ ggplot(fsumm1, aes(cta, j.rel.mn, color = treat2, fill = treat2)) +
   xlim(NA, 75)
 ggsave2x('../plots-meas/tech.note', height = 4, width = 8)
 
+ggplot(fsumm1[fsumm1$new.ID2 == 'Trial 4', ], aes(cta, j.rel.mn, color = treat2, fill = treat2)) + 
+  geom_point(size = 0.5) + 
+  geom_line() + 
+  geom_ribbon(aes(
+    ymax = j.rel.mn + j.rel.sd,
+    ymin = j.rel.mn - j.rel.sd,
+    group = treat2
+  ), alpha = 0.2, color = NA) + 
+  facet_wrap(~ new.ID2, scales = 'free_y') +
+  scale_color_discrete(labels = treat2_expressions) +
+  scale_fill_discrete(labels = treat2_expressions) +
+  theme_bw() +
+  ylab(expression(paste('Flux (frac TAN  ', h^-1,')'))) +
+  xlab('Time from application (h)') +
+  theme(legend.position = 'bottom', legend.title = element_blank()) +
+  xlim(NA, 75)
+ggsave2x('../plots-meas/tech.note_t4', height = 4, width = 6)
+
 
 # # Flux plot for 'Oversigt over landsforsøg', send to Torben Frandsen in november 2024
 # dfTF <- fsumm[fsumm$new.ID == '11' | fsumm$new.ID == '12', ]
