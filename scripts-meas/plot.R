@@ -228,10 +228,10 @@ treat2_labels <- c(
   `2-Pos` = '2 positions',
   `7-Pos` = '7 positions',
   `No` = '1 position',
-  `TH` = 'TH 12 km^-1',
-  `TH-4` = 'TH 4 km^-1',
-  `TS1` = 'TS 12 km^-1',
-  `TS1-4` = 'TS 4 km^-1'
+  `TH` = 'Trailing hose 12 km^-1',
+  `TH-4` = 'Trailing hose 4 km^-1',
+  `TS1` = 'Trailing shoe 12 km^-1',
+  `TS1-4` = 'Trailing shoe 4 km^-1'
 )
 
 fsumm1[, treat2 := treat2_labels[treat1]]
@@ -240,17 +240,17 @@ treat2_expressions <- c(
   `2 positions` = expression("2 positions"),
   `7 positions` = expression("7 positions"),
   `1 position` = expression("1 position"),
-  `TH 12 km^-1` = expression("TH 12 km"^-1),
-  `TH 4 km^-1` = expression("TH 4 km"^-1),
-  `TS 12 km^-1` = expression("TS 12 km"^-1),
-  `TS 4 km^-1` = expression("TS 4 km"^-1)
+  `Trailing hose 12 km^-1` = expression("Trailing hose 12 km"^-1),
+  `Trailing hose 4 km^-1` = expression("Trailing hose 4 km"^-1),
+  `Trailing shoe 12 km^-1` = expression("Trailing shoe 12 km"^-1),
+  `Trailing shoe 4 km^-1` = expression("Trailing shoe 4 km"^-1)
 )
 
 fsumm1[, treat2 := factor(treat2, levels = c(
-  'TH 12 km^-1',
-  'TH 4 km^-1',
-  'TS 12 km^-1',
-  'TS 4 km^-1', 
+  'Trailing hose 12 km^-1',
+  'Trailing hose 4 km^-1',
+  'Trailing shoe 12 km^-1',
+  'Trailing shoe 4 km^-1', 
   '1 position',
   '2 positions',
   '7 positions'
@@ -384,6 +384,72 @@ ggplot(fsumm.prop, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) +
   guides(color = guide_legend(nrow = 3)) + 
   xlim(-0.02, 150)
 ggsave2x('../plots-meas/NH3.flux.prop150', height = 9, width = 7)
+
+
+
+
+# treat2_labels <- c(
+#   `A` = 'Digestate',
+#   `B` = 'Digestate',
+#   `C` = 'Digestate',
+#   `D` = 'Digestate',
+#   `E` = 'Digestate',
+#   `F` = 'Digestate',
+#   `G` = 'Digestate',
+#   `H` = 'Digestate',
+#   `I` = 'Digestate',
+#   `Cattle A` = 'Cattle',
+#   `Cattle B` = 'Cattle',
+#   `Cattle C` = 'Cattle',
+#   `Pig A` = 'Pig',
+#   `Pig B` = 'Pig',
+#   `Pig C` = 'Pig'
+# )
+# 
+# fsumm.prop[, treat2 := treat2_labels[treat1]]
+# 
+# fsumm.prop$DM.lab <- paste(fsumm.prop$new.ID, fsumm.prop$treat1)
+# 
+# DM_labels <- c(
+#   `D1 A` = 5.61,
+#   `D1 B` = 9.29,
+#   `D1 D` = 5.91,
+#   `D1 E` = 10.55,
+#   `D1 F` = 6.48,
+#   `D2 A` = 5.68,
+#   `D2 C` = 4.52,
+#   `D2 G` = 7.58,
+#   `D2 H` = 8.73,
+#   `D2 I` = 5.93,
+#   `D3 A` = 2.83,
+#   `D3 D` = 4.70,
+#   `D3 H` = 4.89,
+#   `D3 Cattle A` = 8.20,
+#   `D3 Pig A` = 6.70,
+#   `D4 A` = 2.89,
+#   `D4 C` = 4.64,
+#   `D4 G` = 4.06,
+#   `D4 Cattle B` = 10.40,
+#   `D4 Pig B` = 2.70,
+#   `D5 A` = 2.43,
+#   `D5 B` = 7.72,
+#   `D5 E` = 11.07,
+#   `D5 Cattle C` = 7.87,
+#   `D5 Pig C` = 3.57 
+# )
+# 
+# fsumm.prop[, DM.val := DM_labels[DM.lab]]
+# 
+# ggplot(fsumm.prop, aes(cta, j.rel.mn, color = DM.val)) + 
+#   geom_point(shape = 1, size = 0.5) + 
+#   geom_line(aes(group = interaction(new.ID, treat1))) + 
+#   theme_bw() + 
+#   facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), ncol = 1, scale = 'free_y') +
+#   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
+#   theme(legend.position = 'bottom', legend.title = element_blank()) +
+#   guides(color = guide_colorbar(barwidth = 12)) + 
+#   scale_color_viridis_c(option = 'D', end = 0.95)
+# ggsave2x('../plots-meas/NH3.flux.prop1AAA', height = 9, width = 7)
 
 ######### CUMULATIVE EMISSION
 

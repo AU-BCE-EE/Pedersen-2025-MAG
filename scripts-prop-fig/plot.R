@@ -160,19 +160,28 @@ pf <- grid.arrange(f1, f2, f3, f4, layout_matrix = mat)
 ggsave2x('../plots-meas/dig.prop.supMat2', plot = pf, height = 8, width = 6)
 
 
-f5 <- ggplot(ds, aes(TS.mn, area.perc.mn, color = dig1, shape = trial.ID)) + 
-  geom_point() +
+
+
+f5 <- ggplot(ds, aes(TS.mn, area.perc.mn, color = dig1)) + 
+  geom_text(aes(label = trial.ID)) +
   theme_bw() + 
   xlab('Dry matter (%)') + ylab('Exposed surface area (%)') +
-  theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
-  guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
+  theme(legend.position = 'none')
 
-f6 <- ggplot(ds, aes(TS.mn, n.mn, color = dig1, shape = trial.ID)) + 
-  geom_point() +
+f6 <- ggplot(ds, aes(TS.mn, n.mn, color = dig1)) + 
+  geom_text(aes(label = trial.ID)) +
   theme_bw() + 
   xlab('Dry matter (%)') + ylab('m') +
-  theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
-  guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
+  theme(legend.position = 'none')
+
+mat <- matrix(c(1, 2),
+              nrow = 1, byrow = TRUE)
+
+pf <- grid.arrange(f5, f6, layout_matrix = mat)
+ggsave2x('../plots-meas/dig.prop.DMall', plot = pf, height = 3, width = 5.3)
+
+
+
 
 f7 <- ggplot(ds, aes(TS.mn, K.mn, color = dig1, shape = trial.ID)) + 
   geom_point() +
@@ -188,12 +197,12 @@ f8 <- ggplot(ds, aes(TS.mn, pH.lab.mn, color = dig1, shape = trial.ID)) +
   theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
   guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
 
-mat <- matrix(c(1, 2,
-                3, 4),
-              nrow = 2, byrow = TRUE)
+mat <- matrix(c(1, 2),
+              nrow = 1, byrow = TRUE)
 
-pf <- grid.arrange(f5, f6, f7, f8, layout_matrix = mat)
-ggsave2x('../plots-meas/dig.prop.supMat3', plot = pf, height = 8, width = 6)
+pf <- grid.arrange(f7, f8, layout_matrix = mat)
+ggsave2x('../plots-meas/dig.prop.supMat3', plot = pf, height = 4, width = 6)
+
 
 # #####################################################################
 # # Plots for Ramiran presentation october 2025
