@@ -171,8 +171,9 @@ f5 <- ggplot(ds, aes(TS.mn, area.perc.mn, color = dig1)) +
 f6 <- ggplot(ds, aes(TS.mn, n.mn, color = dig1)) + 
   geom_text(aes(label = trial.ID)) +
   theme_bw() + 
-  xlab('Dry matter (%)') + ylab('m') +
-  theme(legend.position = 'none')
+  xlab('Dry matter (%)') + ylab(expression(italic(m))) +
+  theme(legend.position = 'none',
+    axis.title.y = element_text(family = "serif"))
 
 mat <- matrix(c(1, 2),
               nrow = 1, byrow = TRUE)
