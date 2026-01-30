@@ -1,0 +1,29 @@
+```{r}
+ggplot(dsd, aes(TS.mn, e.rel.150)) + 
+  geom_text(aes(label = trial.ID)) +
+  theme_bw() +
+  ylab(expression(paste(NH[3],' (% of TAN)'))) +
+  xlab('Dry matter (%)') +
+  theme(legend.position = 'bottom', legend.title = element_blank())
+```
+
+```{r}
+ggplot(dsd, aes(pH.lab.mn, e.rel.150)) + 
+  geom_text(aes(label = trial.ID)) +
+  theme_bw() +
+  ylab(expression(paste(NH[3],' (% of TAN)'))) +
+  xlab('pH') +
+  theme(legend.position = 'bottom', legend.title = element_blank())
+```
+
+
+```{r}
+ggplot(dsd, aes(ESA, e.rel.150)) + 
+  geom_text(aes(label = trial.ID)) +
+  theme_bw() +
+  ylab(expression(paste(NH[3],' (% of TAN)'))) +
+  xlab('ESA') +
+  theme(legend.position = 'bottom', legend.title = element_blank())
+```
+
+

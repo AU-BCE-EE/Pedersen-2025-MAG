@@ -1,0 +1,157 @@
+---
+title: 'Simple models'
+author: 'Sasha D. Hafner'
+date: "`r format(Sys.time(), '%H:%M - %d %B, %Y')`"
+---
+
+# Structure/replication
+
+```{r}
+table(ds[, .(slurry.ID, trial.ID)])
+table(ds[, .(slurry.type, trial.ID)])
+```
+
+# Exploratory plots and correlation
+
+First all.
+
+```{r}
+pairs(ds[, .(pH.lab.mn, TS.mn, area.perc.mn, K.mn, n.mn, mm1.mn, mm2.mn, e.rel.150)], col = ds$col, pch = 19)
+```
+
+```{r}
+cor(ds[, .(pH.lab.mn, TS.mn, area.perc.mn, K.mn, n.mn, mm1.mn, mm2.mn, e.rel.150)])
+cor(dsd[, .(pH.lab.mn, TS.mn, area.perc.mn, K.mn, n.mn, mm1.mn, mm2.mn, e.rel.150)])
+cor(dsr[, .(pH.lab.mn, TS.mn, area.perc.mn, K.mn, n.mn, mm1.mn, mm2.mn, e.rel.150)])
+```
+
+# Models
+
+## Everything
+Start with `lm()` and try many predictors.
+Just to show that we don't have the DF!
+
+```{r}
+mlm0 <- lm(e.rel.150 ~ pH.lab.mn + TS.mn + area.perc.mn + K.mn + n.mn + mm1.mn + mm2.mn + dig + trial.ID, data = ds)
+summary(mlm0)
+```
+
+So we have to work with predictor variable subsets.
+
+DM, viscosity, pH
+
+```{r}
+mlm1 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + K.mn + n.mn + slurry.ID + trial.ID, data = ds)
+summary(mlm1)
+anova(mlm1)
+drop1(mlm1, test = 'F')
+```
+
+We see that:
+
+* presence of variables has effect on significance (`anova()` vs. `drop1()` and `summary()` results),
+* DM is clearest predictor
+
+Try DM and pH
+
+```{r}
+mlm2 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.ID + trial.ID, data = ds)
+summary(mlm2)
+anova(mlm2)
+drop1(mlm2, test = 'F')
+```
+
+Unclear results with the two are included with trial and with slurry ID.
+But see `anova()` results--DM and pH alone without those two are clear.
+
+
+```{r}
+mlm3 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + trial.ID, data = ds)
+summary(mlm3)
+anova(mlm3)
+drop1(mlm3, test = 'F')
+```
+
+Here pH correlation clear.
+
+```{r}
+mlm4 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.ID, data = ds)
+summary(mlm4)
+anova(mlm4)
+drop1(mlm4, test = 'F')
+```
+
+And with slurry ID instead of trial ID, DM effect is more clear.
+
+```{r}
+mlm5 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
+summary(mlm5)
+anova(mlm5)
+drop1(mlm5, test = 'F')
+```
+
+Work with these sets in mixed-effects models.
+
+
+```{r}
+mmm1 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|slurry.ID) + (1|trial.ID), data = ds)
+summary(mmm1)
+drop1(mmm1, test = 'Chisq')
+```
+
+No variance assigned to slurry ID.
+But very clear DM and pH effects.
+Try without.
+
+```{r}
+mmm2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds)
+summary(mmm2)
+drop1(mmm2, test = 'Chisq')
+```
+
+Now that we have this, let's look at other variables again.
+
+```{r}
+mmm3 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + I(K.mn/100) + I(n.mn*10) + (1|trial.ID), data = ds)
+summary(mmm3)
+drop1(mmm3, test = 'Chisq')
+```
+
+Now we see some evidence about K!
+
+
+```{r}
+mmm4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + I(K.mn/100) + (1|trial.ID), data = ds)
+summary(mmm4)
+drop1(mmm4, test = 'Chisq')
+```
+
+Look at predictions and residuals.
+
+```{r}
+ds[, pred.mmm2 := predict(mmm2)]
+ds[, pred.mmm4 := predict(mmm4)]
+ds[, resid4 := resid(mmm4)]
+ds[, resid2 := resid(mmm2)]
+```
+
+```{r}
+ggplot(ds, aes(TS.mn, e.rel.150, colour = slurry.type)) +
+  geom_text(aes(label = trial.ID), show.legend = FALSE) +
+  geom_point(aes(y = pred.mmm4), shape = 1, size = 3) +
+  geom_point(aes(y = pred.mmm2), shape = 1, size = 2) +
+  geom_segment(aes(xend = TS.mn, yend = pred.mmm4), alpha = 0.2) +
+  scale_colour_manual(values = cols) +
+  labs(x = 'Slurry DM (%)', y = 'Relative emission (% TAN)', colour = '') +
+  theme_bw() 
+```
+
+```{r}
+ggplot(ds, aes(TS.mn, resid4, colour = slurry.type)) +
+  geom_point() +
+  geom_point(aes(y = resid2), shape = 1) +
+  geom_hline(yintercept = 0) +
+  scale_colour_manual(values = cols) +
+  labs(x = 'Slurry DM (%)', y = 'Residual in relative emission (% TAN)', colour = '') +
+  theme_bw() 
+```
