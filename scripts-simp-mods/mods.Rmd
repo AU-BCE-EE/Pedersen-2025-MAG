@@ -32,9 +32,8 @@ cor(dsd[, .(pH.lab.mn, TS.mn, area.perc.mn, K.mn, n.mn, mm1.mn, mm2.mn, e.rel.15
 cor(dsr[, .(pH.lab.mn, TS.mn, area.perc.mn, K.mn, n.mn, mm1.mn, mm2.mn, e.rel.150)])
 ```
 
-# Models
+# Models - combined slurry types
 
-## Everything
 Start with `lm()` and try many predictors.
 Just to show that we don't have the degrees of freedom needed.
 
@@ -147,6 +146,68 @@ drop1(mmm5, test = 'Chisq')
 What sign do we expect for K effect?
 That may not mean much, because it could be "correcting" for a non-linear DM effect, for example.
 
+Are we missing some ESA or viscosity n importance?
+
+```{r}
+mmm6 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + I(K.mn/100) + I(n.mn*10) + mm2.mn + area.perc.mn + (1|trial.ID), data = ds)
+summary(mmm6)
+drop1(mmm6, test = 'Chisq')
+```
+
+No evidence of that, at least when DM and pH are in the model.
+Try without DM.
+
+```{r}
+mmm7 <- lmer(e.rel.150 ~ pH.lab.mn + I(K.mn/100) + I(n.mn*10) + mm2.mn + area.perc.mn + (1|trial.ID), data = ds)
+summary(mmm7)
+drop1(mmm7, test = 'Chisq')
+```
+
+Particles < 2 mm now shows up but there is a convergence issue.
+Without pH. . .
+
+```{r}
+mmm8 <- lmer(e.rel.150 ~ I(K.mn/100) + I(n.mn*10) + mm2.mn + area.perc.mn + (1|trial.ID), data = ds)
+summary(mmm8)
+drop1(mmm8, test = 'Chisq')
+```
+
+Just ESA alone.
+
+```{r}
+mmm9 <- lmer(e.rel.150 ~ area.perc.mn + (1|trial.ID), data = ds)
+summary(mmm9)
+drop1(mmm9, test = 'Chisq')
+```
+
+Drop random effect.
+
+
+```{r}
+mlm6 <- lm(e.rel.150 ~ area.perc.mn, data = ds)
+summary(mlm6)
+drop1(mlm6, test = 'F')
+```
+
+Nope.
+
+Include only those that have shown some evidence of correlation.
+
+```{r}
+mmm10 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + I(K.mn/100) + mm2.mn + (1|trial.ID), data = ds)
+summary(mmm10)
+drop1(mmm10, test = 'Chisq')
+```
+
+And try without random effect.
+
+```{r}
+mlm7 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + I(K.mn/100) + mm2.mn, data = ds)
+summary(mlm7)
+drop1(mlm7, test = 'F')
+```
+
+# Best models - combined slurry types
 Two most informative models, I think, are mmm2 and mmm5.
 Look at predictions and residuals.
 
@@ -169,12 +230,24 @@ ggplot(ds, aes(TS.mn, e.rel.150, colour = slurry.type)) +
 ```
 
 ```{r}
+ggplot(ds, aes(pH.lab.mn, e.rel.150, colour = slurry.type)) +
+  geom_text(aes(label = trial.ID), show.legend = FALSE) +
+  geom_point(aes(y = pred.mmm5), shape = 1, size = 3) +
+  geom_point(aes(y = pred.mmm2), shape = 1, size = 2) +
+  geom_segment(aes(xend = pH.lab.mn, yend = pred.mmm5), alpha = 0.2) +
+  scale_colour_manual(values = cols) +
+  labs(x = 'Slurry pH', y = 'Relative emission (% TAN)', colour = '') +
+  theme_bw() 
+```
+
+
+```{r}
 ggplot(ds, aes(TS.mn, resid5, colour = slurry.type)) +
   geom_point() +
   geom_point(aes(y = resid2), shape = 1) +
   geom_hline(yintercept = 0) +
   scale_colour_manual(values = cols) +
-  labs(x = 'Slurry DM (%)', y = 'Residual in relative emission (% TAN)', colour = '') +
+  labs(x = 'Slurry pH', y = 'Residual in relative emission (% TAN)', colour = '') +
   theme_bw() 
 ```
 
