@@ -1,0 +1,351 @@
+---
+title: 'Simple models'
+author: 'Sasha D. Hafner'
+date: "`r format(Sys.time(), '%H:%M - %d %B, %Y')`"
+---
+
+# Structure/replication
+
+Check for replication by slurry ID x trial ID.
+And number of digestate and raw slurries.
+
+```{r}
+table(ds[, .(slurry.ID, trial.ID)])
+table(ds[, .(slurry.type, trial.ID)])
+```
+
+# Exploratory plots and correlation
+
+Scatterplots to look for correlation between emission and predictor variables and between predictor variables.
+
+```{r}
+ds[, logK := log10(K.mn)]
+pairs(ds[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)], col = ds$col, pch = 19)
+```
+
+Pearson's r.
+`dsd` is digestate only and `dsr` is raw slurry only.
+`ds` is everything.
+
+```{r}
+cor(ds[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)])
+cor(dsd[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)])
+cor(dsr[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)])
+```
+
+# Models - combined slurry types
+
+Start with `lm()` and try many predictors.
+Just to show that we don't have the degrees of freedom needed.
+
+```{r}
+mlm0 <- lm(e.rel.150 ~ pH.lab.mn + TS.mn + area.perc.mn + K.mn + n.mn + mm1.mn + mm2.mn + dig + trial.ID, data = ds)
+summary(mlm0)
+```
+
+So we have to work with predictor variable subsets.
+
+Try DM, viscosity, and pH.
+
+```{r}
+mlm1 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + n.mn + slurry.ID + trial.ID, data = ds)
+summary(mlm1)
+anova(mlm1)
+drop1(mlm1, test = 'F')
+```
+
+We see that:
+
+* presence of variables has effect on significance (`anova()` vs. `drop1()` and `summary()` results),
+* DM is clearest predictor
+
+Try DM and pH, keeping trial and slurry IDs.
+
+```{r}
+mlm2 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.ID + trial.ID, data = ds)
+summary(mlm2)
+anova(mlm2)
+drop1(mlm2, test = 'F')
+```
+
+No clear predictors with both DM and pH included with both trial and slurry ID.
+But see `anova()` results--DM and pH alone without those two are clear.
+(For `anova()` the order matters--`TS.mn` p-value is for a model with no predictors vs. with just `TS.mn`, `pH...` row is for adding pH to that DM model.)
+
+Try either trial or slurry ID, not both.
+
+```{r}
+mlm3 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + trial.ID, data = ds)
+summary(mlm3)
+anova(mlm3)
+drop1(mlm3, test = 'F')
+```
+
+Here pH correlation clear.
+
+```{r}
+mlm4 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.ID, data = ds)
+summary(mlm4)
+anova(mlm4)
+drop1(mlm4, test = 'F')
+```
+
+And with slurry ID instead of trial ID, DM effect is quite clear and there is a still a pH correlation.
+
+Drop both random-like predictors.
+
+```{r}
+mlm5 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
+summary(mlm5)
+anova(mlm5)
+drop1(mlm5, test = 'F')
+```
+
+Without either slurry or trial ID, we still see clear pH and DM correlation with emission.
+
+Try to used these sets in mixed-effects models, where we can handle the ID variables more appropriately.
+
+```{r}
+mmm1 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|slurry.ID) + (1|trial.ID), data = ds)
+summary(mmm1)
+drop1(mmm1, test = 'Chisq')
+```
+
+No variance assigned to slurry ID.
+But very clear DM and pH effects even with both slurry and trial ID included.
+Try without slurry ID.
+
+```{r}
+mmm2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds)
+summary(mmm2)
+drop1(mmm2, test = 'Chisq')
+```
+
+```{r}
+mmm3 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|slurry.ID), data = ds)
+summary(mmm3)
+drop1(mmm3, test = 'Chisq')
+```
+
+Now that we have this, let's look at other variables again.
+
+```{r}
+mmm4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + n.mn + (1|trial.ID), data = ds)
+summary(mmm4)
+drop1(mmm4, test = 'Chisq')
+```
+
+Now we see some evidence for a correlation with K.
+Drop n.
+
+```{r}
+mmm5 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + (1|trial.ID), data = ds)
+summary(mmm5)
+drop1(mmm5, test = 'Chisq')
+```
+
+What sign do we expect for K effect?
+That may not mean much, because it could be "correcting" for a non-linear DM effect, for example.
+
+Or drop K.
+
+```{r}
+mmm6 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + n.mn + (1|trial.ID), data = ds)
+summary(mmm6)
+drop1(mmm6, test = 'Chisq')
+```
+
+Are we missing some ESA or viscosity n importance?
+
+```{r}
+mmm6 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + n.mn + mm2.mn + area.perc.mn + (1|trial.ID), data = ds)
+summary(mmm6)
+drop1(mmm6, test = 'Chisq')
+```
+
+No evidence of that, at least when DM and pH are in the model.
+Try without DM.
+
+```{r}
+mmm7 <- lmer(e.rel.150 ~ pH.lab.mn + log10(K.mn) + n.mn + mm2.mn + area.perc.mn + (1|trial.ID), data = ds)
+summary(mmm7)
+drop1(mmm7, test = 'Chisq')
+```
+
+Particles < 2 mm now shows up but there is a convergence issue.
+Without pH. . .
+
+```{r}
+mmm8 <- lmer(e.rel.150 ~ log10(K.mn) + n.mn + mm2.mn + area.perc.mn + (1|trial.ID), data = ds)
+summary(mmm8)
+drop1(mmm8, test = 'Chisq')
+```
+
+Just ESA alone.
+
+```{r}
+mmm9 <- lmer(e.rel.150 ~ area.perc.mn + (1|trial.ID), data = ds)
+summary(mmm9)
+drop1(mmm9, test = 'Chisq')
+```
+
+Drop random effect.
+
+
+```{r}
+mlm6 <- lm(e.rel.150 ~ area.perc.mn, data = ds)
+summary(mlm6)
+drop1(mlm6, test = 'F')
+```
+
+Nope.
+
+Include only those that have shown some evidence of correlation.
+
+```{r}
+mmm10 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + mm2.mn + (1|trial.ID), data = ds)
+summary(mmm10)
+drop1(mmm10, test = 'Chisq')
+```
+
+And try without random effect.
+
+```{r}
+mlm7 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + mm2.mn, data = ds)
+summary(mlm7)
+drop1(mlm7, test = 'F')
+```
+
+# Best models - combined slurry types
+Two most informative models, I think, are mmm2 and mmm5.
+Look at predictions and residuals.
+
+```{r}
+ds[, pred.mmm2 := predict(mmm2)]
+ds[, pred.mmm5 := predict(mmm5)]
+ds[, resid5 := resid(mmm5)]
+ds[, resid2 := resid(mmm2)]
+```
+
+```{r}
+ggplot(ds, aes(TS.mn, e.rel.150, colour = slurry.type)) +
+  geom_text(aes(label = trial.ID), show.legend = FALSE) +
+  geom_point(aes(y = pred.mmm5), shape = 1, size = 3) +
+  geom_point(aes(y = pred.mmm2), shape = 1, size = 2) +
+  geom_segment(aes(xend = TS.mn, yend = pred.mmm5), alpha = 0.2) +
+  scale_colour_manual(values = cols) +
+  labs(x = 'Slurry DM (%)', y = 'Relative emission (% TAN)', colour = '') +
+  theme_bw() 
+```
+
+```{r}
+ggplot(ds, aes(pH.lab.mn, e.rel.150, colour = slurry.type)) +
+  geom_text(aes(label = trial.ID), show.legend = FALSE) +
+  geom_point(aes(y = pred.mmm5), shape = 1, size = 3) +
+  geom_point(aes(y = pred.mmm2), shape = 1, size = 2) +
+  geom_segment(aes(xend = pH.lab.mn, yend = pred.mmm5), alpha = 0.2) +
+  scale_colour_manual(values = cols) +
+  labs(x = 'Slurry pH', y = 'Relative emission (% TAN)', colour = '') +
+  theme_bw() 
+```
+
+
+```{r}
+ggplot(ds, aes(TS.mn, resid5, colour = slurry.type)) +
+  geom_point() +
+  geom_point(aes(y = resid2), shape = 1) +
+  geom_hline(yintercept = 0) +
+  scale_colour_manual(values = cols) +
+  labs(x = 'Slurry pH', y = 'Residual in relative emission (% TAN)', colour = '') +
+  theme_bw() 
+```
+
+All encouraging in my opinion.
+
+See if there is still evidence of a residual slurry type effect.
+
+```{r}
+mmm6 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + (1|trial.ID) + (1|slurry.type), data = ds)
+summary(mmm6)
+drop1(mmm6, test = 'Chisq')
+anova(mmm6, mmm5, test = 'Chisq')
+```
+
+Cool!
+No evidence at all that there is still a residual slurry type effect!
+AIC is higher for `mmm6`.
+
+# Digestate separately
+
+```{r}
+mlm0 <- lm(e.rel.150 ~ pH.lab.mn + TS.mn + area.perc.mn + K.mn + n.mn + mm1.mn + mm2.mn + dig + trial.ID, data = dsd)
+summary(mlm0)
+```
+
+```{r}
+mlm1 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + K.mn + n.mn + slurry.ID + trial.ID, data = dsd)
+summary(mlm1)
+anova(mlm1)
+drop1(mlm1, test = 'F')
+```
+
+Wrong sign on pH.
+Check plot above.
+
+
+```{r}
+mmm2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = dsd)
+summary(mmm2)
+drop1(mmm2, test = 'Chisq')
+```
+
+pH correlation not clear.
+
+```{r}
+mmm4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + n.mn + (1|trial.ID), data = dsd)
+summary(mmm4)
+drop1(mmm4, test = 'Chisq')
+```
+
+Are we missing some ESA or viscosity n importance?
+
+```{r}
+mmm6 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + log10(K.mn) + n.mn + mm2.mn + area.perc.mn + (1|trial.ID), data = dsd)
+summary(mmm6)
+drop1(mmm6, test = 'Chisq')
+```
+
+No evidence of that, at least when DM and pH are in the model.
+Try without DM.
+
+```{r}
+mmm7 <- lmer(e.rel.150 ~ pH.lab.mn + log10(K.mn) + n.mn + mm2.mn + area.perc.mn + (1|trial.ID), data = dsd)
+summary(mmm7)
+drop1(mmm7, test = 'Chisq')
+```
+
+```{r}
+mmm8 <- lmer(e.rel.150 ~ log10(K.mn) + n.mn + mm2.mn + area.perc.mn + (1|trial.ID), data = dsd)
+summary(mmm8)
+drop1(mmm8, test = 'Chisq')
+```
+
+Just ESA alone.
+
+```{r}
+mmm9 <- lmer(e.rel.150 ~ area.perc.mn + (1|trial.ID), data = dsd)
+summary(mmm9)
+drop1(mmm9, test = 'Chisq')
+```
+
+Finally!
+
+Drop random effect.
+
+```{r}
+mlm6 <- lm(e.rel.150 ~ area.perc.mn, data = dsd)
+summary(mlm6)
+drop1(mlm6, test = 'F')
+```
+
+

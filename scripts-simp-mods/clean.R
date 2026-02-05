@@ -16,6 +16,9 @@ ds[, trial.ID := substr(new.ID.x, 2, 2)]
 cols <- c("#1B9E77", "#D95F02", "#7570B3")
 ds[, col := cols[as.integer(slurry.type)]]
 
+# Log transform
+ds[, logK := log10(K.mn)]
+
 # Subsets
 # Digestate
 dsd <- ds[slurry.type == 'Digestate', ]
