@@ -30,9 +30,9 @@ p2 <- ggplot(ds, aes(pH.lab.mn, e.rel.150, colour = slurry.type)) +
   scale_colour_manual(values = cols) +
   labs(x = 'Slurry pH', y = '', colour = '') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'top')
 
 p2
 
-(p1 | p2) + theme(legend.position = 'top')
+p1 | p2
 ggsave2x('../plots-simp-mods/mod_plot', height = 4, width = 6.5)
