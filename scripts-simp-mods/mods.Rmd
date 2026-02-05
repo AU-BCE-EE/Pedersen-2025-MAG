@@ -55,6 +55,14 @@ drop1(mm_a2, test = 'Chisq')
 
 Clear correlation.
 
+Check linear model.
+
+```{r}
+lm_a2 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
+summary(lm_a2)
+```
+
+Same.
 Can we improve predictions by adding any physical parameters?
 
 ```{r}
@@ -114,17 +122,20 @@ summary(mm_a8)
 drop1(mm_a8, test = 'Chisq')
 ```
 
-```{r}
-lm_a2 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
-summary(lm_a2)
-drop1(lm_a2, test = 'Chisq')
-```
-
 Compare.
 
 ```{r}
 anova(lm_a2, lm_a7, test = 'F')
 AIC(mm_a2, mm_a8)
+```
+
+Make predictions for plots.
+
+```{r}
+ds[, mm_a2.pred := predict(mm_a2)]
+ds[, lm_a2.pred := predict(lm_a2)]
+ds[, mm_a8.pred := predict(mm_a8)]
+ds[, lm_a7.pred := predict(lm_a7)]
 ```
 
 ## ESA alternatives

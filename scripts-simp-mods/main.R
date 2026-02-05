@@ -7,4 +7,4 @@ source('load.R')
 source('combine.R')
 source('clean.R')
 render('mods.Rmd')
-
+source('plot_pairs.R')
