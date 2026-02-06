@@ -34,11 +34,28 @@ cor(dsr[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.15
 
 # Models - combined slurry types
 
-## DM and pH
-Hypothesize that DM and pH can explain emission.
+## F. Slurry type models
 
 ```{r}
-mm_a1 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID) + (1|slurry.ID), data = ds)
+lm_f1 <- lm(e.rel.150 ~ slurry.type, data = ds)
+summary(lm_f1)
+drop1(lm_f1, test = 'F')
+```
+
+```{r}
+mm_f1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID), data = ds)
+summary(mm_f1)
+fixef(mm_f1)
+drop1(mm_f1, test = 'Chisq')
+```
+
+## A. DM and pH
+Hypothesize that DM and pH can explain emission.
+`mm1.mn` is the only other variable not highly correlated with DM, so we include that too.
+
+
+```{r}
+mm_a1 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds)
 summary(mm_a1)
 fixef(mm_a1)
 drop1(mm_a1, test = 'Chisq')
@@ -47,103 +64,57 @@ drop1(mm_a1, test = 'Chisq')
 Drop slurry ID.
 
 ```{r}
-mm_a2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds)
+mm_a2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds)
 summary(mm_a2)
 fixef(mm_a2)
 drop1(mm_a2, test = 'Chisq')
 ```
 
-Clear correlation.
-
-Check linear model.
+No evidence of `mm1.mn` correlation so we'll drop it.
 
 ```{r}
-lm_a2 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
-summary(lm_a2)
-```
-
-Same.
-Can we improve predictions by adding any physical parameters?
-
-```{r}
-mm_a3 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + area.perc.mn + logK + (1|trial.ID), data = ds)
+mm_a3 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds)
 summary(mm_a3)
 fixef(mm_a3)
 drop1(mm_a3, test = 'Chisq')
 ```
 
+Pretty clear, and positive coefficients.
+
+Check linear model.
+
 ```{r}
-mm_a4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + area.perc.mn + mm2.mn + (1|trial.ID), data = ds)
+lm_a3 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
+summary(lm_a3)
+```
+
+Same.
+
+```{r}
+mm_a4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds)
 summary(mm_a4)
 fixef(mm_a4)
 drop1(mm_a4, test = 'Chisq')
 ```
 
 ```{r}
-mm_a5 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + logK + (1|trial.ID), data = ds)
-summary(mm_a5)
-fixef(mm_a5)
-drop1(mm_a5, test = 'Chisq')
+lm_a4 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
+summary(lm_a4)
+drop1(lm_a4, test = 'F')
 ```
 
+Yes it does, but the fit does not improve much.
+
 ```{r}
-mm_a6 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm2.mn + (1|trial.ID), data = ds)
-summary(mm_a6)
-fixef(mm_a6)
-drop1(mm_a6, test = 'Chisq')
+summary(lm_f1)[c('r.squared', 'adj.r.squared')]
+summary(lm_a3)[c('r.squared', 'adj.r.squared')]
+summary(lm_a4)[c('r.squared', 'adj.r.squared')]
 ```
 
-No.
-
-Is a model with slurry type better?
+# B. ESA based models
 
 ```{r}
-mm_a7 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds)
-summary(mm_a7)
-fixef(mm_a7)
-drop1(mm_a7, test = 'Chisq')
-```
-
-```{r}
-lm_a7 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
-summary(lm_a7)
-drop1(lm_a7, test = 'F')
-```
-
-```{r}
-lm_a8 <- lm(e.rel.150 ~ slurry.type, data = ds)
-summary(lm_a8)
-drop1(lm_a8, test = 'F')
-```
-
-```{r}
-mm_a8 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID), data = ds)
-summary(mm_a8)
-drop1(mm_a8, test = 'Chisq')
-```
-
-Compare.
-
-```{r}
-anova(lm_a2, lm_a7, test = 'F')
-AIC(mm_a2, mm_a8)
-```
-
-Make predictions for plots.
-
-```{r}
-ds[, mm_a2.pred := predict(mm_a2)]
-ds[, lm_a2.pred := predict(lm_a2)]
-ds[, mm_a8.pred := predict(mm_a8)]
-ds[, lm_a7.pred := predict(lm_a7)]
-```
-
-## ESA alternatives
-
-Try ESA instead of DM.
-
-```{r}
-mm_b1 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID) + (1|slurry.ID), data = ds)
+mm_b1 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID) + (1|slurry.ID), data = ds)
 summary(mm_b1)
 fixef(mm_b1)
 drop1(mm_b1, test = 'Chisq')
@@ -152,127 +123,161 @@ drop1(mm_b1, test = 'Chisq')
 Drop slurry ID.
 
 ```{r}
-mm_b2 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID), data = ds)
+mm_b2 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds)
 summary(mm_b2)
 fixef(mm_b2)
 drop1(mm_b2, test = 'Chisq')
 ```
 
+Go to `lm()` with no trial ID.
+
+
 ```{r}
-mm_b5 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + logK + (1|trial.ID), data = ds)
-summary(mm_b5)
-fixef(mm_b5)
-drop1(mm_b5, test = 'Chisq')
+lm_b3 <- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn, data = ds)
+summary(lm_b3)
+drop1(lm_b3, test = 'F')
+```
+
+Try ESA alone.
+
+```{r}
+mm_b4 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID), data = ds)
+summary(mm_b4)
+fixef(mm_b4)
+drop1(mm_b4, test = 'Chisq')
 ```
 
 ```{r}
-mm_b6 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm2.mn + (1|trial.ID), data = ds)
-summary(mm_b6)
-fixef(mm_b6)
-drop1(mm_b6, test = 'Chisq')
+lm_b4 <- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn, data = ds)
+summary(lm_b4)
+drop1(lm_b4, test = 'F')
 ```
 
-ESA is just not as informative as DM.
-
-# Models - digestate alone
-
-## DM and pH
-Hypothesize that DM and pH can explain emission.
+We get a clear correlation and a decent fit here.
+Of course the sign of the slope makes no sense.
+Overall fit is identical to DM based model.
 
 ```{r}
-mm_c1 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID) + (1|slurry.ID), data = dsd)
+summary(lm_a3)[c('r.squared', 'adj.r.squared')]
+summary(lm_b4)[c('r.squared', 'adj.r.squared')]
+```
+
+# C. logK-based models
+
+```{r}
+mm_c1 <- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds)
 summary(mm_c1)
 fixef(mm_c1)
 drop1(mm_c1, test = 'Chisq')
 ```
 
-Drop slurry ID.
+Drop slurry.ID.
 
 ```{r}
-mm_c2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = dsd)
+mm_c2 <- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds)
 summary(mm_c2)
 fixef(mm_c2)
 drop1(mm_c2, test = 'Chisq')
 ```
 
-Can we improve predictions by adding any physical parameters?
+Particle predictor mm1.mn does not do much.
 
 ```{r}
-mm_c3 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + area.perc.mn + logK + (1|trial.ID), data = dsd)
+mm_c3 <- lmer(e.rel.150 ~ logK + pH.lab.mn + (1|trial.ID), data = ds)
 summary(mm_c3)
 fixef(mm_c3)
 drop1(mm_c3, test = 'Chisq')
 ```
 
-```{r}
-mm_c4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + area.perc.mn + mm2.mn + (1|trial.ID), data = dsd)
-summary(mm_c4)
-fixef(mm_c4)
-drop1(mm_c4, test = 'Chisq')
-```
+And logK is not very useful.
+
+# D. m/n models
 
 ```{r}
-mm_c5 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + logK + (1|trial.ID), data = dsd)
-summary(mm_c5)
-fixef(mm_c5)
-drop1(mm_c5, test = 'Chisq')
-```
-
-```{r}
-mm_c6 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm2.mn + (1|trial.ID), data = dsd)
-summary(mm_c6)
-fixef(mm_c6)
-drop1(mm_c6, test = 'Chisq')
-```
-
-No.
-
-## ESA alternatives
-
-Try ESA instead of DM.
-
-```{r}
-mm_d1 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID) + (1|slurry.ID), data = dsd)
+mm_d1 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + mm1.mn + (1|trial.ID), data = ds)
 summary(mm_d1)
 fixef(mm_d1)
 drop1(mm_d1, test = 'Chisq')
 ```
 
-Drop slurry ID.
+Drop mm1.mn
 
 ```{r}
-mm_d2 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID), data = dsd)
+mm_d2 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + (1|trial.ID), data = ds)
 summary(mm_d2)
 fixef(mm_d2)
 drop1(mm_d2, test = 'Chisq')
 ```
 
 ```{r}
-mm_d5 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + logK + (1|trial.ID), data = dsd)
-summary(mm_d5)
-fixef(mm_d5)
-drop1(mm_d5, test = 'Chisq')
+lm_d3 <- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
+summary(lm_d3)
+drop1(lm_d3, test = 'F')
+```
+
+This is best model so far, and simple.
+
+Does slurry type add more info?
+
+
+```{r}
+lm_d4 <- lm(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type, data = ds)
+summary(lm_d4)
+drop1(lm_d4, test = 'F')
+```
+
+Yes.
+
+# F. Particle based models
+
+```{r}
+mm_e1 <- lmer(e.rel.150 ~ pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds)
+summary(mm_e1)
+fixef(mm_e1)
+drop1(mm_e1, test = 'Chisq')
 ```
 
 ```{r}
-mm_d6 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm2.mn + (1|trial.ID), data = dsd)
-summary(mm_d6)
-fixef(mm_d6)
-drop1(mm_d6, test = 'Chisq')
+mm_e2 <- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + (1|trial.ID), data = ds)
+summary(mm_e2)
+fixef(mm_e2)
+drop1(mm_e2, test = 'Chisq')
 ```
-
-ESA has some correlation.
 
 ```{r}
-anova(mm_d2, mm_c2, test = 'Chisq')
+lm_e3 <- lm(e.rel.150 ~ pH.lab.mn + mm2.mn, data = ds)
+summary(lm_e3)
+drop1(lm_e3, test = 'F')
 ```
 
-But DM gives a better model.
+Another good model.
 
-# Conclusions
+Does slurry type add more info?
 
-* Correlation among predictor variables is high and values were not experimentally manipulated so it is not possible to conclude with certainty exactly what drives emission
-* DM and pH can explain much of the variation in emission between and within slurry types
-* Physical parameters seem to provide little or no additional information
-* Alternative models can be developed using ESA and physical parameters, but they have a poorer fit or explain less of the observed variation and are less plausible
-* Slurry type explains some additional variation in emission beyond DM and pH (i.e., these two cannot explain all the apparent effects of slurry type, with digestate having higher emission), but slurry type alone is less useful than DM and pH. 
+```{r}
+lm_e4 <- lm(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type, data = ds)
+summary(lm_e4)
+drop1(lm_e4, test = 'Chisq')
+```
+
+Nope, not clearly at least!
+
+```{r}
+mm_e5 <- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type + (1|trial.ID), data = ds)
+summary(mm_e5)
+fixef(mm_e5)
+drop1(mm_e5, test = 'Chisq')
+```
+
+Neat!
+
+## Model predictions
+
+Make predictions for plots.
+
+```{r}
+ds[, mm_a3.pred := predict(mm_a3)]
+ds[, mm_d2.pred := predict(mm_d2)]
+ds[, mm_f1.pred := predict(mm_f1)]
+```
+
