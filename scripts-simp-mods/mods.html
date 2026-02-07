@@ -351,7 +351,7 @@ display: none;
 
 <h1 class="title toc-ignore">Simple models</h1>
 <h4 class="author">Sasha D. Hafner</h4>
-<h4 class="date">14:48 - 06 February, 2026</h4>
+<h4 class="date">17:05 - 06 February, 2026</h4>
 
 </div>
 
@@ -522,6 +522,47 @@ summary(mm_f1)</code></pre>
 ## 
 ## Model:
 ## e.rel.150 ~ slurry.type + (1 | trial.ID)
+##             npar     AIC    LRT   Pr(Chi)    
+## &lt;none&gt;           -50.380                     
+## slurry.type    2 -28.853 25.528 2.862e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>mm_f2 &lt;- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) - 1, data = ds)
+summary(mm_f2)</code></pre>
+<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ slurry.type + (1 | trial.ID) - 1
+##    Data: ds
+## 
+## REML criterion at convergence: -45.4
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -1.5996 -0.7722 -0.2671  0.8645  1.7958 
+## 
+## Random effects:
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0006402 0.02530 
+##  Residual             0.0054353 0.07372 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                      Estimate Std. Error t value
+## slurry.typeCattle     0.26428    0.04470   5.912
+## slurry.typeDigestate  0.40670    0.02049  19.847
+## slurry.typePig        0.12638    0.04470   2.827
+## 
+## Correlation of Fixed Effects:
+##             slrr.C slrr.D
+## slrry.typDg 0.120        
+## slrry.typPg 0.093  0.120</code></pre>
+<pre class="r"><code>fixef(mm_f2)</code></pre>
+<pre><code>##    slurry.typeCattle slurry.typeDigestate       slurry.typePig 
+##            0.2642787            0.4067015            0.1263787</code></pre>
+<pre class="r"><code>drop1(mm_f2, test = &#39;Chisq&#39;)</code></pre>
+<pre><code>## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ slurry.type + (1 | trial.ID) - 1
 ##             npar     AIC    LRT   Pr(Chi)    
 ## &lt;none&gt;           -50.380                     
 ## slurry.type    2 -28.853 25.528 2.862e-06 ***

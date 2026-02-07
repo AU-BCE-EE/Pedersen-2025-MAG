@@ -49,6 +49,13 @@ fixef(mm_f1)
 drop1(mm_f1, test = 'Chisq')
 ```
 
+```{r}
+mm_f2 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) - 1, data = ds)
+summary(mm_f2)
+fixef(mm_f2)
+drop1(mm_f2, test = 'Chisq')
+```
+
 ## A. DM and pH
 Hypothesize that DM and pH can explain emission.
 `mm1.mn` is the only other variable not highly correlated with DM, so we include that too.
