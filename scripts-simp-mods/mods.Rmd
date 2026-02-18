@@ -235,6 +235,15 @@ fixef(mm_d2)
 drop1(mm_d2, test = 'Chisq')
 ```
 
+Add slurry type
+
+```{r}
+mm_d3 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds)
+summary(mm_d3)
+drop1(mm_d3, test = 'Chisq')
+```
+
+
 ```{r}
 lm_d3 <- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
 summary(lm_d3)
