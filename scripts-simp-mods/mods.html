@@ -351,7 +351,7 @@ display: none;
 
 <h1 class="title toc-ignore">Simple models</h1>
 <h4 class="author">Sasha D. Hafner</h4>
-<h4 class="date">10:27 - 18 February, 2026</h4>
+<h4 class="date">14:32 - 18 February, 2026</h4>
 
 </div>
 
@@ -1403,6 +1403,55 @@ summary(mm_d2)</code></pre>
 ## &lt;none&gt;         -58.049                     
 ## pH.lab.mn    1 -32.157 27.892 1.283e-07 ***
 ## n.mn         1 -55.596  4.453   0.03484 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Add slurry type</p>
+<pre class="r"><code>mm_d3 &lt;- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre class="r"><code>summary(mm_d3)</code></pre>
+<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1 | trial.ID)
+##    Data: ds
+## 
+## REML criterion at convergence: -52.7
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -1.9716 -0.7339  0.1521  0.7879  1.2494 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.003151 0.05613 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                      Estimate Std. Error t value
+## (Intercept)          -0.19620    0.38515  -0.509
+## pH.lab.mn             0.07437    0.05212   1.427
+## n.mn                 -0.17781    0.04870  -3.651
+## slurry.typeDigestate  0.13781    0.04896   2.815
+## slurry.typePig       -0.04527    0.05099  -0.888
+## 
+## Correlation of Fixed Effects:
+##             (Intr) pH.lb. n.mn   slrr.D
+## pH.lab.mn   -0.995                     
+## n.mn        -0.399  0.348              
+## slrry.typDg  0.637 -0.688 -0.369       
+## slrry.typPg -0.343  0.309 -0.184  0.251
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre class="r"><code>drop1(mm_d3, test = &#39;Chisq&#39;)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1 | trial.ID)
+##             npar     AIC     LRT   Pr(Chi)    
+## &lt;none&gt;           -64.634                      
+## pH.lab.mn      1 -64.210  2.4237 0.1195140    
+## n.mn           1 -54.890 11.7434 0.0006106 ***
+## slurry.type    2 -58.049 10.5849 0.0050295 ** 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>lm_d3 &lt;- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
