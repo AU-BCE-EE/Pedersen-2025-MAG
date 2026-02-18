@@ -43,30 +43,33 @@ drop1(lm_f1, test = 'F')
 ```
 
 ```{r}
-mm_f1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID), data = ds)
+names(ds)
+mm_f1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID), data = ds)
 summary(mm_f1)
 fixef(mm_f1)
 drop1(mm_f1, test = 'Chisq')
 ```
 
+Exclude intercept to get means.
+
 ```{r}
-mm_f2 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) - 1, data = ds)
+mm_f2 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID) - 1, data = ds)
 summary(mm_f2)
 fixef(mm_f2)
 drop1(mm_f2, test = 'Chisq')
 ```
 
 ```{r}
-lm_f1 <- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
-summary(lm_f1)
-drop1(lm_f1, test = 'F')
+lm_f2 <- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
+summary(lm_f2)
+drop1(lm_f2, test = 'F')
 ```
 
 ```{r}
-lm_f2 <- aov(e.rel.150 ~ slurry.type, data = ds)
-summary(lm_f2)
-model.tables(lm_f2, type = 'means')
-TukeyHSD(lm_f2, 'slurry.type')
+lm_f3 <- aov(e.rel.150 ~ slurry.type, data = ds)
+summary(lm_f3)
+model.tables(lm_f3, type = 'means')
+TukeyHSD(lm_f3, 'slurry.type')
 ```
 
 ## A. DM and pH
