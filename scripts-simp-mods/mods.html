@@ -351,7 +351,7 @@ display: none;
 
 <h1 class="title toc-ignore">Simple models</h1>
 <h4 class="author">Sasha D. Hafner</h4>
-<h4 class="date">17:05 - 06 February, 2026</h4>
+<h4 class="date">20:23 - 17 February, 2026</h4>
 
 </div>
 
@@ -568,6 +568,70 @@ summary(mm_f2)</code></pre>
 ## slurry.type    2 -28.853 25.528 2.862e-06 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>lm_f1 &lt;- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
+summary(lm_f1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = e.rel.150 ~ slurry.type + trial.ID, data = ds)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.098600 -0.050600 -0.004733  0.054400  0.141720 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           0.35127    0.05850   6.005 1.12e-05 ***
+## slurry.typeDigestate  0.11333    0.04858   2.333   0.0314 *  
+## slurry.typePig       -0.13790    0.05950  -2.318   0.0324 *  
+## trial.ID2            -0.03260    0.04608  -0.707   0.4884    
+## trial.ID3            -0.11209    0.04858  -2.307   0.0331 *  
+## trial.ID4            -0.08587    0.04858  -1.768   0.0941 .  
+## trial.ID5            -0.09385    0.04858  -1.932   0.0693 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.07287 on 18 degrees of freedom
+## Multiple R-squared:  0.7551, Adjusted R-squared:  0.6735 
+## F-statistic:  9.25 on 6 and 18 DF,  p-value: 0.000106</code></pre>
+<pre class="r"><code>drop1(lm_f1, test = &#39;F&#39;)</code></pre>
+<pre><code>## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ slurry.type + trial.ID
+##             Df Sum of Sq      RSS     AIC F value    Pr(&gt;F)    
+## &lt;none&gt;                   0.095571 -125.17                      
+## slurry.type  2  0.148143 0.243713 -105.77 13.9507 0.0002193 ***
+## trial.ID     4  0.035516 0.131087 -125.27  1.6723 0.2001013    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>lm_f2 &lt;- aov(e.rel.150 ~ slurry.type, data = ds)
+summary(lm_f2)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## slurry.type  2 0.2592 0.12958   21.75 6.14e-06 ***
+## Residuals   22 0.1311 0.00596                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>model.tables(lm_f2, type = &#39;means&#39;)</code></pre>
+<pre><code>## Tables of means
+## Grand mean
+##          
+## 0.355972 
+## 
+##  slurry.type 
+##     Cattle Digestate    Pig
+##      0.254    0.4099 0.1161
+## rep  3.000   19.0000 3.0000</code></pre>
+<pre class="r"><code>TukeyHSD(lm_f2, &#39;slurry.type&#39;)</code></pre>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = e.rel.150 ~ slurry.type, data = ds)
+## 
+## $slurry.type
+##                        diff         lwr        upr     p adj
+## Digestate-Cattle  0.1559474  0.03547904  0.2764157 0.0098209
+## Pig-Cattle       -0.1379000 -0.29622640  0.0204264 0.0955805
+## Pig-Digestate    -0.2938474 -0.41431570 -0.1733790 0.0000105</code></pre>
 </div>
 <div id="a.-dm-and-ph" class="section level2">
 <h2>A. DM and pH</h2>
@@ -740,6 +804,7 @@ summary(lm_a3)</code></pre>
 ## Multiple R-squared:  0.7424, Adjusted R-squared:  0.7189 
 ## F-statistic: 31.69 on 2 and 22 DF,  p-value: 3.321e-07</code></pre>
 <p>Same.</p>
+<p>Add slurry type.</p>
 <pre class="r"><code>mm_a4 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre class="r"><code>summary(mm_a4)</code></pre>
@@ -793,6 +858,7 @@ summary(lm_a3)</code></pre>
 ## slurry.type    2 -57.685  9.7659 0.007575 **
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>And try linear model with slurry type too.</p>
 <pre class="r"><code>lm_a4 &lt;- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
 summary(lm_a4)</code></pre>
 <pre><code>## 
@@ -831,10 +897,10 @@ summary(lm_a4)</code></pre>
 <p>Yes it does, but the fit does not improve much.</p>
 <pre class="r"><code>summary(lm_f1)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
 <pre><code>## $r.squared
-## [1] 0.6640958
+## [1] 0.7551044
 ## 
 ## $adj.r.squared
-## [1] 0.633559</code></pre>
+## [1] 0.6734725</code></pre>
 <pre class="r"><code>summary(lm_a3)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
 <pre><code>## $r.squared
 ## [1] 0.7423531

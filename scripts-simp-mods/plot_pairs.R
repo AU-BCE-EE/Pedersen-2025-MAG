@@ -23,3 +23,13 @@ pairs(
 )
 dev.off()
 
+png('../plots-simp-mods/pairs_all.png', height = 6, width = 6, units = 'in', res = 600)
+pairs(
+  #ds[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)], 
+  ds[, .(pH, `DM (%)`, `ESA (%)`, `log(K)`, m, mm1, mm2, emis)], 
+  upper.panel = panel.cor,
+  col = ds$col, 
+  pch = 19
+)
+dev.off()
+

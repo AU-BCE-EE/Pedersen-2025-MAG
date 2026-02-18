@@ -56,6 +56,19 @@ fixef(mm_f2)
 drop1(mm_f2, test = 'Chisq')
 ```
 
+```{r}
+lm_f1 <- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
+summary(lm_f1)
+drop1(lm_f1, test = 'F')
+```
+
+```{r}
+lm_f2 <- aov(e.rel.150 ~ slurry.type, data = ds)
+summary(lm_f2)
+model.tables(lm_f2, type = 'means')
+TukeyHSD(lm_f2, 'slurry.type')
+```
+
 ## A. DM and pH
 Hypothesize that DM and pH can explain emission.
 `mm1.mn` is the only other variable not highly correlated with DM, so we include that too.
@@ -97,12 +110,16 @@ summary(lm_a3)
 
 Same.
 
+Add slurry type.
+
 ```{r}
 mm_a4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds)
 summary(mm_a4)
 fixef(mm_a4)
 drop1(mm_a4, test = 'Chisq')
 ```
+
+And try linear model with slurry type too.
 
 ```{r}
 lm_a4 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
