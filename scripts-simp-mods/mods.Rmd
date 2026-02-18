@@ -43,7 +43,6 @@ drop1(lm_f1, test = 'F')
 ```
 
 ```{r}
-names(ds)
 mm_f1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID), data = ds)
 summary(mm_f1)
 fixef(mm_f1)
