@@ -38,4 +38,4 @@ p2 <- ggplot(ds, aes(pH.lab.mn, e.rel.150, colour = slurry.type)) +
 p2
 
 p2 | p1
-ggsave2x('../plots-simp-mods/mod_plot', height = 4, width = 6.5)
+ggsave2x('../plots-simp-mods/mod_plot', height = 3.7, width = 6.5)
