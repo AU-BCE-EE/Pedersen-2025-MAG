@@ -43,17 +43,32 @@ drop1(lm_f1, test = 'F')
 ```
 
 ```{r}
-mm_f1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID), data = ds)
+mm_f1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID), data = ds)
 summary(mm_f1)
 fixef(mm_f1)
 drop1(mm_f1, test = 'Chisq')
 ```
 
+Exclude intercept to get means.
+
 ```{r}
-mm_f2 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) - 1, data = ds)
+mm_f2 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID) - 1, data = ds)
 summary(mm_f2)
 fixef(mm_f2)
 drop1(mm_f2, test = 'Chisq')
+```
+
+```{r}
+lm_f2 <- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
+summary(lm_f2)
+drop1(lm_f2, test = 'F')
+```
+
+```{r}
+lm_f3 <- aov(e.rel.150 ~ slurry.type, data = ds)
+summary(lm_f3)
+model.tables(lm_f3, type = 'means')
+TukeyHSD(lm_f3, 'slurry.type')
 ```
 
 ## A. DM and pH
@@ -97,12 +112,16 @@ summary(lm_a3)
 
 Same.
 
+Add slurry type.
+
 ```{r}
 mm_a4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds)
 summary(mm_a4)
 fixef(mm_a4)
 drop1(mm_a4, test = 'Chisq')
 ```
+
+And try linear model with slurry type too.
 
 ```{r}
 lm_a4 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
@@ -215,6 +234,15 @@ summary(mm_d2)
 fixef(mm_d2)
 drop1(mm_d2, test = 'Chisq')
 ```
+
+Add slurry type
+
+```{r}
+mm_d3 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds)
+summary(mm_d3)
+drop1(mm_d3, test = 'Chisq')
+```
+
 
 ```{r}
 lm_d3 <- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)

@@ -10,13 +10,23 @@ panel.cor <- function(x, y, digits = 2, ...) {
 }
 
 # Give vars good plotting names
-ds[, `:=` (pH = pH.lab.mn, `DM (%)` = TS.mn, `ESA (%)` = area.perc.mn, `log(K)` = logK, m = n.mn, mm1 = mm1.mn, mm2 = mm2.mn, emis = e.rel.150)]
+ds[, `:=` (pH = pH.lab.mn, `DM (%)` = TS.mn, `ESA (%)` = area.perc.mn, `log(K)` = logK, m = n.mn, `Par. < 1 mm` = mm1.mn, `Par. > 2 mm` = mm2.mn, Emis. = e.rel.150)]
 
 
 pdf('../plots-simp-mods/pairs_all.pdf', height = 6, width = 6)
 pairs(
   #ds[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)], 
-  ds[, .(pH, `DM (%)`, `ESA (%)`, `log(K)`, m, mm1, mm2, emis)], 
+  ds[, .(pH, `DM (%)`, `ESA (%)`, `log(K)`, m, `Par. < 1 mm`, `Par. > 2 mm`, Emis.)], 
+  upper.panel = panel.cor,
+  col = ds$col, 
+  pch = 19
+)
+dev.off()
+
+png('../plots-simp-mods/pairs_all.png', height = 6, width = 6, units = 'in', res = 600)
+pairs(
+  #ds[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)], 
+  ds[, .(pH, `DM (%)`, `ESA (%)`, `log(K)`, m, `Par. < 1 mm`, `Par. > 2 mm`, Emis.)], 
   upper.panel = panel.cor,
   col = ds$col, 
   pch = 19
