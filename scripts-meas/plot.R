@@ -326,11 +326,32 @@ ggsave2x('../plots-meas/tech.note_t4', height = 4, width = 6)
 fsumm.prop <- fsumm[is.element(fsumm$new.ID, c('D1', 'D2', 'D3', 'D4', 'D5')), ]
 
 # Create and sort factor for plot labels
-setorder(fsumm.prop, new.ID, treat1)
-ll <- unique(fsumm.prop[, treat1])
-labs <- data.table(treat1 = ll, i = as.integer(factor(ll, levels = ll)))
-labs[, leg.lab := paste0(i, '. ', treat1)]
-fsumm.prop[, tfact := factor(treat1, levels = ll)]
+
+treat2 <- c(`A` =  'Dig. A',
+         `B` =  'Dig. B',
+         `C` =  'Dig. C',
+         `D` =  'Dig. D',
+         `E` =  'Dig. E',
+         `F` =  'Dig. F',
+         `G` =  'Dig. G',
+         `H` =  'Dig. H',
+         `I` =  'Dig. I',
+         `Cattle A` =  'Cattle A',
+         `Cattle B` =  'Cattle B',
+         `Cattle C` =  'Cattle C',
+         `Pig A` =  'Pig A',
+         `Pig B` =  'Pig B',
+         `Pig C` =  'Pig C')
+
+fsumm.prop[, treat2 := treat2[treat1]]
+
+
+
+setorder(fsumm.prop, new.ID, treat2)
+ll <- unique(fsumm.prop[, treat2])
+labs <- data.table(treat2 = ll, i = as.integer(factor(ll, levels = ll)))
+labs[, leg.lab := paste0(i, '. ', treat2)]
+fsumm.prop[, tfact := factor(treat2, levels = ll)]
 fsumm.prop[, leg.lab := factor(paste0(as.integer(tfact), '. ', tfact), levels = labs$leg.lab)]
 
 # Manual adjustments to avoid overplotting
@@ -358,18 +379,27 @@ custom_labels <- c(
   'D5' = 'Trial 5'
 )
 
+cols15 <- c(
+  "#1B9E77", "#D95F02", "#7570B3",  # your original 3
+  "#E7298A", "#66A61E", "#E6AB02", "#A6761D", "#666666",
+  "#1F78B4", "#B2DF8A", "#FB9A99", "#FDBF6F",
+  "#CAB2D6", "#6A3D9A", "#FF7F00"
+)
+
 ggplot(fsumm.prop, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
   geom_point(shape = 1, size = 0.5) + 
   geom_line() + 
   geom_text(data = labs, x = 2, aes(y = y, label = i), hjust = 1, size = 4.2, show.legend = FALSE) +
   facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), ncol = 1, scale = 'free_y') +
   theme_bw() + 
-  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
+  scale_colour_manual(values = cols15) +
+  scale_fill_manual(values = cols15) + 
   guides(color = guide_legend(nrow = 5)) + 
   xlim(-0.02, 52)
-ggsave2x('../plots-meas/NH3.flux.prop50', height = 10, width = 3.4)
+ggsave2x('../plots-meas/NH3.flux.prop50', height = 10, width = 3.5)
 
 
 ggplot(fsumm.prop, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) + 
@@ -378,9 +408,11 @@ ggplot(fsumm.prop, aes(cta, j.rel.mn, color = leg.lab, fill = leg.lab)) +
   geom_text(data = labs, x = 2, aes(y = y, label = i), hjust = 1, size = 4.2, show.legend = FALSE) +
   facet_wrap(~ new.ID, labeller = labeller(new.ID = custom_labels), ncol = 1, scale = 'free_y') +
   theme_bw() + 
-  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat1), alpha = 0.3, color = NA) + 
+  geom_ribbon(aes (ymax = j.rel.mn + j.rel.sd, ymin = j.rel.mn - j.rel.sd, group = treat2), alpha = 0.3, color = NA) + 
   ylab(expression(paste('Flux (frac. TAN  ', h^-1,')'))) + xlab('Time from application (h)') +
   theme(legend.position = 'bottom', legend.title = element_blank()) +
+  scale_colour_manual(values = cols15) +
+  scale_fill_manual(values = cols15) + 
   guides(color = guide_legend(nrow = 3)) + 
   xlim(-0.02, 150)
 ggsave2x('../plots-meas/NH3.flux.prop150', height = 9, width = 7)
