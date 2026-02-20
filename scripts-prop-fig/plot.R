@@ -2,8 +2,6 @@
 
 ds$e.rel.150 <- ds$e.rel.150 * 100
 
-dsd <- subset(ds, treat1 %in% c('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'))
-
 # grouping digestates, pig slurry and cattle slurry separately and repeating plot above
 IDs <- c(`A` =  'Digestate',
          `B` =  'Digestate',
@@ -22,7 +20,6 @@ IDs <- c(`A` =  'Digestate',
          `Pig C` =  'Pig')
 
 ds[, dig1 := IDs[dig]]
-dsd[, dig1 := IDs[dig]]
 
 IDs <- c(`D1` =  '1',
          `D2` =  '2',
@@ -31,35 +28,42 @@ IDs <- c(`D1` =  '1',
          `D5` =  '5')
 
 ds[, trial.ID := IDs[new.ID.x]]
-dsd[, trial.ID := IDs[new.ID.x]]
 
 
-f11 <- ggplot(dsd, aes(area.perc.mn, e.rel.150)) + 
-  geom_text(aes(label = trial.ID)) +
+ds$area.perc.mn <- as.numeric(ds$area.perc.mn)
+
+ds$logK.mn <- log(ds$K.mn)
+
+# reshaping to long format with the needed variables
+ds_long <- melt(
+  ds[, .(trial.ID, dig, dig1, e.rel.150,
+         mm2.mn, mm1.mn, logK.mn, n.mn, area.perc.mn)],
+  id.vars = c("trial.ID", "dig", "dig1", "e.rel.150"),
+  variable.name = "variable",
+  value.name = "value"
+)
+
+
+new.names <- c(`mm2.mn` =  'Particles > 2 mm (%)',
+               `mm1.mn` =  'Particles < 1 mm (% total particles < 2 mm)',
+               `logK.mn` =  'log(K)',
+               `n.mn` =  'm',
+               `area.perc.mn` =  'Exposed surface area (%)')
+
+ds_long[, new.names := new.names[variable]]
+
+cols <- c("#1B9E77", "#D95F02", "#7570B3")
+
+ggplot(ds_long, aes(value, e.rel.150, colour = dig1)) +
+  geom_point(shape = 21, fill = 'white', size = 4.5) +
+  geom_text(aes(label = trial.ID), show.legend = FALSE) + 
+  facet_wrap(~ new.names, scales = 'free_x', ncol = 3) + 
+  scale_colour_manual(values = cols) +
+  labs(y = 'Relative emission (% TAN)', colour = '') +
   theme_bw() +
-  ylab(expression(paste(NH[3],' (% of TAN)'))) +
-  xlab('Exposed surface area (%)') +
-  theme(legend.position = 'bottom', legend.title = element_blank())
-
-f112 <- ggplot(dsd, aes(TS.mn, e.rel.150)) + 
-  geom_text(aes(label = trial.ID)) +
-  theme_bw() +
-  ylab(expression(paste(NH[3],' (% of TAN)'))) +
-  xlab('Dry matter (%)') +
-  theme(legend.position = 'bottom', legend.title = element_blank())
-
-f22 <- ggplot(dsd, aes(area.perc.mn, TS.mn)) + 
-  geom_text(aes(label = trial.ID)) +
-  theme_bw() + 
-  ylab('Dry matter (%)') + 
-  xlab('Exposed surface area (%)') +
-  theme(legend.position = 'bottom', legend.title = element_blank())
-
-mat <- matrix(c(1, 2, 3),
-              nrow = 1)
-
-pf <- grid.arrange(f11, f112, f22, layout_matrix = mat)
-ggsave2x('../plots-meas/dig.prop.supMat1', plot = pf, height = 3, width = 8)
+  theme(axis.title.x = element_blank()) +
+  theme(legend.position = 'top')
+ggsave2x('../plots-meas/scatter', height = 5, width = 6.5)
 
 
 ##########################################################
@@ -121,89 +125,6 @@ ggsave2x('../plots-meas/dig.prop.supMat1', plot = pf, height = 3, width = 8)
 # 
 # pf <- grid.arrange(f11, f22, layout_matrix = mat)
 # ggsave2x('../plots-meas/dig.prop.supMat1_Ramiran', plot = pf, height = 3.5, width = 8.5)
-
-########################################################
-
-f1 <- ggplot(ds, aes(TS.mn, e.rel.150, color = dig1, shape = trial.ID)) + 
-  geom_point() + 
-  theme_bw() + 
-  xlab('Dry matter (%)') + ylab(expression(paste(NH[3],' (% of TAN)'))) +
-  theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
-  guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
-
-f2 <- ggplot(ds, aes(pH.lab.mn, e.rel.150, color = dig1, shape = trial.ID)) + 
-  geom_point() + 
-  theme_bw() + 
-  xlab('pH') + ylab(expression(paste(NH[3],' (% of TAN)'))) +
-  theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
-  guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
-
-f3 <- ggplot(ds, aes(area.perc.mn, e.rel.150, color = dig1, shape = trial.ID)) + 
-  geom_point() + 
-  theme_bw() + 
-  xlab('Exposed surface area (%)') + ylab(expression(paste(NH[3],' (% of TAN)'))) +
-  theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
-  guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
-
-f4 <- ggplot(ds, aes(n.mn, e.rel.150, color = dig1, shape = trial.ID)) + 
-  geom_point() + 
-  theme_bw() + 
-  xlab('m') + ylab(expression(paste(NH[3],' (% of TAN)'))) +
-  theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
-  guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
-
-mat <- matrix(c(1, 2,
-                3, 4),
-              nrow = 2, byrow = TRUE)
-
-pf <- grid.arrange(f1, f2, f3, f4, layout_matrix = mat)
-ggsave2x('../plots-meas/dig.prop.supMat2', plot = pf, height = 8, width = 6)
-
-
-
-
-f5 <- ggplot(ds, aes(TS.mn, area.perc.mn, color = dig1)) + 
-  geom_text(aes(label = trial.ID)) +
-  theme_bw() + 
-  xlab('Dry matter (%)') + ylab('Exposed surface area (%)') +
-  theme(legend.position = 'none')
-
-f6 <- ggplot(ds, aes(TS.mn, n.mn, color = dig1)) + 
-  geom_text(aes(label = trial.ID)) +
-  theme_bw() + 
-  xlab('Dry matter (%)') + ylab(expression(italic(m))) +
-  theme(legend.position = 'none',
-    axis.title.y = element_text(family = "serif"))
-
-mat <- matrix(c(1, 2),
-              nrow = 1, byrow = TRUE)
-
-pf <- grid.arrange(f5, f6, layout_matrix = mat)
-ggsave2x('../plots-meas/dig.prop.DMall', plot = pf, height = 3, width = 5.3)
-
-
-
-
-f7 <- ggplot(ds, aes(TS.mn, K.mn, color = dig1, shape = trial.ID)) + 
-  geom_point() +
-  theme_bw() + 
-  xlab('Dry matter (%)') + ylab('K') +
-  theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
-  guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
-
-f8 <- ggplot(ds, aes(TS.mn, pH.lab.mn, color = dig1, shape = trial.ID)) + 
-  geom_point() +
-  theme_bw() + 
-  xlab('Dry matter (%)') + ylab('pH') +
-  theme(legend.position = 'bottom', legend.title = element_blank(), legend.box = 'vertical') +
-  guides(shape = guide_legend(nrow = 2, order = 1), color = guide_legend(nrow = 1, order = 2))
-
-mat <- matrix(c(1, 2),
-              nrow = 1, byrow = TRUE)
-
-pf <- grid.arrange(f7, f8, layout_matrix = mat)
-ggsave2x('../plots-meas/dig.prop.supMat3', plot = pf, height = 4, width = 6)
-
 
 # #####################################################################
 # # Plots for Ramiran presentation october 2025
