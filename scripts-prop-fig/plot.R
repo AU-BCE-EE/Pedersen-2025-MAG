@@ -1,5 +1,3 @@
-
-
 ds$e.rel.150 <- ds$e.rel.150 * 100
 
 # grouping digestates, pig slurry and cattle slurry separately and repeating plot above
@@ -43,7 +41,6 @@ ds_long <- melt(
   value.name = "value"
 )
 
-
 new.names <- c(`mm2.mn` =  'Particles > 2 mm (%)',
                `mm1.mn` =  'Particles < 1 mm (% total particles < 2 mm)',
                `logK.mn` =  'log(K)',
@@ -57,7 +54,7 @@ cols <- c("#1B9E77", "#D95F02", "#7570B3")
 ggplot(ds_long, aes(value, e.rel.150, colour = dig1)) +
   geom_point(shape = 21, fill = 'white', size = 4.5) +
   geom_text(aes(label = trial.ID), show.legend = FALSE) + 
-  facet_wrap(~ new.names, scales = 'free_x', ncol = 3) + 
+  facet_wrap(~ new.names, scales = 'free_x', ncol = 2) + 
   scale_colour_manual(values = cols) +
   labs(y = 'Relative emission (% TAN)', colour = '') +
   theme_bw() +
