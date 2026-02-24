@@ -137,6 +137,14 @@ summary(lm_a3)[c('r.squared', 'adj.r.squared')]
 summary(lm_a4)[c('r.squared', 'adj.r.squared')]
 ```
 
+Similar model 
+
+```{r}
+lm_a5 <- aov(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
+pairs(emmeans(lm_a5, ~ slurry.type), adjust = 'tukey')
+```
+
+
 # B. ESA based models
 
 ```{r}

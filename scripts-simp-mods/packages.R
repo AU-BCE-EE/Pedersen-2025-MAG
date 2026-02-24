@@ -1,6 +1,7 @@
 
 library(ggplot2)
 library(data.table)
+library(emmeans)
 library(lme4)
 library(rmarkdown)
 library(patchwork)
