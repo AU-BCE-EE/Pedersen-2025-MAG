@@ -53,3 +53,20 @@ wsumm <- rounddf(as.data.frame(wsumm), 3, func = signif)
 
 # Add predictor variables to isumm for models
 isumm <- merge(isumm, pdat[, .(pmid, man.dm, man.ph)], by = 'pmid')
+
+
+
+# table for getting pmid id's for table in supporting
+
+pdat1 <- pdat[, c('pmid', 'exper', 'treat')]
+
+pdat1 <- pdat[, .(pmid, exper, treat)][
+  order(exper, treat)
+][, id := seq_len(.N), by = .(exper, treat)]
+
+pdat1 <- dcast(
+  pdat1,
+  exper + treat ~ id,
+  value.var = "pmid")
+
+setorder(pdat1, exper, treat)
