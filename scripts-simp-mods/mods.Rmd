@@ -47,6 +47,7 @@ mm_f1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID), data = ds)
 summary(mm_f1)
 fixef(mm_f1)
 drop1(mm_f1, test = 'Chisq')
+r2(mm_f1)
 ```
 
 Exclude intercept to get means.
@@ -56,6 +57,7 @@ mm_f2 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID) - 1, data =
 summary(mm_f2)
 fixef(mm_f2)
 drop1(mm_f2, test = 'Chisq')
+r2(mm_f2)
 ```
 
 ```{r}
@@ -81,6 +83,7 @@ mm_a1 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.
 summary(mm_a1)
 fixef(mm_a1)
 drop1(mm_a1, test = 'Chisq')
+r2(mm_a1)
 ```
 
 Drop slurry ID.
@@ -90,6 +93,7 @@ mm_a2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds)
 summary(mm_a2)
 fixef(mm_a2)
 drop1(mm_a2, test = 'Chisq')
+r2(mm_a2)
 ```
 
 No evidence of `mm1.mn` correlation so we'll drop it.
@@ -99,6 +103,7 @@ mm_a3 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds)
 summary(mm_a3)
 fixef(mm_a3)
 drop1(mm_a3, test = 'Chisq')
+r2(mm_a3)
 ```
 
 Pretty clear, and positive coefficients.
@@ -119,6 +124,7 @@ mm_a4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data =
 summary(mm_a4)
 fixef(mm_a4)
 drop1(mm_a4, test = 'Chisq')
+r2(mm_a4)
 ```
 
 And try linear model with slurry type too.
@@ -142,7 +148,7 @@ Similar model
 ```{r}
 lm_a5 <- aov(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
 pairs(emmeans(lm_a5, ~ slurry.type), adjust = 'tukey')
-predict(lm_a5, newdata = data.frame(TS.mn = mean(ds$TS.mn), pH.lab.mn = mean(ds$pH.lab.mn), slurry.type = c('Cattle', 'Pig', 'Digestate'))(
+predict(lm_a5, newdata = data.frame(TS.mn = mean(ds$TS.mn), pH.lab.mn = mean(ds$pH.lab.mn), slurry.type = c('Cattle', 'Pig', 'Digestate')))
 ```
 
 
@@ -153,6 +159,7 @@ mm_b1 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.
 summary(mm_b1)
 fixef(mm_b1)
 drop1(mm_b1, test = 'Chisq')
+r2(mm_b1)
 ```
 
 Drop slurry ID.
@@ -162,6 +169,7 @@ mm_b2 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.
 summary(mm_b2)
 fixef(mm_b2)
 drop1(mm_b2, test = 'Chisq')
+r2(mm_b2)
 ```
 
 Go to `lm()` with no trial ID.
@@ -180,6 +188,7 @@ mm_b4 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID), data = ds)
 summary(mm_b4)
 fixef(mm_b4)
 drop1(mm_b4, test = 'Chisq')
+r2(mm_b4)
 ```
 
 ```{r}
@@ -204,6 +213,7 @@ mm_c1 <- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.I
 summary(mm_c1)
 fixef(mm_c1)
 drop1(mm_c1, test = 'Chisq')
+r2(mm_c1)
 ```
 
 Drop slurry.ID.
@@ -213,6 +223,7 @@ mm_c2 <- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds)
 summary(mm_c2)
 fixef(mm_c2)
 drop1(mm_c2, test = 'Chisq')
+r2(mm_c2)
 ```
 
 Particle predictor mm1.mn does not do much.
@@ -222,6 +233,7 @@ mm_c3 <- lmer(e.rel.150 ~ logK + pH.lab.mn + (1|trial.ID), data = ds)
 summary(mm_c3)
 fixef(mm_c3)
 drop1(mm_c3, test = 'Chisq')
+r2(mm_c3)
 ```
 
 And logK is not very useful.
@@ -233,6 +245,7 @@ mm_d1 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + mm1.mn + (1|trial.ID), data = ds)
 summary(mm_d1)
 fixef(mm_d1)
 drop1(mm_d1, test = 'Chisq')
+r2(mm_d1)
 ```
 
 Drop mm1.mn
@@ -242,6 +255,7 @@ mm_d2 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + (1|trial.ID), data = ds)
 summary(mm_d2)
 fixef(mm_d2)
 drop1(mm_d2, test = 'Chisq')
+r2(mm_d2)
 ```
 
 Add slurry type
@@ -250,6 +264,7 @@ Add slurry type
 mm_d3 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds)
 summary(mm_d3)
 drop1(mm_d3, test = 'Chisq')
+r2(mm_d3)
 ```
 
 
@@ -279,6 +294,7 @@ mm_e1 <- lmer(e.rel.150 ~ pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds)
 summary(mm_e1)
 fixef(mm_e1)
 drop1(mm_e1, test = 'Chisq')
+r2(mm_e1)
 ```
 
 ```{r}
@@ -286,6 +302,7 @@ mm_e2 <- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + (1|trial.ID), data = ds)
 summary(mm_e2)
 fixef(mm_e2)
 drop1(mm_e2, test = 'Chisq')
+r2(mm_e2)
 ```
 
 ```{r}
