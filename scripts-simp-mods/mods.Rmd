@@ -71,8 +71,8 @@ r2(mm_a2)
 Save to list.
 
 ```{r}
-presmods <- list()
-presmods[['a']] <- mm_a2
+modlist <- list()
+modlist[['a']] <- mm_a2
 ```
 
 ```{r}
@@ -124,7 +124,7 @@ r2(mm_b3)
 Save.
 
 ```{r}
-presmods[['b']] <- mm_b3
+modlist[['b']] <- mm_b3
 ```
 
 Pretty clear, and positive coefficients.
@@ -156,7 +156,7 @@ model_performance(mm_b3, estimator = 'ML')
 Save
 
 ```{r}
-presmods[['b+']] <- mm_b4
+modlist[['b+']] <- mm_b4
 ```
 
 And try linear model with slurry type too.
@@ -224,7 +224,7 @@ r2(mm_c4)
 ```
 
 ```{r}
-presmods[['c']] <- mm_c4
+modlist[['c']] <- mm_c4
 ```
 
 ```{r}
@@ -252,7 +252,7 @@ r2(mm_c5)
 ```
 
 ```{r}
-presmods[['c+']] <- mm_c5
+modlist[['c+']] <- mm_c5
 ```
 
 # D. logK-based models
@@ -288,7 +288,7 @@ r2(mm_d3)
 Save 
 
 ```{r}
-presmods[['d']] <- mm_d3
+modlist[['d']] <- mm_d3
 ```
 
 And logK is not very useful.
@@ -305,7 +305,7 @@ r2(mm_d4)
 
 
 ```{r}
-presmods[['d+']] <- mm_d4
+modlist[['d+']] <- mm_d4
 ```
 
 
@@ -330,7 +330,7 @@ r2(mm_e2)
 ```
 
 ```{r}
-presmods[['e']] <- mm_e2
+modlist[['e']] <- mm_e2
 ```
 
 Add slurry type
@@ -343,7 +343,7 @@ r2(mm_e3)
 ```
 
 ```{r}
-presmods[['e+']] <- mm_e3
+modlist[['e+']] <- mm_e3
 ```
 
 ```{r}
@@ -387,7 +387,7 @@ r2(mm_f2)
 Save 
 
 ```{r}
-presmods[['f']] <- mm_f2
+modlist[['f']] <- mm_f2
 ```
 
 ```{r}
@@ -419,7 +419,7 @@ drop1(mm_f5, test = 'Chisq')
 Neat!
 
 ```{r}
-presmods[['f+']] <- mm_f5
+modlist[['f+']] <- mm_f5
 ```
 
 
@@ -435,19 +435,19 @@ ds[, mm_a1.pred := predict(mm_a1)]
 ## Table of models
 
 ```{r}
-fit1 <- as.data.table(do.call(rbind, lapply(presmods[ww <- c('a', 'b', 'd', 'e', 'f')], model_performance, estimator = 'ML')))
+fit1 <- as.data.table(do.call(rbind, lapply(modlist[ww <- c('a', 'b', 'd', 'e', 'f')], model_performance, estimator = 'ML')))
 fit1[, model := ww]
 fit1
 ```
 
 ```{r}
-fit2 <- as.data.table(do.call(rbind, lapply(presmods[ww <- c('c')], model_performance, estimator = 'ML')))
+fit2 <- as.data.table(do.call(rbind, lapply(modlist[ww <- c('c')], model_performance, estimator = 'ML')))
 fit2[, model := ww]
 fit2
 ```
 
 ```{r}
-fit3 <- as.data.table(do.call(rbind, lapply(presmods[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], model_performance, estimator = 'ML')))
+fit3 <- as.data.table(do.call(rbind, lapply(modlist[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], model_performance, estimator = 'ML')))
 fit3[, model := ww]
 fit3
 ```
@@ -457,13 +457,24 @@ fit3
 Model summaries
 
 ```{r}
-lapply(presmods[ww <- c('a', 'b', 'c', 'd', 'e', 'f')], summary)
-lapply(presmods[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], summary)
+lapply(modlist[ww <- c('a', 'b', 'c', 'd', 'e', 'f')], summary)
+lapply(modlist[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], summary)
 ```
 
 LRTs
 
 ```{r}
-lapply(presmods[ww <- c('a', 'b', 'c', 'd', 'e', 'f')], drop1, test = 'Chisq')
-lapply(presmods[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], drop1, test = 'Chisq')
+lapply(modlist[ww <- c('a', 'b', 'c', 'd', 'e', 'f')], drop1, test = 'Chisq')
+lapply(modlist[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], drop1, test = 'Chisq')
+```
+
+# Predicted values for all models
+
+```{r]
+dpred <- data.table()
+for (i in modlist) {
+  dd <- ds 
+  dd[, e.rel.pred := predict(i)]
+  dpred <- rbind(dpred, dd)
+}
 ```

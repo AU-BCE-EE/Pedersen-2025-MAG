@@ -38,9 +38,27 @@ ggsave2x('../plots-simp-mods/mod_plot', height = 3.7, width = 6.5)
 # Meas vs. predicted
 
 ggplot(ds, aes(e.rel.150, mm_b3.pred, colour = slurry.type)) +
+  geom_abline(intercept = 0, slope = 1, colour = 'gray45') +
   geom_point(shape = 21, fill = 'white', size = 4.5) +
   geom_text(aes(label = trial.ID), show.legend = FALSE) +
+  coord_fixed(ratio = 1) +
   labs(x = 'Measured emission (frac. TAN)', y = 'Calculated emission (frac. TAN)', colour = '') +
   theme_bw() +
   theme(legend.position = 'top')
-ggsave2x('../plots-simp-mods/mod_v_meas', height = 3.7, width = 3.7)
+ggsave2x('../plots-simp-mods/mod_v_meas_a', height = 3.4, width = 3.1)
+
+# For all models
+dpred[, mainmod := gsub('\\+', '', mod)]
+ggplot(dpred, aes(e.rel.150, e.rel.pred, colour = slurry.type)) +
+  geom_abline(intercept = 0, slope = 1, colour = 'gray45') +
+  geom_point(data = dpred[!grepl('\\+', mod), ], shape = 21, fill = 'white', size = 4.5) +
+  geom_text(data = dpred[!grepl('\\+', mod), ], aes(label = trial.ID), show.legend = FALSE) +
+  geom_point(data = dpred[grepl('\\+', mod), ], shape = 21, fill = 'white', size = 2.5, alpha = 0.6) +
+  coord_fixed(ratio = 1) +
+  facet_wrap(~ toupper(mainmod)) +
+  labs(x = 'Measured emission (frac. TAN)', y = 'Calculated emission (frac. TAN)', colour = '') +
+  theme_bw() +
+  theme(legend.position = 'top')
+ggsave2x('../plots-simp-mods/mod_v_meas_all', height = 6, width = 6)
+
+
