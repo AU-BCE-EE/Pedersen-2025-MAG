@@ -32,130 +32,69 @@ cor(dsd[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.15
 cor(dsr[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)])
 ```
 
+Extract values for correlation with DM
+
+```{r}
+cor(ds[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)])[, 'TS.mn']
+```
+
+
+
 # Models - combined slurry types
 
-## F. Slurry type models
+## A. Slurry type models
 
 ```{r}
-lm_f1 <- lm(e.rel.150 ~ slurry.type, data = ds)
-summary(lm_f1)
-drop1(lm_f1, test = 'F')
+lm_a1 <- lm(e.rel.150 ~ slurry.type, data = ds)
+summary(lm_a1)
+drop1(lm_a1, test = 'F')
 ```
 
 ```{r}
-mm_f1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID), data = ds)
-summary(mm_f1)
-fixef(mm_f1)
-drop1(mm_f1, test = 'Chisq')
-r2(mm_f1)
-```
-
-Exclude intercept to get means.
-
-```{r}
-mm_f2 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID) - 1, data = ds)
-summary(mm_f2)
-fixef(mm_f2)
-drop1(mm_f2, test = 'Chisq')
-r2(mm_f2)
-```
-
-```{r}
-lm_f2 <- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
-summary(lm_f2)
-drop1(lm_f2, test = 'F')
-```
-
-```{r}
-lm_f3 <- aov(e.rel.150 ~ slurry.type, data = ds)
-summary(lm_f3)
-model.tables(lm_f3, type = 'means')
-TukeyHSD(lm_f3, 'slurry.type')
-```
-
-## A. DM and pH
-Hypothesize that DM and pH can explain emission.
-`mm1.mn` is the only other variable not highly correlated with DM, so we include that too.
-
-
-```{r}
-mm_a1 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds)
+mm_a1 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID), data = ds, REML = FALSE)
 summary(mm_a1)
 fixef(mm_a1)
 drop1(mm_a1, test = 'Chisq')
 r2(mm_a1)
 ```
 
-Drop slurry ID.
+Exclude intercept to get means.
 
 ```{r}
-mm_a2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds)
+mm_a2 <- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID) - 1, data = ds, REML = FALSE)
 summary(mm_a2)
 fixef(mm_a2)
 drop1(mm_a2, test = 'Chisq')
 r2(mm_a2)
 ```
 
-No evidence of `mm1.mn` correlation so we'll drop it.
+Save to list.
 
 ```{r}
-mm_a3 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds)
-summary(mm_a3)
-fixef(mm_a3)
-drop1(mm_a3, test = 'Chisq')
-r2(mm_a3)
+presmods <- list()
+presmods[['a']] <- mm_a2
 ```
 
-Pretty clear, and positive coefficients.
-
-Check linear model.
+```{r}
+lm_a2 <- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
+summary(lm_a2)
+drop1(lm_a2, test = 'F')
+```
 
 ```{r}
-lm_a3 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
+lm_a3 <- aov(e.rel.150 ~ slurry.type, data = ds)
 summary(lm_a3)
+model.tables(lm_a3, type = 'means')
+TukeyHSD(lm_a3, 'slurry.type')
 ```
 
-Same.
+## B. DM and pH
+Hypothesize that DM and pH can explain emission.
+`mm1.mn` is the only other variable not highly correlated with DM, so we include that too.
 
-Add slurry type.
 
 ```{r}
-mm_a4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds)
-summary(mm_a4)
-fixef(mm_a4)
-drop1(mm_a4, test = 'Chisq')
-r2(mm_a4)
-```
-
-And try linear model with slurry type too.
-
-```{r}
-lm_a4 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
-summary(lm_a4)
-drop1(lm_a4, test = 'F')
-```
-
-Yes it does, but the fit does not improve much.
-
-```{r}
-summary(lm_f1)[c('r.squared', 'adj.r.squared')]
-summary(lm_a3)[c('r.squared', 'adj.r.squared')]
-summary(lm_a4)[c('r.squared', 'adj.r.squared')]
-```
-
-Similar model 
-
-```{r}
-lm_a5 <- aov(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
-pairs(emmeans(lm_a5, ~ slurry.type), adjust = 'tukey')
-predict(lm_a5, newdata = data.frame(TS.mn = mean(ds$TS.mn), pH.lab.mn = mean(ds$pH.lab.mn), slurry.type = c('Cattle', 'Pig', 'Digestate')))
-```
-
-
-# B. ESA based models
-
-```{r}
-mm_b1 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID) + (1|slurry.ID), data = ds)
+mm_b1 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds, REML = FALSE)
 summary(mm_b1)
 fixef(mm_b1)
 drop1(mm_b1, test = 'Chisq')
@@ -165,36 +104,133 @@ r2(mm_b1)
 Drop slurry ID.
 
 ```{r}
-mm_b2 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds)
+mm_b2 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds, REML = FALSE)
 summary(mm_b2)
 fixef(mm_b2)
 drop1(mm_b2, test = 'Chisq')
 r2(mm_b2)
 ```
 
+No evidence of `mm1.mn` correlation so we'll drop it.
+
+```{r}
+mm_b3 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_b3)
+fixef(mm_b3)
+drop1(mm_b3, test = 'Chisq')
+r2(mm_b3)
+```
+
+Save.
+
+```{r}
+presmods[['b']] <- mm_b3
+```
+
+Pretty clear, and positive coefficients.
+
+Check linear model.
+
+```{r}
+lm_b3 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
+summary(lm_b3)
+```
+
+Same.
+
+Add slurry type.
+
+```{r}
+mm_b4 <- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_b4)
+fixef(mm_b4)
+drop1(mm_b4, test = 'Chisq')
+anova(mm_b4, mm_b3, test = 'Chisq')
+r2(mm_b4)
+AIC(mm_b4)
+AIC(mm_b3)
+model_performance(mm_b4, estimator = 'ML')
+model_performance(mm_b3, estimator = 'ML')
+```
+
+Save
+
+```{r}
+presmods[['b+']] <- mm_b4
+```
+
+And try linear model with slurry type too.
+
+```{r}
+lm_b4 <- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
+summary(lm_b4)
+drop1(lm_b4, test = 'F')
+```
+
+Yes it does, but the fit does not improve much.
+
+```{r}
+summary(lm_f1)[c('r.squared', 'adj.r.squared')]
+summary(lm_b3)[c('r.squared', 'adj.r.squared')]
+summary(lm_b4)[c('r.squared', 'adj.r.squared')]
+```
+
+Similar model 
+
+```{r}
+lm_b5 <- aov(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
+pairs(emmeans(lm_b5, ~ slurry.type), adjust = 'tukey')
+predict(lm_b5, newdata = data.frame(TS.mn = mean(ds$TS.mn), pH.lab.mn = mean(ds$pH.lab.mn), slurry.type = c('Cattle', 'Pig', 'Digestate')))
+```
+
+
+# C. ESA based models
+
+```{r}
+mm_c1 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID) + (1|slurry.ID), data = ds, REML = FALSE)
+summary(mm_c1)
+fixef(mm_c1)
+drop1(mm_c1, test = 'Chisq')
+r2(mm_c1)
+```
+
+Drop slurry ID.
+
+```{r}
+mm_c2 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_c2)
+fixef(mm_c2)
+drop1(mm_c2, test = 'Chisq')
+r2(mm_c2)
+```
+
 Go to `lm()` with no trial ID.
 
 
 ```{r}
-lm_b3 <- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn, data = ds)
-summary(lm_b3)
-drop1(lm_b3, test = 'F')
+lm_c3 <- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn, data = ds)
+summary(lm_c3)
+drop1(lm_c3, test = 'F')
 ```
 
 Try ESA alone.
 
 ```{r}
-mm_b4 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID), data = ds)
-summary(mm_b4)
-fixef(mm_b4)
-drop1(mm_b4, test = 'Chisq')
-r2(mm_b4)
+mm_c4 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_c4)
+fixef(mm_c4)
+drop1(mm_c4, test = 'Chisq')
+r2(mm_c4)
 ```
 
 ```{r}
-lm_b4 <- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn, data = ds)
-summary(lm_b4)
-drop1(lm_b4, test = 'F')
+presmods[['c']] <- mm_c4
+```
+
+```{r}
+lm_c4 <- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn, data = ds)
+summary(lm_c4)
+drop1(lm_c4, test = 'F')
 ```
 
 We get a clear correlation and a decent fit here.
@@ -203,75 +239,117 @@ Overall fit is identical to DM based model.
 
 ```{r}
 summary(lm_a3)[c('r.squared', 'adj.r.squared')]
-summary(lm_b4)[c('r.squared', 'adj.r.squared')]
+summary(lm_c4)[c('r.squared', 'adj.r.squared')]
 ```
 
-# C. logK-based models
+Add slurry type
 
 ```{r}
-mm_c1 <- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds)
-summary(mm_c1)
-fixef(mm_c1)
-drop1(mm_c1, test = 'Chisq')
-r2(mm_c1)
+mm_c5 <- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_c5)
+drop1(mm_c5, test = 'Chisq')
+r2(mm_c5)
 ```
 
-Drop slurry.ID.
-
 ```{r}
-mm_c2 <- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds)
-summary(mm_c2)
-fixef(mm_c2)
-drop1(mm_c2, test = 'Chisq')
-r2(mm_c2)
+presmods[['c+']] <- mm_c5
 ```
 
-Particle predictor mm1.mn does not do much.
+# D. logK-based models
 
 ```{r}
-mm_c3 <- lmer(e.rel.150 ~ logK + pH.lab.mn + (1|trial.ID), data = ds)
-summary(mm_c3)
-fixef(mm_c3)
-drop1(mm_c3, test = 'Chisq')
-r2(mm_c3)
-```
-
-And logK is not very useful.
-
-# D. m/n models
-
-```{r}
-mm_d1 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + mm1.mn + (1|trial.ID), data = ds)
+mm_d1 <- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds, REML = FALSE)
 summary(mm_d1)
 fixef(mm_d1)
 drop1(mm_d1, test = 'Chisq')
 r2(mm_d1)
 ```
 
-Drop mm1.mn
+Drop slurry.ID.
 
 ```{r}
-mm_d2 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + (1|trial.ID), data = ds)
+mm_d2 <- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds, REML = FALSE)
 summary(mm_d2)
 fixef(mm_d2)
 drop1(mm_d2, test = 'Chisq')
 r2(mm_d2)
 ```
 
-Add slurry type
+Particle predictor mm1.mn does not do much.
 
 ```{r}
-mm_d3 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds)
+mm_d3 <- lmer(e.rel.150 ~ logK + pH.lab.mn + (1|trial.ID), data = ds, REML = FALSE)
 summary(mm_d3)
+fixef(mm_d3)
 drop1(mm_d3, test = 'Chisq')
 r2(mm_d3)
 ```
 
+Save 
 
 ```{r}
-lm_d3 <- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
-summary(lm_d3)
-drop1(lm_d3, test = 'F')
+presmods[['d']] <- mm_d3
+```
+
+And logK is not very useful.
+
+Add slurry type
+
+```{r}
+mm_d4 <- lmer(e.rel.150 ~ logK + pH.lab.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_d4)
+fixef(mm_d4)
+drop1(mm_d4, test = 'Chisq')
+r2(mm_d4)
+```
+
+
+```{r}
+presmods[['d+']] <- mm_d4
+```
+
+
+# E. m/n models
+
+```{r}
+mm_e1 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + mm1.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_e1)
+fixef(mm_e1)
+drop1(mm_e1, test = 'Chisq')
+r2(mm_e1)
+```
+
+Drop mm1.mn
+
+```{r}
+mm_e2 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_e2)
+fixef(mm_e2)
+drop1(mm_e2, test = 'Chisq')
+r2(mm_e2)
+```
+
+```{r}
+presmods[['e']] <- mm_e2
+```
+
+Add slurry type
+
+```{r}
+mm_e3 <- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_e3)
+drop1(mm_e3, test = 'Chisq')
+r2(mm_e3)
+```
+
+```{r}
+presmods[['e+']] <- mm_e3
+```
+
+```{r}
+lm_e3 <- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
+summary(lm_e3)
+drop1(lm_e3, test = 'F')
 ```
 
 This is best model so far, and simple.
@@ -280,65 +358,112 @@ Does slurry type add more info?
 
 
 ```{r}
-lm_d4 <- lm(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type, data = ds)
-summary(lm_d4)
-drop1(lm_d4, test = 'F')
+lm_e4 <- lm(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type, data = ds)
+summary(lm_e4)
+drop1(lm_e4, test = 'F')
 ```
 
 Yes.
 
+
 # F. Particle based models
 
 ```{r}
-mm_e1 <- lmer(e.rel.150 ~ pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds)
-summary(mm_e1)
-fixef(mm_e1)
-drop1(mm_e1, test = 'Chisq')
-r2(mm_e1)
+mm_f1 <- lmer(e.rel.150 ~ pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_f1)
+fixef(mm_f1)
+drop1(mm_f1, test = 'Chisq')
+r2(mm_f1)
 ```
 
 ```{r}
-mm_e2 <- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + (1|trial.ID), data = ds)
-summary(mm_e2)
-fixef(mm_e2)
-drop1(mm_e2, test = 'Chisq')
-r2(mm_e2)
+mm_f2 <- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_f2)
+fixef(mm_f2)
+drop1(mm_f2, test = 'Chisq')
+r2(mm_f2)
+```
+
+Save 
+
+```{r}
+presmods[['f']] <- mm_f2
 ```
 
 ```{r}
-lm_e3 <- lm(e.rel.150 ~ pH.lab.mn + mm2.mn, data = ds)
-summary(lm_e3)
-drop1(lm_e3, test = 'F')
+lm_f3 <- lm(e.rel.150 ~ pH.lab.mn + mm2.mn, data = ds)
+summary(lm_f3)
+drop1(lm_f3, test = 'F')
 ```
 
 Another good model.
 
+
 Does slurry type add more info?
 
 ```{r}
-lm_e4 <- lm(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type, data = ds)
-summary(lm_e4)
-drop1(lm_e4, test = 'Chisq')
+lm_f4 <- lm(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type, data = ds)
+summary(lm_f4)
+drop1(lm_f4, test = 'Chisq')
 ```
 
 Nope, not clearly at least!
 
 ```{r}
-mm_e5 <- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type + (1|trial.ID), data = ds)
-summary(mm_e5)
-fixef(mm_e5)
-drop1(mm_e5, test = 'Chisq')
+mm_f5 <- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_f5)
+fixef(mm_f5)
+drop1(mm_f5, test = 'Chisq')
 ```
 
 Neat!
+
+```{r}
+presmods[['f+']] <- mm_f5
+```
+
 
 ## Model predictions
 
 Make predictions for plots.
 
 ```{r}
-ds[, mm_a3.pred := predict(mm_a3)]
-ds[, mm_d2.pred := predict(mm_d2)]
-ds[, mm_f1.pred := predict(mm_f1)]
+ds[, mm_b3.pred := predict(mm_b3)]
+ds[, mm_a1.pred := predict(mm_a1)]
 ```
 
+## Table of models
+
+```{r}
+fit1 <- as.data.table(do.call(rbind, lapply(presmods[ww <- c('a', 'b', 'd', 'e', 'f')], model_performance, estimator = 'ML')))
+fit1[, model := ww]
+fit1
+```
+
+```{r}
+fit2 <- as.data.table(do.call(rbind, lapply(presmods[ww <- c('c')], model_performance, estimator = 'ML')))
+fit2[, model := ww]
+fit2
+```
+
+```{r}
+fit3 <- as.data.table(do.call(rbind, lapply(presmods[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], model_performance, estimator = 'ML')))
+fit3[, model := ww]
+fit3
+```
+
+## Summaries for tables
+
+Model summaries
+
+```{r}
+lapply(presmods[ww <- c('a', 'b', 'c', 'd', 'e', 'f')], summary)
+lapply(presmods[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], summary)
+```
+
+LRTs
+
+```{r}
+lapply(presmods[ww <- c('a', 'b', 'c', 'd', 'e', 'f')], drop1, test = 'Chisq')
+lapply(presmods[ww <- c('b+', 'c+', 'd+', 'e+', 'f+')], drop1, test = 'Chisq')
+```

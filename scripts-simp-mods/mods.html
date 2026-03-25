@@ -351,7 +351,7 @@ display: none;
 
 <h1 class="title toc-ignore">Simple models</h1>
 <h4 class="author">Sasha D. Hafner</h4>
-<h4 class="date">15:10 - 24 March, 2026</h4>
+<h4 class="date">13:46 - 25 March, 2026</h4>
 
 </div>
 
@@ -450,13 +450,19 @@ is raw slurry only. <code>ds</code> is everything.</p>
 ## mm1.mn        1.00000000  0.1396064 -0.3952280
 ## mm2.mn        0.13960644  1.0000000  0.7388405
 ## e.rel.150    -0.39522795  0.7388405  1.0000000</code></pre>
+<p>Extract values for correlation with DM</p>
+<pre class="r"><code>cor(ds[, .(pH.lab.mn, TS.mn, area.perc.mn, logK, n.mn, mm1.mn, mm2.mn, e.rel.150)])[, &#39;TS.mn&#39;]</code></pre>
+<pre><code>##    pH.lab.mn        TS.mn area.perc.mn         logK         n.mn       mm1.mn 
+##    0.1786702    1.0000000   -0.6880913    0.8958075   -0.8493499   -0.2193676 
+##       mm2.mn    e.rel.150 
+##    0.8787776    0.3925947</code></pre>
 </div>
 <div id="models---combined-slurry-types" class="section level1">
 <h1>Models - combined slurry types</h1>
-<div id="f.-slurry-type-models" class="section level2">
-<h2>F. Slurry type models</h2>
-<pre class="r"><code>lm_f1 &lt;- lm(e.rel.150 ~ slurry.type, data = ds)
-summary(lm_f1)</code></pre>
+<div id="a.-slurry-type-models" class="section level2">
+<h2>A. Slurry type models</h2>
+<pre class="r"><code>lm_a1 &lt;- lm(e.rel.150 ~ slurry.type, data = ds)
+summary(lm_a1)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ slurry.type, data = ds)
@@ -476,7 +482,7 @@ summary(lm_f1)</code></pre>
 ## Residual standard error: 0.07719 on 22 degrees of freedom
 ## Multiple R-squared:  0.6641, Adjusted R-squared:  0.6336 
 ## F-statistic: 21.75 on 2 and 22 DF,  p-value: 6.143e-06</code></pre>
-<pre class="r"><code>drop1(lm_f1, test = &#39;F&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_a1, test = &#39;F&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -486,39 +492,40 @@ summary(lm_f1)</code></pre>
 ## slurry.type  2   0.25916 0.39025 -102.00  21.747 6.143e-06 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>mm_f1 &lt;- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID), data = ds)
-summary(mm_f1)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_a1 &lt;- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID), data = ds, REML = FALSE)
+summary(mm_a1)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ slurry.type + (1 | trial.ID) + (1 | slurry.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -46.2
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -49.0     -41.6      30.5     -61.0        19 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.2389 -0.5758 -0.1920  0.6698  1.6369 
+## -1.4446 -0.7259 -0.1416  0.7901  1.7619 
 ## 
 ## Random effects:
 ##  Groups    Name        Variance  Std.Dev.
-##  slurry.ID (Intercept) 0.0011629 0.03410 
-##  trial.ID  (Intercept) 0.0008835 0.02972 
-##  Residual              0.0041140 0.06414 
+##  slurry.ID (Intercept) 0.0007702 0.02775 
+##  trial.ID  (Intercept) 0.0005169 0.02274 
+##  Residual              0.0039776 0.06307 
 ## Number of obs: 25, groups:  slurry.ID, 15; trial.ID, 5
 ## 
 ## Fixed effects:
 ##                      Estimate Std. Error t value
-## (Intercept)           0.26773    0.04473   5.986
-## slurry.typeDigestate  0.14463    0.04739   3.052
-## slurry.typePig       -0.13790    0.05931  -2.325
+## (Intercept)           0.26428    0.04162   6.350
+## slurry.typeDigestate  0.14811    0.04447   3.331
+## slurry.typePig       -0.13790    0.05626  -2.451
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) slrr.D
-## slrry.typDg -0.872       
-## slrry.typPg -0.663  0.626</code></pre>
-<pre class="r"><code>fixef(mm_f1)</code></pre>
+## slrry.typDg -0.889       
+## slrry.typPg -0.676  0.633</code></pre>
+<pre class="r"><code>fixef(mm_a1)</code></pre>
 <pre><code>##          (Intercept) slurry.typeDigestate       slurry.typePig 
-##            0.2677322            0.1446263           -0.1379000</code></pre>
-<pre class="r"><code>drop1(mm_f1, test = &#39;Chisq&#39;)</code></pre>
+##            0.2642768            0.1481121           -0.1379000</code></pre>
+<pre class="r"><code>drop1(mm_a1, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -528,45 +535,46 @@ summary(mm_f1)</code></pre>
 ## slurry.type    2 -30.368 22.585 1.247e-05 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_f1)</code></pre>
+<pre class="r"><code>r2(mm_a1)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.743
-##      Marginal R2: 0.615</code></pre>
+##   Conditional R2: 0.742
+##      Marginal R2: 0.658</code></pre>
 <p>Exclude intercept to get means.</p>
-<pre class="r"><code>mm_f2 &lt;- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID) - 1, data = ds)
-summary(mm_f2)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_a2 &lt;- lmer(e.rel.150 ~ slurry.type + (1|trial.ID) + (1|slurry.ID) - 1, data = ds, REML = FALSE)
+summary(mm_a2)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ slurry.type + (1 | trial.ID) + (1 | slurry.ID) -      1
 ##    Data: ds
 ## 
-## REML criterion at convergence: -46.2
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -49.0     -41.6      30.5     -61.0        19 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.2389 -0.5758 -0.1920  0.6698  1.6369 
+## -1.4446 -0.7259 -0.1416  0.7901  1.7619 
 ## 
 ## Random effects:
 ##  Groups    Name        Variance  Std.Dev.
-##  slurry.ID (Intercept) 0.0011629 0.03410 
-##  trial.ID  (Intercept) 0.0008835 0.02972 
-##  Residual              0.0041140 0.06414 
+##  slurry.ID (Intercept) 0.0007702 0.02775 
+##  trial.ID  (Intercept) 0.0005169 0.02274 
+##  Residual              0.0039776 0.06307 
 ## Number of obs: 25, groups:  slurry.ID, 15; trial.ID, 5
 ## 
 ## Fixed effects:
 ##                      Estimate Std. Error t value
-## slurry.typeCattle     0.26773    0.04473   5.986
-## slurry.typeDigestate  0.41236    0.02345  17.582
-## slurry.typePig        0.12983    0.04473   2.903
+## slurry.typeCattle     0.26428    0.04162   6.350
+## slurry.typeDigestate  0.41239    0.02046  20.156
+## slurry.typePig        0.12638    0.04162   3.037
 ## 
 ## Correlation of Fixed Effects:
 ##             slrr.C slrr.D
-## slrry.typDg 0.145        
-## slrry.typPg 0.121  0.145</code></pre>
-<pre class="r"><code>fixef(mm_f2)</code></pre>
+## slrry.typDg 0.102        
+## slrry.typPg 0.086  0.102</code></pre>
+<pre class="r"><code>fixef(mm_a2)</code></pre>
 <pre><code>##    slurry.typeCattle slurry.typeDigestate       slurry.typePig 
-##            0.2677322            0.4123584            0.1298322</code></pre>
-<pre class="r"><code>drop1(mm_f2, test = &#39;Chisq&#39;)</code></pre>
+##            0.2642768            0.4123890            0.1263768</code></pre>
+<pre class="r"><code>drop1(mm_a2, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -577,13 +585,16 @@ summary(mm_f2)</code></pre>
 ## slurry.type    2 -30.368 22.585 1.247e-05 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_f2)</code></pre>
+<pre class="r"><code>r2(mm_a2)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.743
-##      Marginal R2: 0.615</code></pre>
-<pre class="r"><code>lm_f2 &lt;- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
-summary(lm_f2)</code></pre>
+##   Conditional R2: 0.742
+##      Marginal R2: 0.658</code></pre>
+<p>Save to list.</p>
+<pre class="r"><code>presmods &lt;- list()
+presmods[[&#39;a&#39;]] &lt;- mm_a2</code></pre>
+<pre class="r"><code>lm_a2 &lt;- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
+summary(lm_a2)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ slurry.type + trial.ID, data = ds)
@@ -607,7 +618,7 @@ summary(lm_f2)</code></pre>
 ## Residual standard error: 0.07287 on 18 degrees of freedom
 ## Multiple R-squared:  0.7551, Adjusted R-squared:  0.6735 
 ## F-statistic:  9.25 on 6 and 18 DF,  p-value: 0.000106</code></pre>
-<pre class="r"><code>drop1(lm_f2, test = &#39;F&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_a2, test = &#39;F&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -618,14 +629,14 @@ summary(lm_f2)</code></pre>
 ## trial.ID     4  0.035516 0.131087 -125.27  1.6723 0.2001013    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>lm_f3 &lt;- aov(e.rel.150 ~ slurry.type, data = ds)
-summary(lm_f3)</code></pre>
+<pre class="r"><code>lm_a3 &lt;- aov(e.rel.150 ~ slurry.type, data = ds)
+summary(lm_a3)</code></pre>
 <pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 ## slurry.type  2 0.2592 0.12958   21.75 6.14e-06 ***
 ## Residuals   22 0.1311 0.00596                     
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>model.tables(lm_f3, type = &#39;means&#39;)</code></pre>
+<pre class="r"><code>model.tables(lm_a3, type = &#39;means&#39;)</code></pre>
 <pre><code>## Tables of means
 ## Grand mean
 ##          
@@ -635,7 +646,7 @@ summary(lm_f3)</code></pre>
 ##     Cattle Digestate    Pig
 ##      0.254    0.4099 0.1161
 ## rep  3.000   19.0000 3.0000</code></pre>
-<pre class="r"><code>TukeyHSD(lm_f3, &#39;slurry.type&#39;)</code></pre>
+<pre class="r"><code>TukeyHSD(lm_a3, &#39;slurry.type&#39;)</code></pre>
 <pre><code>##   Tukey multiple comparisons of means
 ##     95% family-wise confidence level
 ## 
@@ -647,50 +658,51 @@ summary(lm_f3)</code></pre>
 ## Pig-Cattle       -0.1379000 -0.29622640  0.0204264 0.0955805
 ## Pig-Digestate    -0.2938474 -0.41431570 -0.1733790 0.0000105</code></pre>
 </div>
-<div id="a.-dm-and-ph" class="section level2">
-<h2>A. DM and pH</h2>
+<div id="b.-dm-and-ph" class="section level2">
+<h2>B. DM and pH</h2>
 <p>Hypothesize that DM and pH can explain emission. <code>mm1.mn</code>
 is the only other variable not highly correlated with DM, so we include
 that too.</p>
-<pre class="r"><code>mm_a1 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds)</code></pre>
+<pre class="r"><code>mm_b1 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds, REML = FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>summary(mm_a1)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>summary(mm_b1)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1 | trial.ID) + (1 |  
 ##     slurry.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -39.2
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -54.0     -45.5      34.0     -68.0        18 
 ## 
 ## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -1.8516 -0.5790  0.1240  0.6977  1.2659 
+##      Min       1Q   Median       3Q      Max 
+## -1.99902 -0.59351  0.09668  0.80179  1.35513 
 ## 
 ## Random effects:
-##  Groups    Name        Variance Std.Dev.
-##  slurry.ID (Intercept) 0.000000 0.00000 
-##  trial.ID  (Intercept) 0.001020 0.03194 
-##  Residual              0.003892 0.06238 
+##  Groups    Name        Variance  Std.Dev.
+##  slurry.ID (Intercept) 0.0000000 0.00000 
+##  trial.ID  (Intercept) 0.0006603 0.02570 
+##  Residual              0.0033665 0.05802 
 ## Number of obs: 25, groups:  slurry.ID, 15; trial.ID, 5
 ## 
 ## Fixed effects:
 ##              Estimate Std. Error t value
-## (Intercept) -1.599022   0.550389  -2.905
-## TS.mn        0.010879   0.005415   2.009
-## pH.lab.mn    0.213352   0.031647   6.742
-## mm1.mn       0.002775   0.005561   0.499
+## (Intercept) -1.618599   0.509745  -3.175
+## TS.mn        0.011218   0.005010   2.239
+## pH.lab.mn    0.215087   0.029250   7.353
+## mm1.mn       0.002820   0.005149   0.548
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) TS.mn  pH.lb.
-## TS.mn     -0.227              
-## pH.lab.mn -0.251 -0.196       
-## mm1.mn    -0.905  0.260 -0.180
+## TS.mn     -0.224              
+## pH.lab.mn -0.251 -0.198       
+## mm1.mn    -0.905  0.258 -0.178
 ## optimizer (nloptwrap) convergence code: 0 (OK)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>fixef(mm_a1)</code></pre>
-<pre><code>## (Intercept)       TS.mn   pH.lab.mn      mm1.mn 
-## -1.59902179  0.01087865  0.21335236  0.00277511</code></pre>
-<pre class="r"><code>drop1(mm_a1, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>fixef(mm_b1)</code></pre>
+<pre><code>##  (Intercept)        TS.mn    pH.lab.mn       mm1.mn 
+## -1.618598669  0.011218414  0.215086675  0.002819881</code></pre>
+<pre class="r"><code>drop1(mm_b1, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre><code>## Single term deletions
@@ -705,7 +717,7 @@ that too.</p>
 ## mm1.mn       1 -55.685  0.298   0.58513    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_a1)</code></pre>
+<pre class="r"><code>r2(mm_b1)</code></pre>
 <pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
 ##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
 ##   and `?performance::check_singularity`).
@@ -716,42 +728,43 @@ that too.</p>
 <pre><code>## # R2 for Mixed Models
 ## 
 ##   Conditional R2: NA
-##      Marginal R2: 0.728</code></pre>
+##      Marginal R2: 0.760</code></pre>
 <p>Drop slurry ID.</p>
-<pre class="r"><code>mm_a2 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds)
-summary(mm_a2)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_b2 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_b2)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ TS.mn + pH.lab.mn + mm1.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -39.2
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -56.0     -48.7      34.0     -68.0        19 
 ## 
 ## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -1.8516 -0.5790  0.1240  0.6977  1.2659 
+##      Min       1Q   Median       3Q      Max 
+## -1.99902 -0.59351  0.09668  0.80179  1.35513 
 ## 
 ## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  trial.ID (Intercept) 0.001020 0.03194 
-##  Residual             0.003892 0.06238 
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0006603 0.02570 
+##  Residual             0.0033665 0.05802 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##              Estimate Std. Error t value
-## (Intercept) -1.599022   0.550389  -2.905
-## TS.mn        0.010879   0.005415   2.009
-## pH.lab.mn    0.213352   0.031647   6.742
-## mm1.mn       0.002775   0.005561   0.499
+## (Intercept) -1.618599   0.509745  -3.175
+## TS.mn        0.011218   0.005010   2.239
+## pH.lab.mn    0.215087   0.029250   7.353
+## mm1.mn       0.002820   0.005149   0.548
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) TS.mn  pH.lb.
-## TS.mn     -0.227              
-## pH.lab.mn -0.251 -0.196       
-## mm1.mn    -0.905  0.260 -0.180</code></pre>
-<pre class="r"><code>fixef(mm_a2)</code></pre>
-<pre><code>## (Intercept)       TS.mn   pH.lab.mn      mm1.mn 
-## -1.59902160  0.01087865  0.21335235  0.00277511</code></pre>
-<pre class="r"><code>drop1(mm_a2, test = &#39;Chisq&#39;)</code></pre>
+## TS.mn     -0.224              
+## pH.lab.mn -0.251 -0.198       
+## mm1.mn    -0.905  0.258 -0.178</code></pre>
+<pre class="r"><code>fixef(mm_b2)</code></pre>
+<pre><code>##  (Intercept)        TS.mn    pH.lab.mn       mm1.mn 
+## -1.618598669  0.011218414  0.215086675  0.002819881</code></pre>
+<pre class="r"><code>drop1(mm_b2, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -763,44 +776,45 @@ summary(mm_a2)</code></pre>
 ## mm1.mn       1 -57.685  0.298   0.58513    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_a2)</code></pre>
+<pre class="r"><code>r2(mm_b2)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.746
-##      Marginal R2: 0.680</code></pre>
+##   Conditional R2: 0.771
+##      Marginal R2: 0.726</code></pre>
 <p>No evidence of <code>mm1.mn</code> correlation so we’ll drop it.</p>
-<pre class="r"><code>mm_a3 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds)
-summary(mm_a3)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_b3 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_b3)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ TS.mn + pH.lab.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -47.5
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -57.7     -51.6      33.8     -67.7        20 
 ## 
 ## Scaled residuals: 
 ##      Min       1Q   Median       3Q      Max 
-## -1.87993 -0.51570  0.05053  0.67942  1.27564 
+## -1.97516 -0.57216 -0.00941  0.76596  1.37086 
 ## 
 ## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  trial.ID (Intercept) 0.001070 0.03271 
-##  Residual             0.003723 0.06102 
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0006779 0.02604 
+##  Residual             0.0034014 0.05832 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##              Estimate Std. Error t value
-## (Intercept) -1.345700   0.229895  -5.854
-## TS.mn        0.010071   0.005121   1.966
-## pH.lab.mn    0.215644   0.030505   7.069
+## (Intercept) -1.365074   0.217846  -6.266
+## TS.mn        0.010491   0.004867   2.156
+## pH.lab.mn    0.217850   0.028939   7.528
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) TS.mn 
-## TS.mn      0.019       
-## pH.lab.mn -0.987 -0.156</code></pre>
-<pre class="r"><code>fixef(mm_a3)</code></pre>
+## TS.mn      0.023       
+## pH.lab.mn -0.988 -0.159</code></pre>
+<pre class="r"><code>fixef(mm_b3)</code></pre>
 <pre><code>## (Intercept)       TS.mn   pH.lab.mn 
-## -1.34569969  0.01007102  0.21564416</code></pre>
-<pre class="r"><code>drop1(mm_a3, test = &#39;Chisq&#39;)</code></pre>
+## -1.36507351  0.01049142  0.21784998</code></pre>
+<pre class="r"><code>drop1(mm_b3, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -811,15 +825,17 @@ summary(mm_a3)</code></pre>
 ## pH.lab.mn    1 -30.092 29.5930 5.33e-08 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_a3)</code></pre>
+<pre class="r"><code>r2(mm_b3)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.754
-##      Marginal R2: 0.683</code></pre>
+##   Conditional R2: 0.768
+##      Marginal R2: 0.722</code></pre>
+<p>Save.</p>
+<pre class="r"><code>presmods[[&#39;b&#39;]] &lt;- mm_b3</code></pre>
 <p>Pretty clear, and positive coefficients.</p>
 <p>Check linear model.</p>
-<pre class="r"><code>lm_a3 &lt;- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
-summary(lm_a3)</code></pre>
+<pre class="r"><code>lm_b3 &lt;- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
+summary(lm_b3)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
@@ -841,32 +857,33 @@ summary(lm_a3)</code></pre>
 ## F-statistic: 31.69 on 2 and 22 DF,  p-value: 3.321e-07</code></pre>
 <p>Same.</p>
 <p>Add slurry type.</p>
-<pre class="r"><code>mm_a4 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds)</code></pre>
+<pre class="r"><code>mm_b4 &lt;- lmer(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>summary(mm_a4)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>summary(mm_b4)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -47.3
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -63.5     -54.9      38.7     -77.5        18 
 ## 
 ## Scaled residuals: 
 ##      Min       1Q   Median       3Q      Max 
-## -2.01982 -0.75271  0.08037  0.66072  1.49214 
+## -2.25823 -0.84156  0.08986  0.73870  1.66827 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance Std.Dev.
 ##  trial.ID (Intercept) 0.000000 0.00000 
-##  Residual             0.003303 0.05748 
+##  Residual             0.002643 0.05141 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##                       Estimate Std. Error t value
-## (Intercept)          -0.540706   0.367069  -1.473
-## TS.mn                 0.018365   0.005348   3.434
-## pH.lab.mn             0.087914   0.052328   1.680
-## slurry.typeDigestate  0.153677   0.052334   2.936
-## slurry.typePig       -0.018753   0.054288  -0.345
+## (Intercept)          -0.540706   0.328317  -1.647
+## TS.mn                 0.018365   0.004783   3.839
+## pH.lab.mn             0.087914   0.046804   1.878
+## slurry.typeDigestate  0.153677   0.046809   3.283
+## slurry.typePig       -0.018753   0.048557  -0.386
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) TS.mn  pH.lb. slrr.D
@@ -876,12 +893,12 @@ summary(lm_a3)</code></pre>
 ## slrry.typPg -0.374  0.326  0.270  0.317
 ## optimizer (nloptwrap) convergence code: 0 (OK)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>fixef(mm_a4)</code></pre>
+<pre class="r"><code>fixef(mm_b4)</code></pre>
 <pre><code>##          (Intercept)                TS.mn            pH.lab.mn 
 ##          -0.54070648           0.01836544           0.08791383 
 ## slurry.typeDigestate       slurry.typePig 
 ##           0.15367657          -0.01875290</code></pre>
-<pre class="r"><code>drop1(mm_a4, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>drop1(mm_b4, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
@@ -894,7 +911,17 @@ summary(lm_a3)</code></pre>
 ## slurry.type    2 -57.685  9.7659 0.007575 **
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_a4)</code></pre>
+<pre class="r"><code>anova(mm_b4, mm_b3, test = &#39;Chisq&#39;)</code></pre>
+<pre><code>## Data: ds
+## Models:
+## mm_b3: e.rel.150 ~ TS.mn + pH.lab.mn + (1 | trial.ID)
+## mm_b4: e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
+##       npar     AIC     BIC logLik -2*log(L)  Chisq Df Pr(&gt;Chisq)   
+## mm_b3    5 -57.685 -51.591 33.843   -67.685                        
+## mm_b4    7 -63.451 -54.919 38.726   -77.451 9.7659  2   0.007575 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>r2(mm_b4)</code></pre>
 <pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
 ##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
 ##   and `?performance::check_singularity`).
@@ -905,10 +932,29 @@ summary(lm_a3)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
 ##   Conditional R2: NA
-##      Marginal R2: 0.803</code></pre>
+##      Marginal R2: 0.836</code></pre>
+<pre class="r"><code>AIC(mm_b4)</code></pre>
+<pre><code>## [1] -63.45104</code></pre>
+<pre class="r"><code>AIC(mm_b3)</code></pre>
+<pre><code>## [1] -57.68515</code></pre>
+<pre class="r"><code>model_performance(mm_b4, estimator = &#39;ML&#39;)</code></pre>
+<pre><code>## Random effect variances not available. Returned R2 does not account for random effects.</code></pre>
+<pre><code>## # Indices of model performance
+## 
+## AIC   |  AICc |   BIC | R2 (cond.) | R2 (marg.) |  RMSE | Sigma
+## ---------------------------------------------------------------
+## -63.5 | -56.9 | -54.9 |            |      0.836 | 0.051 | 0.051</code></pre>
+<pre class="r"><code>model_performance(mm_b3, estimator = &#39;ML&#39;)</code></pre>
+<pre><code>## # Indices of model performance
+## 
+## AIC   |  AICc |   BIC | R2 (cond.) | R2 (marg.) |   ICC |  RMSE | Sigma
+## -----------------------------------------------------------------------
+## -57.7 | -54.5 | -51.6 |      0.768 |      0.722 | 0.166 | 0.055 | 0.058</code></pre>
+<p>Save</p>
+<pre class="r"><code>presmods[[&#39;b+&#39;]] &lt;- mm_b4</code></pre>
 <p>And try linear model with slurry type too.</p>
-<pre class="r"><code>lm_a4 &lt;- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
-summary(lm_a4)</code></pre>
+<pre class="r"><code>lm_b4 &lt;- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
+summary(lm_b4)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
@@ -930,7 +976,7 @@ summary(lm_a4)</code></pre>
 ## Residual standard error: 0.05748 on 20 degrees of freedom
 ## Multiple R-squared:  0.8307, Adjusted R-squared:  0.7968 
 ## F-statistic: 24.53 on 4 and 20 DF,  p-value: 1.801e-07</code></pre>
-<pre class="r"><code>drop1(lm_a4, test = &#39;F&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_b4, test = &#39;F&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -949,62 +995,63 @@ summary(lm_a4)</code></pre>
 ## 
 ## $adj.r.squared
 ## [1] 0.633559</code></pre>
-<pre class="r"><code>summary(lm_a3)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
+<pre class="r"><code>summary(lm_b3)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
 <pre><code>## $r.squared
 ## [1] 0.7423531
 ## 
 ## $adj.r.squared
 ## [1] 0.7189307</code></pre>
-<pre class="r"><code>summary(lm_a4)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
+<pre class="r"><code>summary(lm_b4)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
 <pre><code>## $r.squared
 ## [1] 0.8306991
 ## 
 ## $adj.r.squared
 ## [1] 0.7968389</code></pre>
 <p>Similar model</p>
-<pre class="r"><code>lm_a5 &lt;- aov(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
-pairs(emmeans(lm_a5, ~ slurry.type), adjust = &#39;tukey&#39;)</code></pre>
+<pre class="r"><code>lm_b5 &lt;- aov(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
+pairs(emmeans(lm_b5, ~ slurry.type), adjust = &#39;tukey&#39;)</code></pre>
 <pre><code>##  contrast           estimate     SE df t.ratio p.value
 ##  Cattle - Digestate  -0.1537 0.0523 20  -2.936  0.0213
 ##  Cattle - Pig         0.0188 0.0543 20   0.345  0.9365
 ##  Digestate - Pig      0.1724 0.0623 20   2.767  0.0306
 ## 
 ## P value adjustment: tukey method for comparing a family of 3 estimates</code></pre>
-<pre class="r"><code>predict(lm_a5, newdata = data.frame(TS.mn = mean(ds$TS.mn), pH.lab.mn = mean(ds$pH.lab.mn), slurry.type = c(&#39;Cattle&#39;, &#39;Pig&#39;, &#39;Digestate&#39;)))</code></pre>
+<pre class="r"><code>predict(lm_b5, newdata = data.frame(TS.mn = mean(ds$TS.mn), pH.lab.mn = mean(ds$pH.lab.mn), slurry.type = c(&#39;Cattle&#39;, &#39;Pig&#39;, &#39;Digestate&#39;)))</code></pre>
 <pre><code>##         1         2         3 
 ## 0.2414282 0.2226753 0.3951047</code></pre>
 </div>
 </div>
-<div id="b.-esa-based-models" class="section level1">
-<h1>B. ESA based models</h1>
-<pre class="r"><code>mm_b1 &lt;- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID) + (1|slurry.ID), data = ds)</code></pre>
+<div id="c.-esa-based-models" class="section level1">
+<h1>C. ESA based models</h1>
+<pre class="r"><code>mm_c1 &lt;- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID) + (1|slurry.ID), data = ds, REML = FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>summary(mm_b1)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>summary(mm_c1)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1 |  
 ##     trial.ID) + (1 | slurry.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -30.2
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -53.2     -43.4      34.6     -69.2        17 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.9543 -0.4356  0.1489  0.6858  1.2437 
+## -2.1849 -0.4870  0.1665  0.7667  1.3905 
 ## 
 ## Random effects:
 ##  Groups    Name        Variance Std.Dev.
 ##  slurry.ID (Intercept) 0.000000 0.00000 
 ##  trial.ID  (Intercept) 0.000000 0.00000 
-##  Residual              0.004595 0.06779 
+##  Residual              0.003676 0.06063 
 ## Number of obs: 25, groups:  slurry.ID, 15; trial.ID, 5
 ## 
 ## Fixed effects:
 ##               Estimate Std. Error t value
-## (Intercept)  -1.619914   0.580258  -2.792
-## area.perc.mn -0.001473   0.001215  -1.212
-## pH.lab.mn     0.230655   0.032401   7.119
-## mm1.mn        0.002517   0.006008   0.419
-## mm2.mn        0.023958   0.018438   1.299
+## (Intercept)  -1.619914   0.518998  -3.121
+## area.perc.mn -0.001473   0.001087  -1.356
+## pH.lab.mn     0.230655   0.028980   7.959
+## mm1.mn        0.002517   0.005374   0.468
+## mm2.mn        0.023958   0.016492   1.453
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) ar.pr. pH.lb. mm1.mn
@@ -1014,10 +1061,10 @@ pairs(emmeans(lm_a5, ~ slurry.type), adjust = &#39;tukey&#39;)</code></pre>
 ## mm2.mn       0.112  0.559 -0.009 -0.166
 ## optimizer (nloptwrap) convergence code: 0 (OK)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>fixef(mm_b1)</code></pre>
+<pre class="r"><code>fixef(mm_c1)</code></pre>
 <pre><code>##  (Intercept) area.perc.mn    pH.lab.mn       mm1.mn       mm2.mn 
 ## -1.619913640 -0.001473094  0.230655055  0.002516986  0.023957593</code></pre>
-<pre class="r"><code>drop1(mm_b1, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>drop1(mm_c1, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
@@ -1034,7 +1081,7 @@ pairs(emmeans(lm_a5, ~ slurry.type), adjust = &#39;tukey&#39;)</code></pre>
 ## mm2.mn          1 -53.174  2.0260    0.1546    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_b1)</code></pre>
+<pre class="r"><code>r2(mm_c1)</code></pre>
 <pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
 ##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
 ##   and `?performance::check_singularity`).
@@ -1045,35 +1092,36 @@ pairs(emmeans(lm_a5, ~ slurry.type), adjust = &#39;tukey&#39;)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
 ##   Conditional R2: NA
-##      Marginal R2: 0.730</code></pre>
+##      Marginal R2: 0.772</code></pre>
 <p>Drop slurry ID.</p>
-<pre class="r"><code>mm_b2 &lt;- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds)</code></pre>
+<pre class="r"><code>mm_c2 &lt;- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>summary(mm_b2)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>summary(mm_c2)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn + (1 |  
 ##     trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -30.2
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -55.2     -46.7      34.6     -69.2        18 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.9543 -0.4356  0.1489  0.6858  1.2437 
+## -2.1849 -0.4870  0.1665  0.7667  1.3905 
 ## 
 ## Random effects:
-##  Groups   Name        Variance  Std.Dev. 
-##  trial.ID (Intercept) 4.172e-18 2.043e-09
-##  Residual             4.595e-03 6.779e-02
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.003676 0.06063 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##               Estimate Std. Error t value
-## (Intercept)  -1.619914   0.580258  -2.792
-## area.perc.mn -0.001473   0.001215  -1.212
-## pH.lab.mn     0.230655   0.032401   7.119
-## mm1.mn        0.002517   0.006008   0.419
-## mm2.mn        0.023958   0.018438   1.299
+## (Intercept)  -1.619914   0.518998  -3.121
+## area.perc.mn -0.001473   0.001087  -1.356
+## pH.lab.mn     0.230655   0.028980   7.959
+## mm1.mn        0.002517   0.005374   0.468
+## mm2.mn        0.023958   0.016492   1.453
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) ar.pr. pH.lb. mm1.mn
@@ -1083,13 +1131,10 @@ pairs(emmeans(lm_a5, ~ slurry.type), adjust = &#39;tukey&#39;)</code></pre>
 ## mm2.mn       0.112  0.559 -0.009 -0.166
 ## optimizer (nloptwrap) convergence code: 0 (OK)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>fixef(mm_b2)</code></pre>
+<pre class="r"><code>fixef(mm_c2)</code></pre>
 <pre><code>##  (Intercept) area.perc.mn    pH.lab.mn       mm1.mn       mm2.mn 
 ## -1.619913640 -0.001473094  0.230655055  0.002516986  0.023957593</code></pre>
-<pre class="r"><code>drop1(mm_b2, test = &#39;Chisq&#39;)</code></pre>
-<pre><code>## Warning in optwrap(optimizer, devfun, x@theta, lower = x@lower, calc.derivs =
-## TRUE, : convergence code 3 from bobyqa: bobyqa -- a trust region step failed to
-## reduce q</code></pre>
+<pre class="r"><code>drop1(mm_c2, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre><code>## Single term deletions
@@ -1105,7 +1150,7 @@ pairs(emmeans(lm_a5, ~ slurry.type), adjust = &#39;tukey&#39;)</code></pre>
 ## mm2.mn          1 -55.174  2.0260   0.1546    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_b2)</code></pre>
+<pre class="r"><code>r2(mm_c2)</code></pre>
 <pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
 ##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
 ##   and `?performance::check_singularity`).
@@ -1116,10 +1161,10 @@ pairs(emmeans(lm_a5, ~ slurry.type), adjust = &#39;tukey&#39;)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
 ##   Conditional R2: NA
-##      Marginal R2: 0.730</code></pre>
+##      Marginal R2: 0.772</code></pre>
 <p>Go to <code>lm()</code> with no trial ID.</p>
-<pre class="r"><code>lm_b3 &lt;- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn, data = ds)
-summary(lm_b3)</code></pre>
+<pre class="r"><code>lm_c3 &lt;- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + mm2.mn, data = ds)
+summary(lm_c3)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ area.perc.mn + pH.lab.mn + mm1.mn + 
@@ -1142,7 +1187,7 @@ summary(lm_b3)</code></pre>
 ## Residual standard error: 0.06779 on 20 degrees of freedom
 ## Multiple R-squared:  0.7645, Adjusted R-squared:  0.7174 
 ## F-statistic: 16.23 on 4 and 20 DF,  p-value: 4.536e-06</code></pre>
-<pre class="r"><code>drop1(lm_b3, test = &#39;F&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_c3, test = &#39;F&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1156,30 +1201,31 @@ summary(lm_b3)</code></pre>
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Try ESA alone.</p>
-<pre class="r"><code>mm_b4 &lt;- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID), data = ds)</code></pre>
+<pre class="r"><code>mm_c4 &lt;- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>summary(mm_b4)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>summary(mm_c4)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ area.perc.mn + pH.lab.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -42.6
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -56.7     -50.6      33.4     -66.7        20 
 ## 
 ## Scaled residuals: 
 ##      Min       1Q   Median       3Q      Max 
-## -2.09554 -0.38382  0.06408  0.71009  1.79162 
+## -2.23386 -0.40916  0.06831  0.75696  1.90988 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance Std.Dev.
 ##  trial.ID (Intercept) 0.000000 0.00000 
-##  Residual             0.004616 0.06794 
+##  Residual             0.004063 0.06374 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##                Estimate Std. Error t value
-## (Intercept)  -1.3696909  0.2479474  -5.524
-## area.perc.mn -0.0021634  0.0009645  -2.243
-## pH.lab.mn     0.2343217  0.0320668   7.307
+## (Intercept)  -1.3696909  0.2325953  -5.889
+## area.perc.mn -0.0021634  0.0009048  -2.391
+## pH.lab.mn     0.2343217  0.0300814   7.790
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) ar.pr.
@@ -1187,10 +1233,11 @@ summary(lm_b3)</code></pre>
 ## pH.lab.mn   -0.994  0.104
 ## optimizer (nloptwrap) convergence code: 0 (OK)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>fixef(mm_b4)</code></pre>
+<pre class="r"><code>fixef(mm_c4)</code></pre>
 <pre><code>##  (Intercept) area.perc.mn    pH.lab.mn 
 ## -1.369690883 -0.002163434  0.234321703</code></pre>
-<pre class="r"><code>drop1(mm_b4, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>drop1(mm_c4, test = &#39;Chisq&#39;)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1201,7 +1248,7 @@ summary(lm_b3)</code></pre>
 ## pH.lab.mn       1 -27.909 30.7929 2.871e-08 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_b4)</code></pre>
+<pre class="r"><code>r2(mm_c4)</code></pre>
 <pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
 ##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
 ##   and `?performance::check_singularity`).
@@ -1212,9 +1259,10 @@ summary(lm_b3)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
 ##   Conditional R2: NA
-##      Marginal R2: 0.723</code></pre>
-<pre class="r"><code>lm_b4 &lt;- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn, data = ds)
-summary(lm_b4)</code></pre>
+##      Marginal R2: 0.748</code></pre>
+<pre class="r"><code>presmods[[&#39;c&#39;]] &lt;- mm_c4</code></pre>
+<pre class="r"><code>lm_c4 &lt;- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn, data = ds)
+summary(lm_c4)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ area.perc.mn + pH.lab.mn, data = ds)
@@ -1234,7 +1282,7 @@ summary(lm_b4)</code></pre>
 ## Residual standard error: 0.06794 on 22 degrees of freedom
 ## Multiple R-squared:  0.7397, Adjusted R-squared:  0.7161 
 ## F-statistic: 31.27 on 2 and 22 DF,  p-value: 3.709e-07</code></pre>
-<pre class="r"><code>drop1(lm_b4, test = &#39;F&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_c4, test = &#39;F&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1249,59 +1297,124 @@ summary(lm_b4)</code></pre>
 of the slope makes no sense. Overall fit is identical to DM based
 model.</p>
 <pre class="r"><code>summary(lm_a3)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
-<pre><code>## $r.squared
-## [1] 0.7423531
+<pre><code>## Component 1 :
+## NULL
 ## 
-## $adj.r.squared
-## [1] 0.7189307</code></pre>
-<pre class="r"><code>summary(lm_b4)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
+## Component 2 :
+## NULL</code></pre>
+<pre class="r"><code>summary(lm_c4)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
 <pre><code>## $r.squared
 ## [1] 0.7397498
 ## 
 ## $adj.r.squared
 ## [1] 0.7160907</code></pre>
-</div>
-<div id="c.-logk-based-models" class="section level1">
-<h1>C. logK-based models</h1>
-<pre class="r"><code>mm_c1 &lt;- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds)</code></pre>
+<p>Add slurry type</p>
+<pre class="r"><code>mm_c5 &lt;- lmer(e.rel.150 ~ area.perc.mn + pH.lab.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>summary(mm_c1)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>summary(mm_c5)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ area.perc.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -61.7     -53.2      37.9     -75.7        18 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -1.87133 -0.82571 -0.08459  0.81484  1.65085 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.002831 0.05321 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                        Estimate Std. Error t value
+## (Intercept)          -0.4179568  0.3486946  -1.199
+## area.perc.mn         -0.0027423  0.0007885  -3.478
+## pH.lab.mn             0.1004835  0.0477296   2.105
+## slurry.typeDigestate  0.1168008  0.0450310   2.594
+## slurry.typePig       -0.0687766  0.0476090  -1.445
+## 
+## Correlation of Fixed Effects:
+##             (Intr) ar.pr. pH.lb. slrr.D
+## area.prc.mn -0.280                     
+## pH.lab.mn   -0.995  0.241              
+## slrry.typDg  0.609 -0.287 -0.667       
+## slrry.typPg -0.425 -0.065  0.376  0.210
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre class="r"><code>drop1(mm_c5, test = &#39;Chisq&#39;)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ area.perc.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
+##              npar     AIC    LRT  Pr(Chi)   
+## &lt;none&gt;            -61.730                   
+## area.perc.mn    1 -54.890 8.8393 0.002948 **
+## pH.lab.mn       1 -59.649 4.0803 0.043386 * 
+## slurry.type     2 -56.702 9.0277 0.010956 * 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>r2(mm_c5)</code></pre>
+<pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
+##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
+##   and `?performance::check_singularity`).
+##   Decrease the `tolerance` level to force the calculation of random effect
+##   variances, or impose priors on your random effects parameters (using
+##   packages like `brms` or `glmmTMB`).</code></pre>
+<pre><code>## Random effect variances not available. Returned R2 does not account for random effects.</code></pre>
+<pre><code>## # R2 for Mixed Models
+## 
+##   Conditional R2: NA
+##      Marginal R2: 0.825</code></pre>
+<pre class="r"><code>presmods[[&#39;c+&#39;]] &lt;- mm_c5</code></pre>
+</div>
+<div id="d.-logk-based-models" class="section level1">
+<h1>D. logK-based models</h1>
+<pre class="r"><code>mm_d1 &lt;- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID) + (1|slurry.ID), data = ds, REML = FALSE)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre class="r"><code>summary(mm_d1)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1 | trial.ID) + (1 |  
 ##     slurry.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -40
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -52.6     -44.1      33.3     -66.6        18 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.8804 -0.5397  0.2012  0.6916  1.6243 
+## -2.0299 -0.6037  0.1791  0.7386  1.8299 
 ## 
 ## Random effects:
 ##  Groups    Name        Variance  Std.Dev.
 ##  slurry.ID (Intercept) 0.0000000 0.00000 
-##  trial.ID  (Intercept) 0.0008968 0.02995 
-##  Residual              0.0042025 0.06483 
+##  trial.ID  (Intercept) 0.0005045 0.02246 
+##  Residual              0.0036683 0.06057 
 ## Number of obs: 25, groups:  slurry.ID, 15; trial.ID, 5
 ## 
 ## Fixed effects:
 ##              Estimate Std. Error t value
-## (Intercept) -1.684099   0.588820  -2.860
-## logK         0.025642   0.015344   1.671
-## pH.lab.mn    0.213078   0.033221   6.414
-## mm1.mn       0.003724   0.006028   0.618
+## (Intercept) -1.719594   0.545504  -3.152
+## logK         0.027341   0.014168   1.930
+## pH.lab.mn    0.215134   0.030765   6.993
+## mm1.mn       0.003887   0.005583   0.696
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) logK   pH.lb.
-## logK      -0.331              
-## pH.lab.mn -0.197 -0.258       
-## mm1.mn    -0.911  0.385 -0.220
+## logK      -0.323              
+## pH.lab.mn -0.199 -0.262       
+## mm1.mn    -0.911  0.378 -0.217
 ## optimizer (nloptwrap) convergence code: 0 (OK)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>fixef(mm_c1)</code></pre>
-<pre><code>## (Intercept)        logK   pH.lab.mn      mm1.mn 
-## -1.68409940  0.02564238  0.21307840  0.00372378</code></pre>
-<pre class="r"><code>drop1(mm_c1, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>fixef(mm_d1)</code></pre>
+<pre><code>##  (Intercept)         logK    pH.lab.mn       mm1.mn 
+## -1.719594108  0.027341211  0.215133880  0.003887171</code></pre>
+<pre class="r"><code>drop1(mm_d1, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre><code>## Single term deletions
@@ -1316,7 +1429,7 @@ model.</p>
 ## mm1.mn       1 -54.161  0.4756   0.49043    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_c1)</code></pre>
+<pre class="r"><code>r2(mm_d1)</code></pre>
 <pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
 ##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
 ##   and `?performance::check_singularity`).
@@ -1327,42 +1440,43 @@ model.</p>
 <pre><code>## # R2 for Mixed Models
 ## 
 ##   Conditional R2: NA
-##      Marginal R2: 0.713</code></pre>
+##      Marginal R2: 0.746</code></pre>
 <p>Drop slurry.ID.</p>
-<pre class="r"><code>mm_c2 &lt;- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds)
-summary(mm_c2)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_d2 &lt;- lmer(e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_d2)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ logK + pH.lab.mn + mm1.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -40
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -54.6     -47.3      33.3     -66.6        19 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.8804 -0.5397  0.2012  0.6916  1.6243 
+## -2.0299 -0.6037  0.1791  0.7386  1.8299 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance  Std.Dev.
-##  trial.ID (Intercept) 0.0008968 0.02995 
-##  Residual             0.0042025 0.06483 
+##  trial.ID (Intercept) 0.0005045 0.02246 
+##  Residual             0.0036683 0.06057 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##              Estimate Std. Error t value
-## (Intercept) -1.684099   0.588820  -2.860
-## logK         0.025642   0.015344   1.671
-## pH.lab.mn    0.213078   0.033221   6.414
-## mm1.mn       0.003724   0.006028   0.618
+## (Intercept) -1.719594   0.545504  -3.152
+## logK         0.027341   0.014168   1.930
+## pH.lab.mn    0.215134   0.030765   6.993
+## mm1.mn       0.003887   0.005583   0.696
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) logK   pH.lb.
-## logK      -0.331              
-## pH.lab.mn -0.197 -0.258       
-## mm1.mn    -0.911  0.385 -0.220</code></pre>
-<pre class="r"><code>fixef(mm_c2)</code></pre>
-<pre><code>## (Intercept)        logK   pH.lab.mn      mm1.mn 
-## -1.68409942  0.02564238  0.21307840  0.00372378</code></pre>
-<pre class="r"><code>drop1(mm_c2, test = &#39;Chisq&#39;)</code></pre>
+## logK      -0.323              
+## pH.lab.mn -0.199 -0.262       
+## mm1.mn    -0.911  0.378 -0.217</code></pre>
+<pre class="r"><code>fixef(mm_d2)</code></pre>
+<pre><code>##  (Intercept)         logK    pH.lab.mn       mm1.mn 
+## -1.719594089  0.027341210  0.215133879  0.003887171</code></pre>
+<pre class="r"><code>drop1(mm_d2, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1374,44 +1488,45 @@ summary(mm_c2)</code></pre>
 ## mm1.mn       1 -56.161  0.4756   0.49043    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_c2)</code></pre>
+<pre class="r"><code>r2(mm_d2)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.730
-##      Marginal R2: 0.672</code></pre>
+##   Conditional R2: 0.755
+##      Marginal R2: 0.721</code></pre>
 <p>Particle predictor mm1.mn does not do much.</p>
-<pre class="r"><code>mm_c3 &lt;- lmer(e.rel.150 ~ logK + pH.lab.mn + (1|trial.ID), data = ds)
-summary(mm_c3)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_d3 &lt;- lmer(e.rel.150 ~ logK + pH.lab.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_d3)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ logK + pH.lab.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -48
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -56.2     -50.1      33.1     -66.2        20 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.9131 -0.4844  0.1166  0.6599  1.6025 
+## -2.0103 -0.5404  0.1603  0.7630  1.7695 
 ## 
 ## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  trial.ID (Intercept) 0.001010 0.03178 
-##  Residual             0.004021 0.06341 
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0005829 0.02414 
+##  Residual             0.0036956 0.06079 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##             Estimate Std. Error t value
-## (Intercept) -1.34470    0.23837  -5.641
-## logK         0.02138    0.01390   1.538
-## pH.lab.mn    0.21673    0.03180   6.815
+## (Intercept) -1.36721    0.22612  -6.046
+## logK         0.02312    0.01320   1.752
+## pH.lab.mn    0.21912    0.03022   7.251
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) logK  
-## logK       0.048       
-## pH.lab.mn -0.987 -0.190</code></pre>
-<pre class="r"><code>fixef(mm_c3)</code></pre>
+## logK       0.055       
+## pH.lab.mn -0.987 -0.197</code></pre>
+<pre class="r"><code>fixef(mm_d3)</code></pre>
 <pre><code>## (Intercept)        logK   pH.lab.mn 
-## -1.34469598  0.02137755  0.21673279</code></pre>
-<pre class="r"><code>drop1(mm_c3, test = &#39;Chisq&#39;)</code></pre>
+## -1.36720796  0.02312133  0.21912390</code></pre>
+<pre class="r"><code>drop1(mm_d3, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1422,49 +1537,120 @@ summary(mm_c3)</code></pre>
 ## pH.lab.mn    1 -29.857 28.3041 1.037e-07 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_c3)</code></pre>
+<pre class="r"><code>r2(mm_d3)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.737
-##      Marginal R2: 0.670</code></pre>
+##   Conditional R2: 0.751
+##      Marginal R2: 0.712</code></pre>
+<p>Save</p>
+<pre class="r"><code>presmods[[&#39;d&#39;]] &lt;- mm_d3</code></pre>
 <p>And logK is not very useful.</p>
+<p>Add slurry type</p>
+<pre class="r"><code>mm_d4 &lt;- lmer(e.rel.150 ~ logK + pH.lab.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre class="r"><code>summary(mm_d4)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ logK + pH.lab.mn + slurry.type + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -64.7     -56.2      39.4     -78.7        18 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -2.02433 -0.77724 -0.04095  1.03967  1.52049 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.002511 0.05011 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                       Estimate Std. Error t value
+## (Intercept)          -0.366222   0.329376  -1.112
+## logK                  0.053758   0.013106   4.102
+## pH.lab.mn             0.058732   0.047965   1.224
+## slurry.typeDigestate  0.187955   0.049513   3.796
+## slurry.typePig       -0.006413   0.048166  -0.133
+## 
+## Correlation of Fixed Effects:
+##             (Intr) logK   pH.lb. slrr.D
+## logK         0.290                     
+## pH.lab.mn   -0.987 -0.416              
+## slrry.typDg  0.617  0.572 -0.717       
+## slrry.typPg -0.304  0.370  0.188  0.365
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre class="r"><code>fixef(mm_d4)</code></pre>
+<pre><code>##          (Intercept)                 logK            pH.lab.mn 
+##         -0.366221781          0.053758188          0.058731798 
+## slurry.typeDigestate       slurry.typePig 
+##          0.187955403         -0.006412855</code></pre>
+<pre class="r"><code>drop1(mm_d4, test = &#39;Chisq&#39;)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ logK + pH.lab.mn + slurry.type + (1 | trial.ID)
+##             npar     AIC     LRT   Pr(Chi)    
+## &lt;none&gt;           -64.729                      
+## logK           1 -54.890 11.8385 0.0005802 ***
+## pH.lab.mn      1 -65.273  1.4561 0.2275561    
+## slurry.type    2 -56.161 12.5674 0.0018665 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>r2(mm_d4)</code></pre>
+<pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
+##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
+##   and `?performance::check_singularity`).
+##   Decrease the `tolerance` level to force the calculation of random effect
+##   variances, or impose priors on your random effects parameters (using
+##   packages like `brms` or `glmmTMB`).</code></pre>
+<pre><code>## Random effect variances not available. Returned R2 does not account for random effects.</code></pre>
+<pre><code>## # R2 for Mixed Models
+## 
+##   Conditional R2: NA
+##      Marginal R2: 0.845</code></pre>
+<pre class="r"><code>presmods[[&#39;d+&#39;]] &lt;- mm_d4</code></pre>
 </div>
-<div id="d.-mn-models" class="section level1">
-<h1>D. m/n models</h1>
-<pre class="r"><code>mm_d1 &lt;- lmer(e.rel.150 ~ pH.lab.mn + n.mn + mm1.mn + (1|trial.ID), data = ds)
-summary(mm_d1)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<div id="e.-mn-models" class="section level1">
+<h1>E. m/n models</h1>
+<pre class="r"><code>mm_e1 &lt;- lmer(e.rel.150 ~ pH.lab.mn + n.mn + mm1.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_e1)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ pH.lab.mn + n.mn + mm1.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -44.7
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -57.3     -50.0      34.6     -69.3        19 
 ## 
 ## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -1.9347 -0.5392  0.1388  0.7397  1.5324 
+##      Min       1Q   Median       3Q      Max 
+## -2.05755 -0.66199  0.07136  0.69729  1.79431 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance  Std.Dev.
-##  trial.ID (Intercept) 0.0004077 0.02019 
-##  Residual             0.0040370 0.06354 
+##  trial.ID (Intercept) 9.880e-06 0.003143
+##  Residual             3.652e-03 0.060430
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##              Estimate Std. Error t value
-## (Intercept) -1.682058   0.552464  -3.045
-## pH.lab.mn    0.205628   0.032883   6.253
-## n.mn        -0.141874   0.058064  -2.443
-## mm1.mn       0.005897   0.005951   0.991
+## (Intercept) -1.748400   0.514955  -3.395
+## pH.lab.mn    0.209039   0.030609   6.829
+## n.mn        -0.159307   0.053104  -3.000
+## mm1.mn       0.006434   0.005524   1.165
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) pH.lb. n.mn  
-## pH.lab.mn -0.214              
-## n.mn       0.214  0.338       
-## mm1.mn    -0.889 -0.253 -0.420</code></pre>
-<pre class="r"><code>fixef(mm_d1)</code></pre>
+## pH.lab.mn -0.220              
+## n.mn       0.191  0.356       
+## mm1.mn    -0.888 -0.248 -0.406</code></pre>
+<pre class="r"><code>fixef(mm_e1)</code></pre>
 <pre><code>##  (Intercept)    pH.lab.mn         n.mn       mm1.mn 
-## -1.682057631  0.205628460 -0.141873938  0.005896518</code></pre>
-<pre class="r"><code>drop1(mm_d1, test = &#39;Chisq&#39;)</code></pre>
+## -1.748399926  0.209039205 -0.159306822  0.006433693</code></pre>
+<pre class="r"><code>drop1(mm_e1, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1476,44 +1662,52 @@ summary(mm_d1)</code></pre>
 ## mm1.mn       1 -58.049  1.2504   0.26347    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_d1)</code></pre>
+<pre class="r"><code>r2(mm_e1)</code></pre>
+<pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
+##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
+##   and `?performance::check_singularity`).
+##   Decrease the `tolerance` level to force the calculation of random effect
+##   variances, or impose priors on your random effects parameters (using
+##   packages like `brms` or `glmmTMB`).</code></pre>
+<pre><code>## Random effect variances not available. Returned R2 does not account for random effects.</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.747
-##      Marginal R2: 0.721</code></pre>
+##   Conditional R2: NA
+##      Marginal R2: 0.773</code></pre>
 <p>Drop mm1.mn</p>
-<pre class="r"><code>mm_d2 &lt;- lmer(e.rel.150 ~ pH.lab.mn + n.mn + (1|trial.ID), data = ds)
-summary(mm_d2)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_e2 &lt;- lmer(e.rel.150 ~ pH.lab.mn + n.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_e2)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ pH.lab.mn + n.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -52.2
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##       -58       -52        34       -68        20 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.9459 -0.5714  0.1125  0.6009  1.4942 
+## -2.0239 -0.6157  0.1604  0.7137  1.6757 
 ## 
 ## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  trial.ID (Intercept) 0.000645 0.0254  
-##  Residual             0.003894 0.0624  
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0002379 0.01543 
+##  Residual             0.0036376 0.06031 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##             Estimate Std. Error t value
-## (Intercept) -1.18695    0.25041  -4.740
-## pH.lab.mn    0.21220    0.03148   6.740
-## n.mn        -0.11094    0.05240  -2.117
+## (Intercept) -1.20146    0.23904  -5.026
+## pH.lab.mn    0.21508    0.03002   7.164
+## n.mn        -0.12255    0.04956  -2.473
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) pH.lb.
-## pH.lab.mn -0.989       
-## n.mn      -0.376  0.255</code></pre>
-<pre class="r"><code>fixef(mm_d2)</code></pre>
+## pH.lab.mn -0.990       
+## n.mn      -0.390  0.271</code></pre>
+<pre class="r"><code>fixef(mm_e2)</code></pre>
 <pre><code>## (Intercept)   pH.lab.mn        n.mn 
-##  -1.1869532   0.2122024  -0.1109449</code></pre>
-<pre class="r"><code>drop1(mm_d2, test = &#39;Chisq&#39;)</code></pre>
+##  -1.2014642   0.2150765  -0.1225478</code></pre>
+<pre class="r"><code>drop1(mm_e2, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1524,38 +1718,40 @@ summary(mm_d2)</code></pre>
 ## n.mn         1 -55.596  4.453   0.03484 *  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_d2)</code></pre>
+<pre class="r"><code>r2(mm_e2)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.749
-##      Marginal R2: 0.707</code></pre>
+##   Conditional R2: 0.764
+##      Marginal R2: 0.749</code></pre>
+<pre class="r"><code>presmods[[&#39;e&#39;]] &lt;- mm_e2</code></pre>
 <p>Add slurry type</p>
-<pre class="r"><code>mm_d3 &lt;- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds)</code></pre>
+<pre class="r"><code>mm_e3 &lt;- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>summary(mm_d3)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>summary(mm_e3)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -52.7
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -64.6     -56.1      39.3     -78.6        18 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.9716 -0.7339  0.1521  0.7879  1.2494 
+## -2.2044 -0.8205  0.1700  0.8809  1.3969 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance Std.Dev.
 ##  trial.ID (Intercept) 0.000000 0.00000 
-##  Residual             0.003151 0.05613 
+##  Residual             0.002521 0.05021 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##                      Estimate Std. Error t value
-## (Intercept)          -0.19620    0.38515  -0.509
-## pH.lab.mn             0.07437    0.05212   1.427
-## n.mn                 -0.17781    0.04870  -3.651
-## slurry.typeDigestate  0.13781    0.04896   2.815
-## slurry.typePig       -0.04527    0.05099  -0.888
+## (Intercept)          -0.19620    0.34448  -0.570
+## pH.lab.mn             0.07437    0.04661   1.595
+## n.mn                 -0.17781    0.04355  -4.082
+## slurry.typeDigestate  0.13781    0.04379   3.147
+## slurry.typePig       -0.04527    0.04561  -0.993
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) pH.lb. n.mn   slrr.D
@@ -1565,7 +1761,7 @@ summary(mm_d2)</code></pre>
 ## slrry.typPg -0.343  0.309 -0.184  0.251
 ## optimizer (nloptwrap) convergence code: 0 (OK)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
-<pre class="r"><code>drop1(mm_d3, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>drop1(mm_e3, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
@@ -1578,7 +1774,7 @@ summary(mm_d2)</code></pre>
 ## slurry.type    2 -58.049 10.5849 0.0050295 ** 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_d3)</code></pre>
+<pre class="r"><code>r2(mm_e3)</code></pre>
 <pre><code>## Warning: Can&#39;t compute random effect variances. Some variance components equal
 ##   zero. Your model may suffer from singularity (see `?lme4::isSingular`
 ##   and `?performance::check_singularity`).
@@ -1589,9 +1785,10 @@ summary(mm_d2)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
 ##   Conditional R2: NA
-##      Marginal R2: 0.812</code></pre>
-<pre class="r"><code>lm_d3 &lt;- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
-summary(lm_d3)</code></pre>
+##      Marginal R2: 0.844</code></pre>
+<pre class="r"><code>presmods[[&#39;e+&#39;]] &lt;- mm_e3</code></pre>
+<pre class="r"><code>lm_e3 &lt;- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
+summary(lm_e3)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
@@ -1611,7 +1808,7 @@ summary(lm_d3)</code></pre>
 ## Residual standard error: 0.06624 on 22 degrees of freedom
 ## Multiple R-squared:  0.7526, Adjusted R-squared:  0.7301 
 ## F-statistic: 33.47 on 2 and 22 DF,  p-value: 2.122e-07</code></pre>
-<pre class="r"><code>drop1(lm_d3, test = &#39;F&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_e3, test = &#39;F&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1624,8 +1821,8 @@ summary(lm_d3)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>This is best model so far, and simple.</p>
 <p>Does slurry type add more info?</p>
-<pre class="r"><code>lm_d4 &lt;- lm(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type, data = ds)
-summary(lm_d4)</code></pre>
+<pre class="r"><code>lm_e4 &lt;- lm(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type, data = ds)
+summary(lm_e4)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ pH.lab.mn + n.mn + slurry.type, data = ds)
@@ -1647,7 +1844,7 @@ summary(lm_d4)</code></pre>
 ## Residual standard error: 0.05613 on 20 degrees of freedom
 ## Multiple R-squared:  0.8385, Adjusted R-squared:  0.8062 
 ## F-statistic: 25.96 on 4 and 20 DF,  p-value: 1.131e-07</code></pre>
-<pre class="r"><code>drop1(lm_d4, test = &#39;F&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_e4, test = &#39;F&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1663,40 +1860,41 @@ summary(lm_d4)</code></pre>
 </div>
 <div id="f.-particle-based-models" class="section level1">
 <h1>F. Particle based models</h1>
-<pre class="r"><code>mm_e1 &lt;- lmer(e.rel.150 ~ pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds)
-summary(mm_e1)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_f1 &lt;- lmer(e.rel.150 ~ pH.lab.mn + mm1.mn + mm2.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_f1)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ pH.lab.mn + mm1.mn + mm2.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -41.1
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -55.9     -48.6      33.9     -67.9        19 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.9719 -0.6450  0.1861  0.7293  1.2751 
+## -2.1282 -0.6022  0.1590  0.8254  1.4125 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance  Std.Dev.
-##  trial.ID (Intercept) 0.0009168 0.03028 
-##  Residual             0.0039624 0.06295 
+##  trial.ID (Intercept) 0.0005446 0.02334 
+##  Residual             0.0034483 0.05872 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##               Estimate Std. Error t value
-## (Intercept) -1.3858882  0.5402622  -2.565
-## pH.lab.mn    0.2217032  0.0313292   7.077
-## mm1.mn       0.0003379  0.0054147   0.062
-## mm2.mn       0.0299782  0.0150263   1.995
+## (Intercept) -1.4020659  0.5015590  -2.795
+## pH.lab.mn    0.2243044  0.0289725   7.742
+## mm1.mn       0.0002896  0.0050240   0.058
+## mm2.mn       0.0312473  0.0138702   2.253
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) pH.lb. mm1.mn
-## pH.lab.mn -0.306              
-## mm1.mn    -0.900 -0.139       
-## mm2.mn    -0.029 -0.081  0.044</code></pre>
-<pre class="r"><code>fixef(mm_e1)</code></pre>
+## pH.lab.mn -0.307              
+## mm1.mn    -0.900 -0.136       
+## mm2.mn    -0.026 -0.083  0.041</code></pre>
+<pre class="r"><code>fixef(mm_f1)</code></pre>
 <pre><code>##   (Intercept)     pH.lab.mn        mm1.mn        mm2.mn 
-## -1.3858881615  0.2217031619  0.0003378508  0.0299781530</code></pre>
-<pre class="r"><code>drop1(mm_e1, test = &#39;Chisq&#39;)</code></pre>
+## -1.4020659246  0.2243044078  0.0002895954  0.0312472987</code></pre>
+<pre class="r"><code>drop1(mm_f1, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1708,43 +1906,44 @@ summary(mm_e1)</code></pre>
 ## mm2.mn       1 -53.596  4.2939  0.03825 *  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_e1)</code></pre>
+<pre class="r"><code>r2(mm_f1)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.743
-##      Marginal R2: 0.683</code></pre>
-<pre class="r"><code>mm_e2 &lt;- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + (1|trial.ID), data = ds)
-summary(mm_e2)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+##   Conditional R2: 0.767
+##      Marginal R2: 0.730</code></pre>
+<pre class="r"><code>mm_f2 &lt;- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + (1|trial.ID), data = ds, REML = FALSE)
+summary(mm_f2)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ pH.lab.mn + mm2.mn + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -49.7
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -57.9     -51.8      33.9     -67.9        20 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -2.0190 -0.6730  0.1618  0.7710  1.3019 
+## -2.1237 -0.5931  0.1246  0.8172  1.4138 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance  Std.Dev.
-##  trial.ID (Intercept) 0.0009446 0.03073 
-##  Residual             0.0037524 0.06126 
+##  trial.ID (Intercept) 0.0005419 0.02328 
+##  Residual             0.0034504 0.05874 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##             Estimate Std. Error t value
-## (Intercept) -1.35097    0.23009  -5.871
-## pH.lab.mn    0.22140    0.03025   7.319
-## mm2.mn       0.02965    0.01464   2.025
+## (Intercept) -1.37632    0.21822  -6.307
+## pH.lab.mn    0.22457    0.02871   7.822
+## mm2.mn       0.03123    0.01386   2.253
 ## 
 ## Correlation of Fixed Effects:
 ##           (Intr) pH.lb.
-## pH.lab.mn -0.995       
-## mm2.mn     0.024 -0.075</code></pre>
-<pre class="r"><code>fixef(mm_e2)</code></pre>
+## pH.lab.mn -0.996       
+## mm2.mn     0.026 -0.078</code></pre>
+<pre class="r"><code>fixef(mm_f2)</code></pre>
 <pre><code>## (Intercept)   pH.lab.mn      mm2.mn 
-## -1.35096523  0.22139999  0.02964791</code></pre>
-<pre class="r"><code>drop1(mm_e2, test = &#39;Chisq&#39;)</code></pre>
+##  -1.3763227   0.2245675   0.0312323</code></pre>
+<pre class="r"><code>drop1(mm_f2, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1755,13 +1954,15 @@ summary(mm_e2)</code></pre>
 ## mm2.mn       1 -55.596  4.2909   0.03832 *  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>r2(mm_e2)</code></pre>
+<pre class="r"><code>r2(mm_f2)</code></pre>
 <pre><code>## # R2 for Mixed Models
 ## 
-##   Conditional R2: 0.752
-##      Marginal R2: 0.690</code></pre>
-<pre class="r"><code>lm_e3 &lt;- lm(e.rel.150 ~ pH.lab.mn + mm2.mn, data = ds)
-summary(lm_e3)</code></pre>
+##   Conditional R2: 0.767
+##      Marginal R2: 0.731</code></pre>
+<p>Save</p>
+<pre class="r"><code>presmods[[&#39;f&#39;]] &lt;- mm_f2</code></pre>
+<pre class="r"><code>lm_f3 &lt;- lm(e.rel.150 ~ pH.lab.mn + mm2.mn, data = ds)
+summary(lm_f3)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ pH.lab.mn + mm2.mn, data = ds)
@@ -1781,7 +1982,7 @@ summary(lm_e3)</code></pre>
 ## Residual standard error: 0.06697 on 22 degrees of freedom
 ## Multiple R-squared:  0.7472, Adjusted R-squared:  0.7242 
 ## F-statistic: 32.51 on 2 and 22 DF,  p-value: 2.696e-07</code></pre>
-<pre class="r"><code>drop1(lm_e3, test = &#39;F&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_f3, test = &#39;F&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1794,8 +1995,8 @@ summary(lm_e3)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Another good model.</p>
 <p>Does slurry type add more info?</p>
-<pre class="r"><code>lm_e4 &lt;- lm(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type, data = ds)
-summary(lm_e4)</code></pre>
+<pre class="r"><code>lm_f4 &lt;- lm(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type, data = ds)
+summary(lm_f4)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type, data = ds)
@@ -1817,7 +2018,7 @@ summary(lm_e4)</code></pre>
 ## Residual standard error: 0.06398 on 20 degrees of freedom
 ## Multiple R-squared:  0.7902, Adjusted R-squared:  0.7483 
 ## F-statistic: 18.83 on 4 and 20 DF,  p-value: 1.469e-06</code></pre>
-<pre class="r"><code>drop1(lm_e4, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>drop1(lm_f4, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
 ## Model:
@@ -1830,44 +2031,48 @@ summary(lm_e4)</code></pre>
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Nope, not clearly at least!</p>
-<pre class="r"><code>mm_e5 &lt;- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type + (1|trial.ID), data = ds)
-summary(mm_e5)</code></pre>
-<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+<pre class="r"><code>mm_f5 &lt;- lmer(e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre class="r"><code>summary(mm_f5)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type + (1 | trial.ID)
 ##    Data: ds
 ## 
-## REML criterion at convergence: -45
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -58.1     -49.6      36.0     -72.1        18 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -1.7815 -0.6166  0.1913  0.8079  1.1713 
+## -2.0992 -0.7448  0.2187  0.9246  1.3388 
 ## 
 ## Random effects:
-##  Groups   Name        Variance  Std.Dev.
-##  trial.ID (Intercept) 0.0001483 0.01218 
-##  Residual             0.0039684 0.06300 
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.003275 0.05722 
 ## Number of obs: 25, groups:  trial.ID, 5
 ## 
 ## Fixed effects:
 ##                      Estimate Std. Error t value
-## (Intercept)          -0.82770    0.40025  -2.068
-## pH.lab.mn             0.14341    0.05526   2.595
-## mm2.mn                0.03553    0.01560   2.277
-## slurry.typeDigestate  0.08993    0.05267   1.707
-## slurry.typePig       -0.02912    0.06038  -0.482
+## (Intercept)          -0.83334    0.36116  -2.307
+## pH.lab.mn             0.14344    0.04983   2.879
+## mm2.mn                0.03699    0.01391   2.659
+## slurry.typeDigestate  0.09516    0.04721   2.015
+## slurry.typePig       -0.02708    0.05477  -0.494
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) pH.lb. mm2.mn slrr.D
 ## pH.lab.mn   -0.994                     
-## mm2.mn      -0.065  0.006              
-## slrry.typDg  0.547 -0.627  0.207       
-## slrry.typPg -0.456  0.382  0.361  0.252</code></pre>
-<pre class="r"><code>fixef(mm_e5)</code></pre>
+## mm2.mn      -0.079  0.022              
+## slrry.typDg  0.548 -0.627  0.186       
+## slrry.typPg -0.458  0.385  0.360  0.251
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre class="r"><code>fixef(mm_f5)</code></pre>
 <pre><code>##          (Intercept)            pH.lab.mn               mm2.mn 
-##          -0.82769942           0.14340765           0.03552527 
+##          -0.83334343           0.14343991           0.03699051 
 ## slurry.typeDigestate       slurry.typePig 
-##           0.08993316          -0.02912411</code></pre>
-<pre class="r"><code>drop1(mm_e5, test = &#39;Chisq&#39;)</code></pre>
+##           0.09515695          -0.02707893</code></pre>
+<pre class="r"><code>drop1(mm_f5, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre><code>## Single term deletions
 ## 
@@ -1881,12 +2086,570 @@ summary(mm_e5)</code></pre>
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Neat!</p>
+<pre class="r"><code>presmods[[&#39;f+&#39;]] &lt;- mm_f5</code></pre>
 <div id="model-predictions" class="section level2">
 <h2>Model predictions</h2>
 <p>Make predictions for plots.</p>
-<pre class="r"><code>ds[, mm_a3.pred := predict(mm_a3)]
-ds[, mm_d2.pred := predict(mm_d2)]
-ds[, mm_f1.pred := predict(mm_f1)]</code></pre>
+<pre class="r"><code>ds[, mm_b3.pred := predict(mm_b3)]
+ds[, mm_a1.pred := predict(mm_a1)]</code></pre>
+</div>
+<div id="table-of-models" class="section level2">
+<h2>Table of models</h2>
+<pre class="r"><code>fit1 &lt;- as.data.table(do.call(rbind, lapply(presmods[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], model_performance, estimator = &#39;ML&#39;)))
+fit1[, model := ww]
+fit1</code></pre>
+<pre><code>##          AIC      AICc       BIC R2_conditional R2_marginal       ICC
+##        &lt;num&gt;     &lt;num&gt;     &lt;num&gt;          &lt;num&gt;       &lt;num&gt;     &lt;num&gt;
+## 1: -48.95327 -44.28660 -41.64001      0.7418037   0.6582499 0.2444881
+## 2: -57.68515 -54.52726 -51.59078      0.7684478   0.7222971 0.1661874
+## 3: -56.16147 -53.00357 -50.06709      0.7514994   0.7123044 0.1362376
+## 4: -58.04882 -54.89093 -51.95444      0.7644615   0.7490550 0.0613940
+## 5: -57.88672 -54.72883 -51.79234      0.7671016   0.7305229 0.1357398
+##          RMSE      Sigma  model
+##         &lt;num&gt;      &lt;num&gt; &lt;char&gt;
+## 1: 0.05635558 0.06306822      a
+## 2: 0.05533398 0.05832154      b
+## 3: 0.05804884 0.06079104      d
+## 4: 0.05880763 0.06031281      e
+## 5: 0.05609691 0.05874018      f</code></pre>
+<pre class="r"><code>fit2 &lt;- as.data.table(do.call(rbind, lapply(presmods[ww &lt;- c(&#39;c&#39;)], model_performance, estimator = &#39;ML&#39;)))</code></pre>
+<pre><code>## Random effect variances not available. Returned R2 does not account for random effects.</code></pre>
+<pre class="r"><code>fit2[, model := ww]
+fit2</code></pre>
+<pre><code>##          AIC    AICc       BIC R2_conditional R2_marginal       RMSE      Sigma
+##        &lt;num&gt;   &lt;num&gt;     &lt;num&gt;         &lt;lgcl&gt;       &lt;num&gt;      &lt;num&gt;      &lt;num&gt;
+## 1: -56.70189 -53.544 -50.60751             NA   0.7475316 0.06373787 0.06373787
+##     model
+##    &lt;char&gt;
+## 1:      c</code></pre>
+<pre class="r"><code>fit3 &lt;- as.data.table(do.call(rbind, lapply(presmods[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], model_performance, estimator = &#39;ML&#39;)))</code></pre>
+<pre><code>## Random effect variances not available. Returned R2 does not account for random effects.
+## Random effect variances not available. Returned R2 does not account for random effects.
+## Random effect variances not available. Returned R2 does not account for random effects.
+## Random effect variances not available. Returned R2 does not account for random effects.
+## Random effect variances not available. Returned R2 does not account for random effects.</code></pre>
+<pre class="r"><code>fit3[, model := ww]
+fit3</code></pre>
+<pre><code>##          AIC      AICc       BIC R2_conditional R2_marginal       RMSE
+##        &lt;num&gt;     &lt;num&gt;     &lt;num&gt;         &lt;lgcl&gt;       &lt;num&gt;      &lt;num&gt;
+## 1: -63.45104 -56.86280 -54.91891             NA   0.8363630 0.05140811
+## 2: -61.72956 -55.14133 -53.19743             NA   0.8246128 0.05320889
+## 3: -64.72882 -58.14059 -56.19669             NA   0.8445694 0.05011099
+## 4: -64.63368 -58.04544 -56.10155             NA   0.8439728 0.05020644
+## 5: -58.09169 -51.50345 -49.55956             NA   0.7969086 0.05722455
+##         Sigma  model
+##         &lt;num&gt; &lt;char&gt;
+## 1: 0.05140811     b+
+## 2: 0.05320889     c+
+## 3: 0.05011099     d+
+## 4: 0.05020644     e+
+## 5: 0.05722455     f+</code></pre>
+</div>
+<div id="summaries-for-tables" class="section level2">
+<h2>Summaries for tables</h2>
+<p>Model summaries</p>
+<pre class="r"><code>lapply(presmods[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], summary)</code></pre>
+<pre><code>## $a
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ slurry.type + (1 | trial.ID) + (1 | slurry.ID) -      1
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -49.0     -41.6      30.5     -61.0        19 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -1.4446 -0.7259 -0.1416  0.7901  1.7619 
+## 
+## Random effects:
+##  Groups    Name        Variance  Std.Dev.
+##  slurry.ID (Intercept) 0.0007702 0.02775 
+##  trial.ID  (Intercept) 0.0005169 0.02274 
+##  Residual              0.0039776 0.06307 
+## Number of obs: 25, groups:  slurry.ID, 15; trial.ID, 5
+## 
+## Fixed effects:
+##                      Estimate Std. Error t value
+## slurry.typeCattle     0.26428    0.04162   6.350
+## slurry.typeDigestate  0.41239    0.02046  20.156
+## slurry.typePig        0.12638    0.04162   3.037
+## 
+## Correlation of Fixed Effects:
+##             slrr.C slrr.D
+## slrry.typDg 0.102        
+## slrry.typPg 0.086  0.102 
+## 
+## $b
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ TS.mn + pH.lab.mn + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -57.7     -51.6      33.8     -67.7        20 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -1.97516 -0.57216 -0.00941  0.76596  1.37086 
+## 
+## Random effects:
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0006779 0.02604 
+##  Residual             0.0034014 0.05832 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##              Estimate Std. Error t value
+## (Intercept) -1.365074   0.217846  -6.266
+## TS.mn        0.010491   0.004867   2.156
+## pH.lab.mn    0.217850   0.028939   7.528
+## 
+## Correlation of Fixed Effects:
+##           (Intr) TS.mn 
+## TS.mn      0.023       
+## pH.lab.mn -0.988 -0.159
+## 
+## $c
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ area.perc.mn + pH.lab.mn + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -56.7     -50.6      33.4     -66.7        20 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -2.23386 -0.40916  0.06831  0.75696  1.90988 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.004063 0.06374 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                Estimate Std. Error t value
+## (Intercept)  -1.3696909  0.2325953  -5.889
+## area.perc.mn -0.0021634  0.0009048  -2.391
+## pH.lab.mn     0.2343217  0.0300814   7.790
+## 
+## Correlation of Fixed Effects:
+##             (Intr) ar.pr.
+## area.prc.mn -0.203       
+## pH.lab.mn   -0.994  0.104
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## 
+## 
+## $d
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ logK + pH.lab.mn + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -56.2     -50.1      33.1     -66.2        20 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -2.0103 -0.5404  0.1603  0.7630  1.7695 
+## 
+## Random effects:
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0005829 0.02414 
+##  Residual             0.0036956 0.06079 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept) -1.36721    0.22612  -6.046
+## logK         0.02312    0.01320   1.752
+## pH.lab.mn    0.21912    0.03022   7.251
+## 
+## Correlation of Fixed Effects:
+##           (Intr) logK  
+## logK       0.055       
+## pH.lab.mn -0.987 -0.197
+## 
+## $e
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ pH.lab.mn + n.mn + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##       -58       -52        34       -68        20 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -2.0239 -0.6157  0.1604  0.7137  1.6757 
+## 
+## Random effects:
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0002379 0.01543 
+##  Residual             0.0036376 0.06031 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept) -1.20146    0.23904  -5.026
+## pH.lab.mn    0.21508    0.03002   7.164
+## n.mn        -0.12255    0.04956  -2.473
+## 
+## Correlation of Fixed Effects:
+##           (Intr) pH.lb.
+## pH.lab.mn -0.990       
+## n.mn      -0.390  0.271
+## 
+## $f
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ pH.lab.mn + mm2.mn + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -57.9     -51.8      33.9     -67.9        20 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -2.1237 -0.5931  0.1246  0.8172  1.4138 
+## 
+## Random effects:
+##  Groups   Name        Variance  Std.Dev.
+##  trial.ID (Intercept) 0.0005419 0.02328 
+##  Residual             0.0034504 0.05874 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept) -1.37632    0.21822  -6.307
+## pH.lab.mn    0.22457    0.02871   7.822
+## mm2.mn       0.03123    0.01386   2.253
+## 
+## Correlation of Fixed Effects:
+##           (Intr) pH.lb.
+## pH.lab.mn -0.996       
+## mm2.mn     0.026 -0.078</code></pre>
+<pre class="r"><code>lapply(presmods[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], summary)</code></pre>
+<pre><code>## $`b+`
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -63.5     -54.9      38.7     -77.5        18 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -2.25823 -0.84156  0.08986  0.73870  1.66827 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.002643 0.05141 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                       Estimate Std. Error t value
+## (Intercept)          -0.540706   0.328317  -1.647
+## TS.mn                 0.018365   0.004783   3.839
+## pH.lab.mn             0.087914   0.046804   1.878
+## slurry.typeDigestate  0.153677   0.046809   3.283
+## slurry.typePig       -0.018753   0.048557  -0.386
+## 
+## Correlation of Fixed Effects:
+##             (Intr) TS.mn  pH.lb. slrr.D
+## TS.mn        0.172                     
+## pH.lab.mn   -0.988 -0.293              
+## slrry.typDg  0.582  0.455 -0.680       
+## slrry.typPg -0.374  0.326  0.270  0.317
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## 
+## 
+## $`c+`
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ area.perc.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -61.7     -53.2      37.9     -75.7        18 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -1.87133 -0.82571 -0.08459  0.81484  1.65085 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.002831 0.05321 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                        Estimate Std. Error t value
+## (Intercept)          -0.4179568  0.3486946  -1.199
+## area.perc.mn         -0.0027423  0.0007885  -3.478
+## pH.lab.mn             0.1004835  0.0477296   2.105
+## slurry.typeDigestate  0.1168008  0.0450310   2.594
+## slurry.typePig       -0.0687766  0.0476090  -1.445
+## 
+## Correlation of Fixed Effects:
+##             (Intr) ar.pr. pH.lb. slrr.D
+## area.prc.mn -0.280                     
+## pH.lab.mn   -0.995  0.241              
+## slrry.typDg  0.609 -0.287 -0.667       
+## slrry.typPg -0.425 -0.065  0.376  0.210
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## 
+## 
+## $`d+`
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ logK + pH.lab.mn + slurry.type + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -64.7     -56.2      39.4     -78.7        18 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -2.02433 -0.77724 -0.04095  1.03967  1.52049 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.002511 0.05011 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                       Estimate Std. Error t value
+## (Intercept)          -0.366222   0.329376  -1.112
+## logK                  0.053758   0.013106   4.102
+## pH.lab.mn             0.058732   0.047965   1.224
+## slurry.typeDigestate  0.187955   0.049513   3.796
+## slurry.typePig       -0.006413   0.048166  -0.133
+## 
+## Correlation of Fixed Effects:
+##             (Intr) logK   pH.lb. slrr.D
+## logK         0.290                     
+## pH.lab.mn   -0.987 -0.416              
+## slrry.typDg  0.617  0.572 -0.717       
+## slrry.typPg -0.304  0.370  0.188  0.365
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## 
+## 
+## $`e+`
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -64.6     -56.1      39.3     -78.6        18 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -2.2044 -0.8205  0.1700  0.8809  1.3969 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.002521 0.05021 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                      Estimate Std. Error t value
+## (Intercept)          -0.19620    0.34448  -0.570
+## pH.lab.mn             0.07437    0.04661   1.595
+## n.mn                 -0.17781    0.04355  -4.082
+## slurry.typeDigestate  0.13781    0.04379   3.147
+## slurry.typePig       -0.04527    0.04561  -0.993
+## 
+## Correlation of Fixed Effects:
+##             (Intr) pH.lb. n.mn   slrr.D
+## pH.lab.mn   -0.995                     
+## n.mn        -0.399  0.348              
+## slrry.typDg  0.637 -0.688 -0.369       
+## slrry.typPg -0.343  0.309 -0.184  0.251
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## 
+## 
+## $`f+`
+## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
+## Formula: e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type + (1 | trial.ID)
+##    Data: ds
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##     -58.1     -49.6      36.0     -72.1        18 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -2.0992 -0.7448  0.2187  0.9246  1.3388 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  trial.ID (Intercept) 0.000000 0.00000 
+##  Residual             0.003275 0.05722 
+## Number of obs: 25, groups:  trial.ID, 5
+## 
+## Fixed effects:
+##                      Estimate Std. Error t value
+## (Intercept)          -0.83334    0.36116  -2.307
+## pH.lab.mn             0.14344    0.04983   2.879
+## mm2.mn                0.03699    0.01391   2.659
+## slurry.typeDigestate  0.09516    0.04721   2.015
+## slurry.typePig       -0.02708    0.05477  -0.494
+## 
+## Correlation of Fixed Effects:
+##             (Intr) pH.lb. mm2.mn slrr.D
+## pH.lab.mn   -0.994                     
+## mm2.mn      -0.079  0.022              
+## slrry.typDg  0.548 -0.627  0.186       
+## slrry.typPg -0.458  0.385  0.360  0.251
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<p>LRTs</p>
+<pre class="r"><code>lapply(presmods[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], drop1, test = &#39;Chisq&#39;)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## $a
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ slurry.type + (1 | trial.ID) + (1 | slurry.ID) - 
+##     1
+##             npar     AIC    LRT   Pr(Chi)    
+## &lt;none&gt;           -48.953                     
+## slurry.type    2 -30.368 22.585 1.247e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $b
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ TS.mn + pH.lab.mn + (1 | trial.ID)
+##           npar     AIC     LRT  Pr(Chi)    
+## &lt;none&gt;         -57.685                     
+## TS.mn        1 -55.596  4.0894  0.04315 *  
+## pH.lab.mn    1 -30.092 29.5930 5.33e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $c
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ area.perc.mn + pH.lab.mn + (1 | trial.ID)
+##              npar     AIC     LRT   Pr(Chi)    
+## &lt;none&gt;            -56.702                      
+## area.perc.mn    1 -55.596  3.1061     0.078 .  
+## pH.lab.mn       1 -27.909 30.7929 2.871e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $d
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ logK + pH.lab.mn + (1 | trial.ID)
+##           npar     AIC     LRT   Pr(Chi)    
+## &lt;none&gt;         -56.161                      
+## logK         1 -55.596  2.5657    0.1092    
+## pH.lab.mn    1 -29.857 28.3041 1.037e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $e
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ pH.lab.mn + n.mn + (1 | trial.ID)
+##           npar     AIC    LRT   Pr(Chi)    
+## &lt;none&gt;         -58.049                     
+## pH.lab.mn    1 -32.157 27.892 1.283e-07 ***
+## n.mn         1 -55.596  4.453   0.03484 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $f
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ pH.lab.mn + mm2.mn + (1 | trial.ID)
+##           npar     AIC     LRT   Pr(Chi)    
+## &lt;none&gt;         -57.887                      
+## pH.lab.mn    1 -28.979 30.9082 2.705e-08 ***
+## mm2.mn       1 -55.596  4.2909   0.03832 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>lapply(presmods[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], drop1, test = &#39;Chisq&#39;)</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## $`b+`
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
+##             npar     AIC     LRT  Pr(Chi)   
+## &lt;none&gt;           -63.451                    
+## TS.mn          1 -54.890 10.5607 0.001155 **
+## pH.lab.mn      1 -62.151  3.3004 0.069261 . 
+## slurry.type    2 -57.685  9.7659 0.007575 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $`c+`
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ area.perc.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
+##              npar     AIC    LRT  Pr(Chi)   
+## &lt;none&gt;            -61.730                   
+## area.perc.mn    1 -54.890 8.8393 0.002948 **
+## pH.lab.mn       1 -59.649 4.0803 0.043386 * 
+## slurry.type     2 -56.702 9.0277 0.010956 * 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $`d+`
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ logK + pH.lab.mn + slurry.type + (1 | trial.ID)
+##             npar     AIC     LRT   Pr(Chi)    
+## &lt;none&gt;           -64.729                      
+## logK           1 -54.890 11.8385 0.0005802 ***
+## pH.lab.mn      1 -65.273  1.4561 0.2275561    
+## slurry.type    2 -56.161 12.5674 0.0018665 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $`e+`
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1 | trial.ID)
+##             npar     AIC     LRT   Pr(Chi)    
+## &lt;none&gt;           -64.634                      
+## pH.lab.mn      1 -64.210  2.4237 0.1195140    
+## n.mn           1 -54.890 11.7434 0.0006106 ***
+## slurry.type    2 -58.049 10.5849 0.0050295 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $`f+`
+## Single term deletions
+## 
+## Model:
+## e.rel.150 ~ pH.lab.mn + mm2.mn + slurry.type + (1 | trial.ID)
+##             npar     AIC    LRT  Pr(Chi)   
+## &lt;none&gt;           -58.092                   
+## pH.lab.mn      1 -52.934 7.1574 0.007466 **
+## mm2.mn         1 -54.890 5.2014 0.022569 * 
+## slurry.type    2 -57.887 4.2050 0.122153   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
 </div>
 
