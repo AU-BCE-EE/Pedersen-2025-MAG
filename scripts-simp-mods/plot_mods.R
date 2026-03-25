@@ -26,7 +26,7 @@ p2 <- ggplot(ds, aes(pH.lab.mn, e.rel.150, colour = slurry.type)) +
   geom_point(aes(x = pH.lab.mn - 0.04, y = mm_a1.pred), shape = 1, show.legend = FALSE) +
   geom_point(aes(x = pH.lab.mn + 0.04, y = mm_b3.pred), shape = 17, show.legend = FALSE) +
   scale_colour_manual(values = cols) +
-  labs(x = 'Slurry pH', y = 'Relative emission (% TAN)', colour = '') +
+  labs(x = 'Slurry pH', y = 'Relative emission (frac. TAN)', colour = '') +
   theme_bw() +
   theme(legend.position = 'top')
 
@@ -34,3 +34,13 @@ p2
 
 p2 | p1
 ggsave2x('../plots-simp-mods/mod_plot', height = 3.7, width = 6.5)
+
+# Meas vs. predicted
+
+ggplot(ds, aes(e.rel.150, mm_b3.pred, colour = slurry.type)) +
+  geom_point(shape = 21, fill = 'white', size = 4.5) +
+  geom_text(aes(label = trial.ID), show.legend = FALSE) +
+  labs(x = 'Measured emission (frac. TAN)', y = 'Calculated emission (frac. TAN)', colour = '') +
+  theme_bw() +
+  theme(legend.position = 'top')
+ggsave2x('../plots-simp-mods/mod_v_meas', height = 3.7, width = 3.7)
