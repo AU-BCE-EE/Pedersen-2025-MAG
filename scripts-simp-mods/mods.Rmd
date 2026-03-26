@@ -170,7 +170,7 @@ drop1(lm_b4, test = 'F')
 Yes it does, but the fit does not improve much.
 
 ```{r}
-summary(lm_f1)[c('r.squared', 'adj.r.squared')]
+summary(lm_a1)[c('r.squared', 'adj.r.squared')]
 summary(lm_b3)[c('r.squared', 'adj.r.squared')]
 summary(lm_b4)[c('r.squared', 'adj.r.squared')]
 ```

@@ -351,7 +351,7 @@ display: none;
 
 <h1 class="title toc-ignore">Simple models</h1>
 <h4 class="author">Sasha D. Hafner</h4>
-<h4 class="date">13:46 - 25 March, 2026</h4>
+<h4 class="date">14:23 - 26 March, 2026</h4>
 
 </div>
 
@@ -591,8 +591,8 @@ summary(mm_a2)</code></pre>
 ##   Conditional R2: 0.742
 ##      Marginal R2: 0.658</code></pre>
 <p>Save to list.</p>
-<pre class="r"><code>presmods &lt;- list()
-presmods[[&#39;a&#39;]] &lt;- mm_a2</code></pre>
+<pre class="r"><code>modlist &lt;- list()
+modlist[[&#39;a&#39;]] &lt;- mm_a2</code></pre>
 <pre class="r"><code>lm_a2 &lt;- lm(e.rel.150 ~ slurry.type + trial.ID, data = ds)
 summary(lm_a2)</code></pre>
 <pre><code>## 
@@ -831,7 +831,7 @@ summary(mm_b3)</code></pre>
 ##   Conditional R2: 0.768
 ##      Marginal R2: 0.722</code></pre>
 <p>Save.</p>
-<pre class="r"><code>presmods[[&#39;b&#39;]] &lt;- mm_b3</code></pre>
+<pre class="r"><code>modlist[[&#39;b&#39;]] &lt;- mm_b3</code></pre>
 <p>Pretty clear, and positive coefficients.</p>
 <p>Check linear model.</p>
 <pre class="r"><code>lm_b3 &lt;- lm(e.rel.150 ~ TS.mn + pH.lab.mn, data = ds)
@@ -951,7 +951,7 @@ summary(lm_b3)</code></pre>
 ## -----------------------------------------------------------------------
 ## -57.7 | -54.5 | -51.6 |      0.768 |      0.722 | 0.166 | 0.055 | 0.058</code></pre>
 <p>Save</p>
-<pre class="r"><code>presmods[[&#39;b+&#39;]] &lt;- mm_b4</code></pre>
+<pre class="r"><code>modlist[[&#39;b+&#39;]] &lt;- mm_b4</code></pre>
 <p>And try linear model with slurry type too.</p>
 <pre class="r"><code>lm_b4 &lt;- lm(e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type, data = ds)
 summary(lm_b4)</code></pre>
@@ -989,7 +989,7 @@ summary(lm_b4)</code></pre>
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Yes it does, but the fit does not improve much.</p>
-<pre class="r"><code>summary(lm_f1)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
+<pre class="r"><code>summary(lm_a1)[c(&#39;r.squared&#39;, &#39;adj.r.squared&#39;)]</code></pre>
 <pre><code>## $r.squared
 ## [1] 0.6640958
 ## 
@@ -1260,7 +1260,7 @@ summary(lm_c3)</code></pre>
 ## 
 ##   Conditional R2: NA
 ##      Marginal R2: 0.748</code></pre>
-<pre class="r"><code>presmods[[&#39;c&#39;]] &lt;- mm_c4</code></pre>
+<pre class="r"><code>modlist[[&#39;c&#39;]] &lt;- mm_c4</code></pre>
 <pre class="r"><code>lm_c4 &lt;- lm(e.rel.150 ~ area.perc.mn + pH.lab.mn, data = ds)
 summary(lm_c4)</code></pre>
 <pre><code>## 
@@ -1371,7 +1371,7 @@ model.</p>
 ## 
 ##   Conditional R2: NA
 ##      Marginal R2: 0.825</code></pre>
-<pre class="r"><code>presmods[[&#39;c+&#39;]] &lt;- mm_c5</code></pre>
+<pre class="r"><code>modlist[[&#39;c+&#39;]] &lt;- mm_c5</code></pre>
 </div>
 <div id="d.-logk-based-models" class="section level1">
 <h1>D. logK-based models</h1>
@@ -1543,7 +1543,7 @@ summary(mm_d3)</code></pre>
 ##   Conditional R2: 0.751
 ##      Marginal R2: 0.712</code></pre>
 <p>Save</p>
-<pre class="r"><code>presmods[[&#39;d&#39;]] &lt;- mm_d3</code></pre>
+<pre class="r"><code>modlist[[&#39;d&#39;]] &lt;- mm_d3</code></pre>
 <p>And logK is not very useful.</p>
 <p>Add slurry type</p>
 <pre class="r"><code>mm_d4 &lt;- lmer(e.rel.150 ~ logK + pH.lab.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
@@ -1612,7 +1612,7 @@ summary(mm_d3)</code></pre>
 ## 
 ##   Conditional R2: NA
 ##      Marginal R2: 0.845</code></pre>
-<pre class="r"><code>presmods[[&#39;d+&#39;]] &lt;- mm_d4</code></pre>
+<pre class="r"><code>modlist[[&#39;d+&#39;]] &lt;- mm_d4</code></pre>
 </div>
 <div id="e.-mn-models" class="section level1">
 <h1>E. m/n models</h1>
@@ -1723,7 +1723,7 @@ summary(mm_e2)</code></pre>
 ## 
 ##   Conditional R2: 0.764
 ##      Marginal R2: 0.749</code></pre>
-<pre class="r"><code>presmods[[&#39;e&#39;]] &lt;- mm_e2</code></pre>
+<pre class="r"><code>modlist[[&#39;e&#39;]] &lt;- mm_e2</code></pre>
 <p>Add slurry type</p>
 <pre class="r"><code>mm_e3 &lt;- lmer(e.rel.150 ~ pH.lab.mn + n.mn + slurry.type + (1|trial.ID), data = ds, REML = FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
@@ -1786,7 +1786,7 @@ summary(mm_e2)</code></pre>
 ## 
 ##   Conditional R2: NA
 ##      Marginal R2: 0.844</code></pre>
-<pre class="r"><code>presmods[[&#39;e+&#39;]] &lt;- mm_e3</code></pre>
+<pre class="r"><code>modlist[[&#39;e+&#39;]] &lt;- mm_e3</code></pre>
 <pre class="r"><code>lm_e3 &lt;- lm(e.rel.150 ~ pH.lab.mn + n.mn, data = ds)
 summary(lm_e3)</code></pre>
 <pre><code>## 
@@ -1960,7 +1960,7 @@ summary(mm_f2)</code></pre>
 ##   Conditional R2: 0.767
 ##      Marginal R2: 0.731</code></pre>
 <p>Save</p>
-<pre class="r"><code>presmods[[&#39;f&#39;]] &lt;- mm_f2</code></pre>
+<pre class="r"><code>modlist[[&#39;f&#39;]] &lt;- mm_f2</code></pre>
 <pre class="r"><code>lm_f3 &lt;- lm(e.rel.150 ~ pH.lab.mn + mm2.mn, data = ds)
 summary(lm_f3)</code></pre>
 <pre><code>## 
@@ -2086,7 +2086,7 @@ summary(lm_f4)</code></pre>
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Neat!</p>
-<pre class="r"><code>presmods[[&#39;f+&#39;]] &lt;- mm_f5</code></pre>
+<pre class="r"><code>modlist[[&#39;f+&#39;]] &lt;- mm_f5</code></pre>
 <div id="model-predictions" class="section level2">
 <h2>Model predictions</h2>
 <p>Make predictions for plots.</p>
@@ -2095,7 +2095,7 @@ ds[, mm_a1.pred := predict(mm_a1)]</code></pre>
 </div>
 <div id="table-of-models" class="section level2">
 <h2>Table of models</h2>
-<pre class="r"><code>fit1 &lt;- as.data.table(do.call(rbind, lapply(presmods[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], model_performance, estimator = &#39;ML&#39;)))
+<pre class="r"><code>fit1 &lt;- as.data.table(do.call(rbind, lapply(modlist[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], model_performance, estimator = &#39;ML&#39;)))
 fit1[, model := ww]
 fit1</code></pre>
 <pre><code>##          AIC      AICc       BIC R2_conditional R2_marginal       ICC
@@ -2112,7 +2112,7 @@ fit1</code></pre>
 ## 3: 0.05804884 0.06079104      d
 ## 4: 0.05880763 0.06031281      e
 ## 5: 0.05609691 0.05874018      f</code></pre>
-<pre class="r"><code>fit2 &lt;- as.data.table(do.call(rbind, lapply(presmods[ww &lt;- c(&#39;c&#39;)], model_performance, estimator = &#39;ML&#39;)))</code></pre>
+<pre class="r"><code>fit2 &lt;- as.data.table(do.call(rbind, lapply(modlist[ww &lt;- c(&#39;c&#39;)], model_performance, estimator = &#39;ML&#39;)))</code></pre>
 <pre><code>## Random effect variances not available. Returned R2 does not account for random effects.</code></pre>
 <pre class="r"><code>fit2[, model := ww]
 fit2</code></pre>
@@ -2122,7 +2122,7 @@ fit2</code></pre>
 ##     model
 ##    &lt;char&gt;
 ## 1:      c</code></pre>
-<pre class="r"><code>fit3 &lt;- as.data.table(do.call(rbind, lapply(presmods[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], model_performance, estimator = &#39;ML&#39;)))</code></pre>
+<pre class="r"><code>fit3 &lt;- as.data.table(do.call(rbind, lapply(modlist[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], model_performance, estimator = &#39;ML&#39;)))</code></pre>
 <pre><code>## Random effect variances not available. Returned R2 does not account for random effects.
 ## Random effect variances not available. Returned R2 does not account for random effects.
 ## Random effect variances not available. Returned R2 does not account for random effects.
@@ -2148,7 +2148,7 @@ fit3</code></pre>
 <div id="summaries-for-tables" class="section level2">
 <h2>Summaries for tables</h2>
 <p>Model summaries</p>
-<pre class="r"><code>lapply(presmods[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], summary)</code></pre>
+<pre class="r"><code>lapply(modlist[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], summary)</code></pre>
 <pre><code>## $a
 ## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ slurry.type + (1 | trial.ID) + (1 | slurry.ID) -      1
@@ -2326,7 +2326,7 @@ fit3</code></pre>
 ##           (Intr) pH.lb.
 ## pH.lab.mn -0.996       
 ## mm2.mn     0.026 -0.078</code></pre>
-<pre class="r"><code>lapply(presmods[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], summary)</code></pre>
+<pre class="r"><code>lapply(modlist[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], summary)</code></pre>
 <pre><code>## $`b+`
 ## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]
 ## Formula: e.rel.150 ~ TS.mn + pH.lab.mn + slurry.type + (1 | trial.ID)
@@ -2506,7 +2506,7 @@ fit3</code></pre>
 ## optimizer (nloptwrap) convergence code: 0 (OK)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <p>LRTs</p>
-<pre class="r"><code>lapply(presmods[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], drop1, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>lapply(modlist[ww &lt;- c(&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;)], drop1, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 <pre><code>## $a
 ## Single term deletions
@@ -2579,7 +2579,7 @@ fit3</code></pre>
 ## mm2.mn       1 -55.596  4.2909   0.03832 *  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>lapply(presmods[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], drop1, test = &#39;Chisq&#39;)</code></pre>
+<pre class="r"><code>lapply(modlist[ww &lt;- c(&#39;b+&#39;, &#39;c+&#39;, &#39;d+&#39;, &#39;e+&#39;, &#39;f+&#39;)], drop1, test = &#39;Chisq&#39;)</code></pre>
 <pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)
 ## boundary (singular) fit: see help(&#39;isSingular&#39;)
@@ -2651,6 +2651,10 @@ fit3</code></pre>
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
+</div>
+<div id="predicted-values-for-all-models" class="section level1">
+<h1>Predicted values for all models</h1>
+<p><code>{r] dpred &lt;- data.table() for (i in modlist) {   dd &lt;- ds    dd[, e.rel.pred := predict(i)]   dpred &lt;- rbind(dpred, dd) }</code></p>
 </div>
 
 
