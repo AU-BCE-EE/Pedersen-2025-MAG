@@ -3,13 +3,13 @@ Data from the project: Methods for reducing Ammonia loss and increased methane y
 
 Repository contains data and data treatment related to NH3 emissions after field application of digestates, and associated data such as slurry surface pH and infiltration. 
 
-The data is presented in two manuscripts in preparation: 
+The data is presented in three manuscripts: 
 
-Manuscript A: Pedersen, J., Hafner, S. D., Romio, C., Pacholski, A. S. Assessment of ammonia emission mitigation efficiency of established and novel field application techniques for slurry digestates. In review, November 2025.
+Manuscript A: Pedersen, J., Hafner, S. D., Romio, C., Pacholski, A. S. Assessment of ammonia emission mitigation efficiency of established and novel field application techniques for slurry digestates. 2026. Atmospheric Environment: X. 29. https://doi.org/10.1016/j.aeaoa.2026.100415
 
-Technical note: Pedersen, J., Hafner, S. D., Pacholski, A. S. Methodological factors affecting ammonia emission meas-urement with flux chambers from field-applied biogas diges-tate slurry (Technical note), In preparation, November 2025. 
+Technical note: Pedersen, J., Hafner, S. D., Pacholski, A. S. Methodological factors affecting ammonia emission measurement with flux chambers from field-applied biogas digestate slurry. 2026. Atmospheric Environment: X. 29. https://doi.org/10.1016/j.aeaoa.2025.100408
 
-Manuscript B: Pedersen, J., Labouriau, R., Romio, C., Pacholski, A. S., Hafner, S. D. Effect of digestate and untreated slurry properties on ammonia emission after field application. In preparation, November 2025. 
+Manuscript B: Pedersen, J., Romio, C., Pacholski, A. S., Hafner, S. D. Explaining variation in ammonia emission after field application of digested and untreated slurry using physical and chemical characteristics. In preparation April 2026. 
 
 # Maintainer
 Johanna Pedersen. Contact information here: https://www.researchgate.net/profile/Johanna-Pedersen 
@@ -29,8 +29,6 @@ See `scripts` for R scripts.
 `main.R` calls the other to do the complete data loading, subsetting, calculations, plotting, saving of data (in `output` subdirectory) and plots (in `plots` subdirectory). 
 
 # Directory structure
-## `data-dig-prop-stats`
-Data file used for the statistical analysis in 'Manuscript B'. 
 
 ## `data-emission`
 Measurement data in `data` subdirectory.
@@ -49,24 +47,27 @@ R functions used by various scripts.
 Logs of R package versions, parameter values, and more to try to ensure reproducibility.
 
 ## `output`
-Output summaries and similar files.
+Output summaries and similar files, for all three publications.
 
 ## `plots-meas`
-Plots produced by scripts in `scripts-meas` of NH3 emission after field application of digestates. 
+Plots produced by scripts in `scripts-meas` of NH3 emission after field application of digestates, for all three publications. 
+
+## `plots-simp-mods`
+Plots of simple models for manuscript B, produced by scripts in 'scripts-simp-mods'.
 
 ## `plots-surface-pH`
 Plots of surface pH, produced by scripts in `scripts-pH`.
 
 ## `plots-temp-loggers`
-Plots of soil surface temperature, produced by scripts in `scripts-temp-loggers`. 
+Plots of soil surface temperature, produced by scripts in `scripts-temp-loggers`, presented in supporting materials in manuscript A. 
 
 ## `scripts-DFC`
-R scripts for processing dynamic flux chamber (DFC) data to calculate measured ammonia emission. 
+R scripts for processing dynamic flux chamber (DFC) data to calculate measured ammonia emission for all three publications. 
 Data files are too large to include but scripts are still included here for partial reproducibility.
 The script `main.R` calls all others. 
 
 ## `scripts-ESA`
-Matlab scripts for processing exposed surface area (ESA) data. 
+Matlab scripts for processing exposed surface area (ESA) data for manuscript B.
 Data files (pictures) are too large to include but scripts are still included here for partial reproducibility. 
 
 ## `scripts-meas`
@@ -104,7 +105,7 @@ Auxiliary/supporting data to the emission measurements.
 Digestate properties, exposed surface area (ESA) data, soil properties, and slurry surface pH. 
 
 # Links to manuscript A
-This section give the sources of tables, figures, and some statistical results presented in the paper.
+This section give the sources of tables, figures, and some statistical results presented in the paper (https://doi.org/10.1016/j.aeaoa.2026.100415).
 
 | Paper component          |  Repo source                             |  Repo scripts             |
 |-----------------         |-----------------                         |---------------            |
@@ -121,7 +122,7 @@ This section give the sources of tables, figures, and some statistical results p
 |  Fig. S12 | `plots-meas/NH3.flux.trial12.pdf` | `scripts-meas/plot.R` |
 
 # Links to technical note
-This section give the sources of tables, figures, and some statistical results presented in the technical note.
+This section give the sources of tables, figures, and some statistical results presented in the technical note (https://doi.org/10.1016/j.aeaoa.2025.100408).
 
 | Paper component          |  Repo source                             |  Repo scripts             |
 |-----------------         |-----------------                         |---------------            |
@@ -136,7 +137,16 @@ This section give the sources of tables, figures, and some statistical results p
 
 | Paper component          |  Repo source                             |  Repo scripts             |
 |-----------------         |-----------------                         |---------------            |
-|    Table GGG, all digestate and slurry properties |   `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
-|    Table GGG, cumulative NH3 emission  |    `output/cum.emis.prop.csv`   | `scripts-meas/export.R`  |
-|    Table SHHH and SIII  |   `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
-|      |      ||
+|    Table 1 |   `output/soil.table.prop.csv`   | `scripts-pub-tables/export.R`  |
+|    Table 2 |   `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
+|     Fig. 1 |  `plots-meas/NH3.flux.prop50.pdf    | `scripts-meas/plot.R` |
+|    Table 3  |    `scripts-simp-mods/mods.HTML`  | `scripts-simp-mods/mods.rmd` |
+|    Table 4  |    `scripts-simp-mods/mods.HTML`  | `scripts-simp-mods/mods.rmd` |
+|   Fig. 2   |   `plots-simp-mods/mod-plot.pdf`   | `scripts-simp-mods/plot_mods` |
+|   Fig. 3   |   `plots-meas/scatter.pdf'   | `scripts-meas/plot.R` |
+| Fig. S1 |`plots-meas/temp.prop.pdf'  | `scripts-meas/plot.R` |
+| Table S1 | `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
+| Fig. S4 | `plots-simp-mods/pairs_all.pdf` | `scripts-simp-mods/plot_mods` |
+| Fig. S5 |`plots-meas/NH3.flux.prop150.pdf    | `scripts-meas/plot.R` |
+| Table S3 | `scripts-simp-mods/mods.HTML`  | `scripts-simp-mods/mods.rmd` |
+| Fig. S6 | | |
