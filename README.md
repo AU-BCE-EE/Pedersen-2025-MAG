@@ -139,14 +139,14 @@ This section give the sources of tables, figures, and some statistical results p
 |-----------------         |-----------------                         |---------------            |
 |    Table 1 |   `output/soil.table.prop.csv`   | `scripts-pub-tables/export.R`  |
 |    Table 2 |   `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
-|     Fig. 1 |  `plots-meas/NH3.flux.prop50.pdf    | `scripts-meas/plot.R` |
+|     Fig. 1 |  `plots-meas/NH3.flux.prop50.pdf`    | `scripts-meas/plot.R` |
 |    Table 3  |    `scripts-simp-mods/mods.HTML`  | `scripts-simp-mods/mods.rmd` |
 |    Table 4  |    `scripts-simp-mods/mods.HTML`  | `scripts-simp-mods/mods.rmd` |
 |   Fig. 2   |   `plots-simp-mods/mod-plot.pdf`   | `scripts-simp-mods/plot_mods` |
-|   Fig. 3   |   `plots-meas/scatter.pdf'   | `scripts-meas/plot.R` |
-| Fig. S1 |`plots-meas/temp.prop.pdf'  | `scripts-meas/plot.R` |
+|   Fig. 3   |   `plots-meas/scatter.pdf`   | `scripts-meas/plot.R` |
+| Fig. S1 |`plots-meas/temp.prop.pdf`  | `scripts-meas/plot.R` |
 | Table S1 | `output/digestate.table.prop1.csv` and `output/digestate.table.prop2.csv`   | `scripts-pub-tables/export.R`  |
 | Fig. S4 | `plots-simp-mods/pairs_all.pdf` | `scripts-simp-mods/plot_mods` |
-| Fig. S5 |`plots-meas/NH3.flux.prop150.pdf    | `scripts-meas/plot.R` |
+| Fig. S5 |`plots-meas/NH3.flux.prop150.pdf`    | `scripts-meas/plot.R` |
 | Table S3 | `scripts-simp-mods/mods.HTML`  | `scripts-simp-mods/mods.rmd` |
 | Fig. S6 | `plots-simp-mods/mod_v_meas_all.pdf` |  `scripts-simp-mods/plot_mods.R` |
