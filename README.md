@@ -149,4 +149,4 @@ This section give the sources of tables, figures, and some statistical results p
 | Fig. S4 | `plots-simp-mods/pairs_all.pdf` | `scripts-simp-mods/plot_mods` |
 | Fig. S5 |`plots-meas/NH3.flux.prop150.pdf    | `scripts-meas/plot.R` |
 | Table S3 | `scripts-simp-mods/mods.HTML`  | `scripts-simp-mods/mods.rmd` |
-| Fig. S6 | | |
+| Fig. S6 | `plots-simp-mods/mod_v_meas_all.pdf` |  `scripts-simp-mods/plot_mods.R` |
