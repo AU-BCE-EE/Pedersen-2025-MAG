@@ -1,7 +1,7 @@
 # Pedersen-2025-MAG
 Data from the project: Methods for reducing Ammonia loss and increased methane yield from bioGas slurry (MAG). 
 
-Repository contains data and data treatment related to NH3 emissions after field application of digestates, and associated data such as slurry surface pH and infiltration. 
+Repository contains data and data treatment related to NH3 emissions after field application of digestates, and associated data such as slurry surface pH and exposed surface area. 
 
 The data is presented in three manuscripts: 
 
