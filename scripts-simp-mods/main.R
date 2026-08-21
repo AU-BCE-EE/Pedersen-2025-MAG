@@ -10,3 +10,5 @@ source('clean.R')
 render('mods.Rmd')
 source('plot_pairs.R')
 source('plot_mods.R')
+
+names(ds)

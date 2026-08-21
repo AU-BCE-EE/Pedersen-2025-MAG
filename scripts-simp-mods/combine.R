@@ -3,7 +3,14 @@
 
 df.emis[, trial := new.ID]
 df.emis[, slurry.ID := treat1]
+
+df.emis.plot[, trial := new.ID]
+df.emis.plot[, slurry.ID := treat1]
+
 df.prop[, trial := Trial_B]
 df.prop[, slurry.ID := dig]
 
+
 ds <- merge(df.emis, df.prop, by = c('trial', 'slurry.ID'))
+
+ds.plot <- merge(df.emis.plot, df.prop, by = c('trial', 'slurry.ID'))
