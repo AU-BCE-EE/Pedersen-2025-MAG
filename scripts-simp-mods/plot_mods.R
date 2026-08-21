@@ -4,8 +4,8 @@ p1 <- ggplot(ds, aes(TS.mn, e.rel.150, colour = slurry.type)) +
   geom_segment(aes(x = TS.mn + 0.1, xend = TS.mn + 0.1, yend = mm_b3.pred), alpha = 0.2, show.legend = FALSE) +
   geom_point(shape = 21, fill = 'white', size = 4.5, show.legend = FALSE) +
   geom_text(aes(label = trial.ID), show.legend = FALSE) +
-  geom_point(aes(x = TS.mn - 0.1, y = mm_a1.pred), shape = 1, show.legend = FALSE) +
-  geom_point(aes(x = TS.mn + 0.1, y = mm_b3.pred), shape = 17, show.legend = FALSE) +
+  geom_point(aes(x = TS.mn - 0.1, y = mm_a1.pred), shape = 1, alpha = 0.5, show.legend = FALSE) +
+  geom_point(aes(x = TS.mn + 0.1, y = mm_b3.pred), shape = 17, alpha = 0.5, show.legend = FALSE) +
   scale_colour_manual(values = cols) +
   # Invisble layers just for legend
   geom_point(aes(shape = 'Model A'), size = 4.5, alpha = 0) +
@@ -23,8 +23,8 @@ p2 <- ggplot(ds, aes(pH.lab.mn, e.rel.150, colour = slurry.type)) +
   geom_segment(aes(x = pH.lab.mn + 0.04, xend = pH.lab.mn + 0.04, yend = mm_b3.pred), alpha = 0.2, show.legend = FALSE) +
   geom_point(shape = 21, fill = 'white', size = 4.5) +
   geom_text(aes(label = trial.ID), show.legend = FALSE) +
-  geom_point(aes(x = pH.lab.mn - 0.04, y = mm_a1.pred), shape = 1, show.legend = FALSE) +
-  geom_point(aes(x = pH.lab.mn + 0.04, y = mm_b3.pred), shape = 17, show.legend = FALSE) +
+  geom_point(aes(x = pH.lab.mn - 0.04, y = mm_a1.pred), shape = 1, alpha = 0.5, show.legend = FALSE) +
+  geom_point(aes(x = pH.lab.mn + 0.04, y = mm_b3.pred), shape = 17, alpha = 0.5, show.legend = FALSE) +
   scale_colour_manual(values = cols) +
   labs(x = 'Slurry pH', y = 'Relative emission (frac. TAN)', colour = '') +
   theme_bw() +

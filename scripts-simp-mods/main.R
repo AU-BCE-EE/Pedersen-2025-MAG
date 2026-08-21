@@ -1,4 +1,4 @@
-# Preliminary simple statistical models
+# Simple statistical models
 
 rm(list = ls())
 
@@ -8,7 +8,6 @@ source('load.R')
 source('combine.R')
 source('clean.R')
 render('mods.Rmd')
+render('mods8h.Rmd')
 source('plot_pairs.R')
 source('plot_mods.R')
-
-names(ds)
