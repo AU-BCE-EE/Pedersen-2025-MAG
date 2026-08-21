@@ -2,7 +2,7 @@
 idat <- fread('../data-emission/data/MAG_interval.csv')
 pdat <- fread('../data-emission/data/MAG_plot.csv')
 
-# New IDs for publication purpose
+# New IDs by field trial publication purpose
 IDs <- c(`23C` =  '1',
          `23D` =  '2',
          `23G` =  '3',

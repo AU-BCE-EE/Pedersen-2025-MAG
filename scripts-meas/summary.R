@@ -8,6 +8,8 @@ fsumm <- idat[, .(j.rel.mn  = mean(j.rel),
 # cumulative emissions: 
 isumm1 <- idat[, .(e.cum.final = max(e.cum), 
                      e.rel.final = max(e.rel),
+                     e.cum.8 = approx(cta, e.cum, xout = 8)$y,
+                     e.rel.8 = approx(cta, e.rel, xout = 8)$y,
                      e.cum.150 = approx(cta, e.cum, xout = 150)$y,
                      e.rel.150 = approx(cta, e.rel, xout = 150)$y
                      ), by = list(new.ID, treat1, pmid)]
@@ -17,8 +19,11 @@ isumm1 <- isumm1[! isumm1$new.ID == '11', ]
 isumm1 <- isumm1[! isumm1$new.ID == '12', ]
 
 # cumulative emissions for experiments 5, 11, 12 as they are not close to 150 h emission: 
+# 8 h done here as well for simplicity in merge
 isumm2 <- idat[is.element(idat$new.ID, c('5', '11', '12')), .(e.cum.final = max(e.cum), 
                   e.rel.final = max(e.rel),
+                  e.cum.8 = approx(cta, e.cum, xout = 8)$y,
+                  e.rel.8 = approx(cta, e.rel, xout = 8)$y,
                   e.cum.150 = approx(cta, e.cum, xout = 85)$y,
                   e.rel.150 = approx(cta, e.rel, xout = 85)$y
 ), by = list(new.ID, treat1, pmid)]
@@ -43,6 +48,8 @@ esumm <- isumm[ , list(
                        pmid = paste(pmid, collapse = ', '),
                        e.rel.final = mean(e.rel.final), e.rel.final.sd = sd(e.rel.final), e.rel.final.n = length(e.rel.final),
                        e.cum.final = mean(e.cum.final), e.cum.final.sd = sd(e.cum.final), e.cum.final.n = length(e.cum.final),
+                       e.rel.8 = mean(e.rel.8), e.rel.8.sd = sd(e.rel.8), e.rel.8.n = length(e.rel.8),
+                       e.cum.8 = mean(e.cum.8), e.cum.8.sd = sd(e.cum.8), e.cum.8.n = length(e.cum.8),
                        e.rel.150 = mean(e.rel.150), e.rel.150.sd = sd(e.rel.150), e.rel.150.n = length(e.rel.150),
                        e.cum.150 = mean(e.cum.150), e.cum.150.sd = sd(e.cum.150), e.cum.150.n = length(e.cum.150)
                        ), by = list(new.ID, treat1)]
