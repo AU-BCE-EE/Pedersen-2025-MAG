@@ -9,7 +9,7 @@ Manuscript A: Pedersen, J., Hafner, S. D., Romio, C., Pacholski, A. S. Assessmen
 
 Technical note: Pedersen, J., Hafner, S. D., Pacholski, A. S. Methodological factors affecting ammonia emission measurement with flux chambers from field-applied biogas digestate slurry. 2026. Atmospheric Environment: X. 29. https://doi.org/10.1016/j.aeaoa.2025.100408
 
-Manuscript B: Pedersen, J., Romio, C., Pacholski, A. S., Hafner, S. D. Explaining variation in ammonia emission after field application of digested and untreated slurry using physical and chemical characteristics. In preparation April 2026. 
+Manuscript B: Pedersen, J., Romio, C., Pacholski, A. S., Hafner, S. D. Explaining variation in ammonia emission after field application of digested and untreated slurry using physical and chemical characteristics. Nutrient Cycling in Agroecosystems, 133:26. https://link.springer.com/content/pdf/10.1007/s10705-026-10524-x.pdf
 
 # Maintainer
 Johanna Pedersen. Contact information here: https://www.researchgate.net/profile/Johanna-Pedersen 
